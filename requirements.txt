@@ -1,14 +1,16 @@
 asn1crypto==0.24.0
 attrs==19.1.0
 cffi==1.12.3
+coverage==4.5.3
 cryptography==2.7
-Django==2.2.2
+Django==2.2.3
 django-extensions==2.1.9
 django-filter==2.1.0
 django-money==0.15
 django-unixdatetimefield==1.0.3
 djangorestframework==3.9.4
 gunicorn==19.9.0
+httpretty==0.9.6
 jsonschema==3.0.1
 psycopg2==2.8.3
 py-moneyed==0.8.0

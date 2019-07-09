@@ -66,12 +66,13 @@ REST_FRAMEWORK = {
         #'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-#        'apiserver.authentication.CsrfExemptSessionAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        'auctionhouse.authentication.CsrfExemptSessionAuthentication',
+        'auctionhouse.authentication.TokenAuth',
         #'rest_framework.authentication.TokenAuthentication',
         #'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
     ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     # we only want to accept json input so default to json only
@@ -116,7 +117,12 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'apiserver': {
+        'auctionhouse': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'auction': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
             'propagate': True,

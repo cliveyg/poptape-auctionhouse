@@ -16,9 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
+from django.views.generic import RedirectView
+from auctionhouse.views import StatusView
 
 urlpatterns = [
     path('auctionhouse/admin/', admin.site.urls),
+    path('auctionhouse/status', StatusView.as_view(), name="status"),
+    #path('auctionhouse', RedirectView.as_view(url='/auctionhouse/status')),
     url(r'^', include('auction.urls')),
 ]
 

@@ -34,7 +34,6 @@ class AuctionDetail(APIView):
             raise NotFound(detail="Nowt 'ere, resource not found", code=404)
 
     def get_serializer_object(self, auction):
-        logger.info("Auc type is [%s]",auction.type)
         return serializer.get(auction.type)
 
     def get(self, request, auction_id, format=None):

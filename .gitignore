@@ -30,6 +30,8 @@
 !auctionhouse/urls.py
 !auctionhouse/views.py
 !auctionhouse/validators.py
+!auctionhouse/assertions.py
+!auctionhouse/authentication.py
 !auctionhouse/wsgi.py
 !auctionhouse/tests/tests_paths.py
 !auctionhouse/tests/__init__.py

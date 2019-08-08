@@ -27,6 +27,7 @@ SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = False
 
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
@@ -97,7 +98,8 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/poptape_auctionhouse.log',
+            #'filename': '/var/log/poptape_auctionhouse.log',
+			'filename': 'log/poptape_auctionhouse.log',
             'formatter': 'verbose',
         },
         'console': {
@@ -110,22 +112,22 @@ LOGGING = {
         'django': {
             'handlers': ['file'],
             'level': 'ERROR',
-            'propagate': True,
+            'propagate': False,
         },
         'django.request': {
             'handlers': ['file'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
         'auctionhouse': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
         'auction': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
     },
 }
@@ -177,6 +179,7 @@ DATABASES = {
         'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
         'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
         'PORT': os.getenv('AUCTIONHOUSE_DB_PORT')
+		#'PORT': 5432
     }
 }
 

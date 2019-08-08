@@ -8,11 +8,9 @@ from auctionhouse.validators import validate_currency, validate_uuid_from_model
 # -----------------------------------------------------------------------------
 # a u c t i o n    m o d e l s
 # -----------------------------------------------------------------------------
-# i've made the design decision that an item can appear in more than one auction
-# and have different prices in different auctions - i'm not 100% sure of this. 
-# it may be better to make items unique to an auction with only one price. 
-# an item can only be in one live auction at a time. probably revisit. 
-
+# i've made the design decision that an item cannot appear in more than one 
+# auction. 
+#
 # also unsure of my choice for model design. i think having an auction item base
 # class and then various child classes based on auction type works but again i
 # may revisit this. it's a bit odd having auction type hanging off auction item

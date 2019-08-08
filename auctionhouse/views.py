@@ -23,3 +23,4 @@ class StatusView(RetrieveAPIView):
         message = { 'message': 'System running...' }
 
         return Response(message, status=status.HTTP_200_OK)
+

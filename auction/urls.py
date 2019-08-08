@@ -3,7 +3,6 @@ from django.conf.urls import url, include
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from auction.views import AuctionDetail, AuctionListCreate, AuctionLotListCreate
-#path('snippets/<int:pk>/', views.SnippetDetail.as_view()),
 
 urlpatterns = [
     #url(r'^auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),

@@ -24,6 +24,7 @@ serializer = {
 # views
 # -----------------------------------------------------------------------------
 
+
 class AuctionDetail(APIView):
     permission_classes = (IsAuthenticated,)
 

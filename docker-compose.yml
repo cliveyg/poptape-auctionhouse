@@ -1,0 +1,45 @@
+version: '3'
+services:
+  api:
+    env_file:
+      - "auctionhouse/.env"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: poptape/auctionhouse/api:v0.1
+#TODO: change ports to expose when going into prod and using an apiserver to manage incoming
+    ports:
+      - "1250:9100"
+    restart: always
+    volumes:
+      - /var/log:/auctionhouse/log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10Mb"
+        max-file: "5"
+    networks:
+      - net_poptape
+  db:
+    image: poptape/auctionhouse/db:v0.1
+    restart: always
+    env_file:
+      - "auctionhouse/.env"
+#    environment:
+#      POSTGRES_PASSWORD: ${AUCTIONHOUSE_DB_PASS}
+#      POSTGRES_USER: ${AUCTIONHOUSE_DB_USER}
+#      POSTGRES_DB: ${AUCTIONHOUSE_DB_NAME}
+#    ports:
+#      - "1251:5432"
+    expose:
+      - "5432"
+    volumes:
+      - poptape_auctionhousedata:/var/lib/postgresql/data
+    networks:
+      - net_poptape
+networks:
+  net_poptape:
+    external: true
+volumes:
+  poptape_auctionhousedata:
+  

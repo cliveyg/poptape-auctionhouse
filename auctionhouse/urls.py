@@ -26,3 +26,4 @@ urlpatterns = [
     url(r'^', include('auction.urls')),
 ]
 
+

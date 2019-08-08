@@ -38,3 +38,5 @@
 !requirements.txt
 !auctionhouse/schemas/
 !auctionhouse/schemas/*
+!docker-compose.yml
+!Dockerfile

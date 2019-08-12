@@ -1,9 +1,11 @@
 # poptape-auctionhouse
   
-An apiserver written in Python Django that controls auctions, i.e. create,
+A microservice written in Python Django that controls auctions, i.e. create,
 delete, update an auction with items or lots and start times etc. Also in this
 microservice are items or lots but I may spin this out into a seperate micro-
 service in the future.
+
+Please see [this gist](https://gist.github.com/cliveyg/cf77c295e18156ba74cda46949231d69) to see how this microservice works as part of the auction system software.
 
 I've made various design decisions that I may chnage such as that an item can
 appear in more than one auction and have different prices in different auctions.

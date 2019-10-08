@@ -21,7 +21,8 @@ services:
     networks:
       - net_poptape
   db:
-    image: poptape/auctionhouse/db:v0.1
+    #image: poptape/auctionhouse/db:v0.1
+    image: postgres:alpine
     restart: always
     env_file:
       - "auctionhouse/.env"

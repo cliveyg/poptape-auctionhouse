@@ -3,6 +3,8 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.authentication import BaseAuthentication
 from django.conf import settings
 from django.contrib.auth.models import User
+import base64
+import ast
 
 # get an instance of a logger
 import logging
@@ -32,7 +34,14 @@ class TokenAuth(BaseAuthentication):
         resp = requests.get(authy_url ,headers=headers)
 
         if resp.status_code == 200:
-            user = User()
+
+            # now we know we're valid we can get the public_id from the token
+            # and store it in the django User for use everywhere 
+            token_parts = token.split(".")
+            decoded_second_part = base64.b64decode(token_parts[1]).decode("utf-8")  
+            py_dic = ast.literal_eval(decoded_second_part) 
+
+            user = User(username = py_dic.get('public_id'))
             return (user, None)
 
         return None

@@ -4,6 +4,7 @@ from django_unixdatetimefield import UnixDateTimeField
 #from djmoney.models.fields import MoneyField
 
 from auctionhouse.validators import validate_currency, validate_uuid_from_model
+from auctionhouse.validators import validate_decimals
 
 # -----------------------------------------------------------------------------
 # a u c t i o n    m o d e l s
@@ -63,7 +64,7 @@ class AuctionType(models.Model):
 class Auction(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, unique=True, 
                                   validators=[validate_uuid_from_model])
-    owner = models.CharField(max_length=36, blank=False,
+    public_id = models.CharField(max_length=36, blank=False,
                              validators=[validate_uuid_from_model])
     lots = ArrayField(models.CharField(max_length=36, 
                                         blank=False, null=False,
@@ -71,13 +72,15 @@ class Auction(models.Model):
                        size=500)
     type = models.CharField(max_length=15, 
                             choices=AuctionType.AUCTION_CHOICES) 
-    start_time = UnixDateTimeField()
-    end_time = UnixDateTimeField()
-    status = models.CharField(max_length=20, blank=False)
-    active = models.BooleanField(default=True)
+    name = models.CharField(max_length=100, blank=True)
+    multiple = models.BooleanField(default=False, null=False)
+    start_time = UnixDateTimeField(blank=True)
+    end_time = UnixDateTimeField(blank=True)
+    status = models.CharField(max_length=20, blank=False, default="created")
+    active = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    currency = models.CharField(max_length=3)
+    currency = models.CharField(max_length=3, blank=False)
 
 # -----------------------------------------------------------------------------
 
@@ -91,12 +94,20 @@ class AuctionLot(models.Model):
     # i'm putting start and end times at both the item level and auction level
     # as live auctions have an ordered list of items to go through and the 
     # start time is when the lot comes up under the auctioneers hammer so is 
-    # likely to be set at 'run' time
-    start_time = UnixDateTimeField()
-    end_time = UnixDateTimeField()
-    starting_bid = models.FloatField(null=True, blank=True, default=None)
-    current_bid = models.FloatField(null=True, blank=True, default=None)
-    winning_bid = models.FloatField(null=True, blank=True, default=None)
+    # likely to be set at 'run' time - single item auctions will have both 
+    # start times (and end times) set to teh same value
+    start_time = UnixDateTimeField(blank=True, null=True)
+    end_time = UnixDateTimeField(blank=True, null=True)
+    starting_bid = models.DecimalField(null=True, blank=True, default=None,
+                                       validators=[validate_decimals],
+                                       max_digits=10, decimal_places=2)
+    current_bid = models.DecimalField(null=True, blank=True, default=None,
+                                      validators=[validate_decimals],
+                                      max_digits=10, decimal_places=2)
+    winning_bid = models.DecimalField(null=True, blank=True, default=None,
+                                      validators=[validate_decimals],
+                                      max_digits=10, decimal_places=2)
+    no_of_bids = models.IntegerField(null=False, default=0)
     quantity = models.IntegerField(null=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -104,14 +115,34 @@ class AuctionLot(models.Model):
 # -----------------------------------------------------------------------------
 
 class EnglishAuctionLot(AuctionLot): 
-    start_price = models.FloatField(null=True, blank=True, default=None)
-    reserve_price = models.FloatField(null=True, blank=True, default=None)
-    min_increment = models.FloatField(null=True, blank=True, default=None)
+    start_price = models.DecimalField(null=True, blank=True, default=None, 
+                                      validators=[validate_decimals],
+                                      max_digits=10, decimal_places=2)
+    reserve_price = models.DecimalField(null=True, blank=True, default=None,
+                                        validators=[validate_decimals],
+                                        max_digits=10, decimal_places=2)
+    min_increment = models.DecimalField(null=False, blank=False, default=None,
+                                        validators=[validate_decimals],
+                                        max_digits=10, decimal_places=2)
 
 # -----------------------------------------------------------------------------
 
 class BuyNowAuctionLot(EnglishAuctionLot):
-    buy_now_price = models.FloatField(null=True, blank=True, default=None)
+    buy_now_price = models.DecimalField(null=False, blank=False, default=None,
+                                        validators=[validate_decimals],
+                                        max_digits=10, decimal_places=2)
 
 # -----------------------------------------------------------------------------
 
+class DutchAuctionLot(AuctionLot):
+    start_price = models.DecimalField(null=False, blank=False, default=None,
+                                      validators=[validate_decimals],
+                                      max_digits=10, decimal_places=2)
+    reserve_price = models.DecimalField(null=True, blank=True, default=None,
+                                        validators=[validate_decimals],
+                                        max_digits=10, decimal_places=2)
+    min_decrement = models.DecimalField(null=False, blank=False, default=None,
+                                        validators=[validate_decimals],
+                                        max_digits=10, decimal_places=2)
+
+# -----------------------------------------------------------------------------

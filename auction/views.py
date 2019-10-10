@@ -229,6 +229,41 @@ class AuctionTypes(RetrieveAPIView):
         return Response(message, status=status.HTTP_200_OK)
 
 # -----------------------------------------------------------------------------
+# class for testing validity of auction data sent to auctioneer microservice
+# the service only needs to know if the auction exists and the lot is from 
+# that particular auction and that auction owner is not bidding on their own  
+# auction. returns either 200 or 406
+
+class AuctionValid(RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, auction_id, lot_id, format=None):
+
+        lot = auction = None
+
+        try:
+            auction = Auction.objects.get(auction_id=auction_id)
+        except Auction.DoesNotExist:
+            return Response(status=HTTP_406_NOT_ACCEPTABLE)
+
+        # public id of requester is stored in the django User object
+        if auction.public_id == request.user.get_username():
+            # can't bid on your own auction so return a 406
+            return Response(status=HTTP_406_NOT_ACCEPTABLE)
+
+        lot_found = False
+        for lot in auction.lots:
+            if lot.lot_id == lot_id:
+                lot_found = True
+                break
+
+        if not lot_found:
+            return Response(status=HTTP_406_NOT_ACCEPTABLE)
+        
+        # successfully passed all tests
+        return Response(status=status.HTTP_200_OK)
+
+# -----------------------------------------------------------------------------
 
 class ComboAuctionCreate(APIView):
     permission_classes = (IsAuthenticated,)

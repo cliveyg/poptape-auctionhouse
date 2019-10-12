@@ -8,29 +8,30 @@ from auction.views import ComboAuctionCreate, AuctionByItem
 from auction.views import AuctionValid
 
 urlpatterns = [
-    #url(r'^auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),
+    #path('auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),
 
     # returns auction types available
-    url('auctionhouse/types', AuctionTypes.as_view(), name="auctiontypes"),
-
-    # read, edit, delete ops on auction
-    url('auctionhouse/auction/(?P<auction_id>[0-9a-f-]{36})', AuctionDetail.as_view(), name="detail"),
+    path('auctionhouse/types/', AuctionTypes, name='auctiontypes'),
 
     # create auction - probably superceded by ComboAuctionCreate
-    url('auctionhouse/auction', AuctionListCreate.as_view(), name="createauction"),
-
-    # create auction lot - probably superceded by ComboAuctionCreate
-    url('auctionhouse/auction/lot', AuctionLotListCreate.as_view(), name="createlot"),
+    path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
 
     # returns auction and lot data on a key of item_id
-    url('auctionhouse/item/(?P<item_id>[0-9a-f-]{36})', AuctionByItem.as_view(), name="auctionbyitem"),
-
-    # allows easier creation of auctions and lots - one http call instead of two or more
-    url('auctionhouse/(?P<auction_type>[a-z]{4,5})/auction', ComboAuctionCreate.as_view(), name="combocreate"),
+    path('auctionhouse/auction/item/<uuid:item_id>/', AuctionByItem.as_view(), name='auctionbyitem'),
 
     # this url is for checking whether the auctioneer microservice has been sent the correct data
-    url('auctionhouse/auction/(?P<auction_id>[0-9a-f-]{36})/(?P<lot_id>[0-9a-f-]{36})', 
-                                                            AuctionValid.as_view(), name="validauction"),
+    path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/',
+                                                            AuctionValid.as_view(), name='validauction'),
+
+    # read, edit, delete ops on auction
+    path('auctionhouse/auction/<uuid:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
+
+    # create auction lot - probably superceded by ComboAuctionCreate
+    path('auctionhouse/auction/lot', AuctionLotListCreate.as_view(), name='createlot'),
+
+    # allows easier creation of auctions and lots - one http call instead of two or more
+    path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

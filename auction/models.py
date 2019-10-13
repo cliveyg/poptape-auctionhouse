@@ -98,19 +98,40 @@ class AuctionLot(models.Model):
     # start times (and end times) set to teh same value
     start_time = UnixDateTimeField(blank=True, null=True)
     end_time = UnixDateTimeField(blank=True, null=True)
-    starting_bid = models.DecimalField(null=True, blank=True, default=None,
-                                       validators=[validate_decimals],
-                                       max_digits=10, decimal_places=2)
-    current_bid = models.DecimalField(null=True, blank=True, default=None,
-                                      validators=[validate_decimals],
-                                      max_digits=10, decimal_places=2)
-    winning_bid = models.DecimalField(null=True, blank=True, default=None,
-                                      validators=[validate_decimals],
-                                      max_digits=10, decimal_places=2)
-    no_of_bids = models.IntegerField(null=False, default=0)
+#    starting_bid = models.DecimalField(null=True, blank=True, default=None,
+#                                       validators=[validate_decimals],
+#                                       max_digits=10, decimal_places=2)
+#    current_bid = models.DecimalField(null=True, blank=True, default=None,
+#                                      validators=[validate_decimals],
+#                                      max_digits=10, decimal_places=2)
+#    winning_bid = models.DecimalField(null=True, blank=True, default=None,
+#                                      validators=[validate_decimals],
+#                                      max_digits=10, decimal_places=2)
+#    no_of_bids = models.IntegerField(null=False, default=0)
     quantity = models.IntegerField(null=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+# -----------------------------------------------------------------------------
+
+class BidHistory(models.Model):
+    bid_id = models.CharField(max_length=36, blank=False, unique=True,
+                              validators=[validate_uuid_from_model]) 
+    lot = models.ForeignKey(AuctionLot, on_delete=models.CASCADE, related_name='lot')
+    username = models.CharField(max_length=36, blank=False, null=False)
+    your_bid = models.DecimalField(null=True, blank=True, default=None,
+                                   validators=[validate_decimals],
+                                   max_digits=10, decimal_places=2)
+    current_winning_bid = models.DecimalField(null=True, blank=True, default=None,
+                                              validators=[validate_decimals],
+                                              max_digits=10, decimal_places=2)
+    current_winning_bid_id = models.CharField(max_length=36, blank=False, null=False,
+                                              validators=[validate_uuid_from_model])
+    bid_status = models.CharField(max_length=10, blank=False, null=False)
+    lot_status = models.CharField(max_length=10, blank=False, null=False)
+    message = models.CharField(max_length=50, blank=False, null=False)
+    unixtime = UnixDateTimeField(blank=False)
+    created = models.DateTimeField(auto_now_add=True)
 
 # -----------------------------------------------------------------------------
 

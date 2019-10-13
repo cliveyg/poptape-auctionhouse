@@ -6,7 +6,7 @@ from rest_framework.generics import RetrieveAPIView
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from auction.models import Auction, EnglishAuctionLot, BuyNowAuctionLot
-from auction.models import AuctionLot, DutchAuctionLot
+from auction.models import AuctionLot, DutchAuctionLot, BidHistory
 from auction.serializers import AuctionSerializer, EnglishAuctionLotSerializer
 from auction.serializers import DutchAuctionLotSerializer, BuyNowAuctionLotSerializer
 from rest_framework.exceptions import NotFound
@@ -14,6 +14,7 @@ from django.db.models import Q
 
 import uuid
 import requests
+from datetime import datetime
 
 # get an instance of a logger
 import logging
@@ -30,6 +31,11 @@ model = {
     "BN": BuyNowAuctionLot,
     "DU": DutchAuctionLot,
 }
+
+#def get_milli(time_string):
+#    st_dt_obj = datetime.strptime(time_string,'%Y-%m-%dT%H:%M:%S')
+#    millisec = st_dt_obj.timestamp() * 1000
+#    return millisec
 
 # -----------------------------------------------------------------------------
 # views
@@ -231,6 +237,9 @@ class AuctionTypes(RetrieveAPIView):
 # the service only needs to know if the auction exists and the lot is from 
 # that particular auction and that the user trying to use the auction service
 # is the valid user to do this
+# we also check if there is any bid history because if there is then the user
+# is attempting to create this auction instance twice (i.e. deleted and trying
+# to recreate) which we do not allow.
 # returns either 200 or 406 along with a subset of auction/lot data
 # TODO: decide which data to return
 
@@ -255,8 +264,6 @@ class AuctionValid(RetrieveAPIView):
         if auction.public_id != request.user.get_username():
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        logger.info(auction.lots)
-
         lot_found = False
         for lotty in auction.lots:
             logger.info(type(lot_id))
@@ -273,16 +280,34 @@ class AuctionValid(RetrieveAPIView):
         if not lot_found:
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        auction_data = { 'auction_id': auction.auction_id,
-                         'auction_type': auction.type,
-                         'lot_id': lot.lot_id,
-                         'start_price': lot.start_price or 0,
-                         'end_time': lot.end_time,
-                         'username': request.user.get_short_name(),
-                         'public_id' : auction.public_id }
-        
-        # successfully passed all tests
-        return Response(auction_data, status=status.HTTP_200_OK)
+        # look for bid history
+        try:
+             BidHistory.objects.get(lot=lot)
+        except BidHistory.DoesNotExist:
+            start_time = end_time = None
+            if lot.start_time:
+                start_time = lot.start_time.timestamp() * 1000
+            if lot.end_time:
+                end_time = lot.end_time.timestamp() * 1000
+
+            auction_data = { 'auction_id': auction.auction_id,
+                             'auction_type': auction.type,
+                             'lot_id': lot.lot_id,
+                             'start_price': lot.start_price or 0,
+                             'end_time': end_time,
+                             'start_time': start_time or 0,
+                             'username': request.user.get_short_name(),
+                             'public_id' : auction.public_id }
+            # need to add minimum increase or decrease (change)
+            if auction.type == 'EN' or auction.type == 'BN':
+                auction_data['min_change'] = lot.min_increment
+            elif auction.type == 'DU':
+                auction_data['min_change'] = lot.min_decrement
+
+            # successfully passed all tests
+            return Response(auction_data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 # -----------------------------------------------------------------------------
 

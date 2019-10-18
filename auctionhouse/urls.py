@@ -14,16 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from auctionhouse.views import StatusView
 
 urlpatterns = [
     path('auctionhouse/admin/', admin.site.urls),
-    path('auctionhouse/status', StatusView.as_view(), name="status"),
+    path('auctionhouse/status/', StatusView.as_view(), name="status"),
     #path('auctionhouse', RedirectView.as_view(url='/auctionhouse/status')),
-    url(r'^', include('auction.urls')),
+    #url(r'^', include('auction.urls')),
+    re_path(r'^', include('auction.urls')),
 ]
 
 

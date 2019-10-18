@@ -23,8 +23,11 @@ class TokenAuth(BaseAuthentication):
 
     def authenticate(self, request, token=None):
 
+        #logger.info("Why you here Willis?")
+
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
-            raise AuthenticationFailed
+            return None
+            #raise AuthenticationFailed
 
         # call authy
         authy_url = settings.AUTH_SERVER_URL

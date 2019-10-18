@@ -1,7 +1,8 @@
 # auction/serializers.py
   
 from rest_framework import serializers
-from auction.models import Auction, AuctionLot
+#from auction.bidhistory import BuildBidHistory
+from auction.models import Auction, AuctionLot, BidHistory
 from auction.models import EnglishAuctionLot, BuyNowAuctionLot
 from auction.models import DutchAuctionLot
 
@@ -24,6 +25,7 @@ class AuctionSerializer(serializers.ModelSerializer):
 
 class AuctionLotSerializer(serializers.ModelSerializer):
     # serializer to map the model instance into JSON format
+    #bids = serializers.RelatedField(many=True, read_only=True)
 
     class Meta:
         # meta class to map serializer's fields with the model fields.
@@ -34,6 +36,16 @@ class AuctionLotSerializer(serializers.ModelSerializer):
 #                  'start_time', 'end_time', 'status', 'active',
 #                  'quantity', 'created', 'modified')
         read_only_fields = ('created', 'modified')
+
+# -----------------------------------------------------------------------------
+
+class BidHistorySerializer(serializers.ModelSerializer):
+
+    class Meta: 
+        model = BidHistory
+        fields = ('bid_id', 'username', 'bid_amount', 'bid_status', 'lot_status',
+                  'message', 'reserve_message', 'unixtime', 'created')
+        read_only_fields = ('created',)
 
 # -----------------------------------------------------------------------------
 

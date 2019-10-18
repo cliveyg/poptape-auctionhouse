@@ -19,6 +19,7 @@
 !auction/tests/__init__.py
 !auction/urls.py
 !auction/views.py
+!auction/bid_history.py
 !auction/migrations/
 !auction/migrations/__init__.py
 !.gitignore

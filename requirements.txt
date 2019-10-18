@@ -1,5 +1,8 @@
+amqp==2.5.1
 asn1crypto==0.24.0
 attrs==19.1.0
+billiard==3.6.1.0
+celery==4.3.0
 certifi==2019.6.16
 cffi==1.12.3
 chardet==3.0.4
@@ -14,7 +17,10 @@ djangorestframework==3.9.4
 gunicorn==19.9.0
 httpretty==0.9.6
 idna==2.8
+importlib-metadata==0.23
 jsonschema==3.0.1
+kombu==4.6.5
+more-itertools==7.2.0
 psycopg2==2.8.3
 py-moneyed==0.8.0
 pycparser==2.19
@@ -26,4 +32,6 @@ requests==2.22.0
 six==1.12.0
 sqlparse==0.3.0
 urllib3==1.25.3
+vine==1.3.0
 Werkzeug==0.15.4
+zipp==0.6.0

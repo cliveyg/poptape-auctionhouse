@@ -1,5 +1,5 @@
 # auctionhouse/auction/views.py
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
@@ -9,8 +9,11 @@ from auction.models import Auction, EnglishAuctionLot, BuyNowAuctionLot
 from auction.models import AuctionLot, DutchAuctionLot, BidHistory
 from auction.serializers import AuctionSerializer, EnglishAuctionLotSerializer
 from auction.serializers import DutchAuctionLotSerializer, BuyNowAuctionLotSerializer
+from auction.serializers import BidHistorySerializer
 from rest_framework.exceptions import NotFound
 from django.db.models import Q
+
+from auction.bidhistory import LotQueueConsumer
 
 import uuid
 import requests
@@ -31,11 +34,6 @@ model = {
     "BN": BuyNowAuctionLot,
     "DU": DutchAuctionLot,
 }
-
-#def get_milli(time_string):
-#    st_dt_obj = datetime.strptime(time_string,'%Y-%m-%dT%H:%M:%S')
-#    millisec = st_dt_obj.timestamp() * 1000
-#    return millisec
 
 # -----------------------------------------------------------------------------
 # views
@@ -128,6 +126,7 @@ class AuctionListCreate(APIView):
 # -----------------------------------------------------------------------------
 
 class AuctionByItem(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_object(self, item_id):
         try:
@@ -175,35 +174,65 @@ class AuctionByItem(APIView):
 # -----------------------------------------------------------------------------
 
 class AuctionLotDetail(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get_object(self, lot_id):
+    def get_auction(self, lot_id):
         try:
-            return Auction.objects.get(auction_id=auction_id)
+            # returns only one Auction object
+            return Auction.objects.filter(lots__contains=[lot_id])[:1].get()
         except Auction.DoesNotExist:
-            raise NotFound(detail="Nowt 'ere, resource not found", code=404)
+            raise NotFound(detail="Nowt 'ere, auction lot not in auction", code=404)
 
-    def get(self, request, auction_id, format=None):
+    def get_data_objects(self, auctype):
+        return model.get(auctype), serializer.get(auctype)
 
-        auction = self.get_object(auction_id)
-        serializer = AuctionSerializer(auction)
-        return Response(serializer.data)
+    def get(self, request, lot_uuid):
+        lot_id = str(lot_uuid)
 
-    def put(self, request, auction_id, format=None):
-        auction = self.get_object(auction_id)
-        # don't want to let user change auction id so make sure they can't
-        # overwrite it in the json by overwriting it ourselves
-        request.data['auction_id'] = auction_id
-        serializer = AuctionSerializer(auction, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # get rabbitmq messages (if any) and save to db
+        consumer = LotQueueConsumer( lot_id = lot_id )        
 
-    def delete(self, request, auction_id, format=None):
-        auction = self.get_object(auction_id)
-        auction.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if consumer.connected_to_exchange():
+            consumer.get_messages()
+            saved, errored = consumer.save_messages_to_db()
+
+        # gather and return bid history data
+        auction = self.get_auction(lot_id)
+        model_obj, serializer_obj = self.get_data_objects(auction.type)
+        lot = model_obj.objects.get(lot_id = lot_id)
+
+        bids = None
+        try:
+            bids = BidHistory.objects.filter(lot=lot)
+        except Exception as e:
+            logger.error("Bid history fail! [%s]",e)
+
+        json_bid_data = []
+        for bid in bids:
+            bid_serializer = BidHistorySerializer(bid)
+            json_bid_data.append(bid_serializer.data)
+
+        # not using the serializer as we only want a subset of the lot data
+        #TODO?: create more serializers for subsets of data??
+        json_lot_data = {}
+        json_lot_data['lot_id'] = lot_id
+        json_lot_data['auction_id'] = auction.auction_id
+        json_lot_data['public_id'] = auction.public_id
+        json_lot_data['auction_type'] = auction.type
+        json_lot_data['start_time'] = lot.start_time
+        json_lot_data['end_time'] = lot.end_time
+        json_lot_data['status'] = lot.status
+
+        if auction.type == 'EN' or auction.type == 'BN' :
+            json_lot_data['min_change'] = lot.min_increment
+            json_lot_data['start_price'] = lot.start_price
+        elif auction.type == 'DU':
+            json_lot_data['min_change'] = lot.min_decrement
+            json_lot_data['start_price'] = lot.start_price
+        
+        json_lot_data['bids'] = json_bid_data
+
+        return Response(json_lot_data, status=status.HTTP_200_OK)
 
 # -----------------------------------------------------------------------------
 
@@ -222,6 +251,9 @@ class AuctionLotListCreate(APIView):
 # -----------------------------------------------------------------------------
 
 class AuctionTypes(RetrieveAPIView):
+    permission_classes = (AllowAny,)
+    #permission_classes = (IsAuthenticated,)
+    
 
     def get(self, request, *args, **kwargs):
         # simply returns a 200 ok with a message 
@@ -266,7 +298,6 @@ class AuctionValid(RetrieveAPIView):
 
         lot_found = False
         for lotty in auction.lots:
-            logger.info(type(lot_id))
             if lotty == str(lot_id):
                 model_obj =  model.get(auction.type)
                 try:
@@ -281,8 +312,11 @@ class AuctionValid(RetrieveAPIView):
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         # look for bid history
+        #TODO: need to change as it's possible that bids may exist
+        # and auction still be active but auctioneer service went
+        # down.
         try:
-             BidHistory.objects.get(lot=lot)
+            BidHistory.objects.filter(lot=lot)[:1].get()
         except BidHistory.DoesNotExist:
             start_time = end_time = None
             if lot.start_time:
@@ -294,6 +328,7 @@ class AuctionValid(RetrieveAPIView):
                              'auction_type': auction.type,
                              'lot_id': lot.lot_id,
                              'start_price': lot.start_price or 0,
+                             'reserve_price': lot.reserve_price or 0,
                              'end_time': end_time,
                              'start_time': start_time or 0,
                              'username': request.user.get_short_name(),
@@ -364,7 +399,7 @@ class ComboAuctionCreate(APIView):
         #TODO: multi lots 
         if not lot_serializer.is_valid():
             return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
         #request.data['lots'] = [request.data['lot_id']]
 
         if auction_type == 'multi': 
@@ -383,10 +418,16 @@ class ComboAuctionCreate(APIView):
         auction_serializer = AuctionSerializer(data=request.data)
         if auction_serializer.is_valid():
             # only save when both are valid
-            lot_serializer.save()
-            auction_serializer.save()
-            create_message_queues(request.data)
-            return Response({ 'auction_id': request.data['auction_id'] }, status=status.HTTP_201_CREATED)
+            try:
+                auction_serializer.save()
+                lot_serializer.save()
+            except Exception as err:
+                logger.error(err)
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response({ 'auction_id': request.data['auction_id'],
+                              'lot_id': request.data['lot_id'] }, 
+                            status=status.HTTP_201_CREATED)
 
         return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
        
@@ -394,7 +435,6 @@ class ComboAuctionCreate(APIView):
         return model.get(auctype), serializer.get(auctype) 
 
     def get(self, request, format=None):
-
         #queryset = Auction.objects.all()
         #serializer = AuctionSerializer(queryset, many=True)
         #return Response(serializer.data, status=status.HTTP_200_OK)

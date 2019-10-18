@@ -63,13 +63,13 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        #'rest_framework.permissions.AllowAny',
-        #'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         #'rest_framework.authentication.SessionAuthentication',
-        'auctionhouse.authentication.CsrfExemptSessionAuthentication',
         'auctionhouse.authentication.TokenAuth',
+        'auctionhouse.authentication.CsrfExemptSessionAuthentication',
         #'rest_framework.authentication.TokenAuthentication',
         #'rest_framework.authentication.BasicAuthentication',
         #'rest_framework.authentication.BasicAuthentication',
@@ -145,6 +145,12 @@ AUTH_SERVER_URL = os.getenv('AUTH_SERVER_URL')
 FOTOS_SERVER_URL = os.getenv('FOTOS_SERVER_URL')
 ADDRESS_SERVER_URL = os.getenv('ADDRESS_SERVER_URL')
 
+RABBIT_IP = os.getenv('RABBIT_IP')
+RABBIT_USER = os.getenv('RABBIT_USER')
+RABBIT_PASS = os.getenv('RABBIT_PASS') 
+RABBIT_VHOST = os.getenv('RABBIT_VHOST') 
+RABBIT_PORT = os.getenv('RABBIT_PORT')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -168,18 +174,14 @@ WSGI_APPLICATION = 'auctionhouse.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('AUCTIONHOUSE_DB_NAME'),
         'USER': os.getenv('AUCTIONHOUSE_DB_USER'),
         'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
         'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
-        'PORT': os.getenv('AUCTIONHOUSE_DB_PORT')
-		#'PORT': 5432
+        'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
+        #'ATOMIC_REQUESTS': True,
     }
 }
 

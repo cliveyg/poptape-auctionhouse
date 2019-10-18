@@ -65,11 +65,11 @@ class Auction(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, unique=True, 
                                   validators=[validate_uuid_from_model])
     public_id = models.CharField(max_length=36, blank=False,
-                             validators=[validate_uuid_from_model])
+                                 validators=[validate_uuid_from_model])
     lots = ArrayField(models.CharField(max_length=36, 
-                                        blank=False, null=False,
-                                        validators=[validate_uuid_from_model]),
-                       size=500)
+                                       blank=False, null=False,
+                                       validators=[validate_uuid_from_model]),
+                                       size=500)
     type = models.CharField(max_length=15, 
                             choices=AuctionType.AUCTION_CHOICES) 
     name = models.CharField(max_length=100, blank=True)
@@ -119,19 +119,34 @@ class BidHistory(models.Model):
                               validators=[validate_uuid_from_model]) 
     lot = models.ForeignKey(AuctionLot, on_delete=models.CASCADE, related_name='lot')
     username = models.CharField(max_length=36, blank=False, null=False)
-    your_bid = models.DecimalField(null=True, blank=True, default=None,
+    bid_amount = models.DecimalField(null=True, blank=True, default=None,
                                    validators=[validate_decimals],
                                    max_digits=10, decimal_places=2)
-    current_winning_bid = models.DecimalField(null=True, blank=True, default=None,
-                                              validators=[validate_decimals],
-                                              max_digits=10, decimal_places=2)
-    current_winning_bid_id = models.CharField(max_length=36, blank=False, null=False,
-                                              validators=[validate_uuid_from_model])
+    #current_winning_bid = models.DecimalField(null=True, blank=True, default=None,
+    #                                          validators=[validate_decimals],
+    #                                          max_digits=10, decimal_places=2)
+    #current_winning_bid_id = models.CharField(max_length=36, blank=False, null=False,
+    #                                          validators=[validate_uuid_from_model])
     bid_status = models.CharField(max_length=10, blank=False, null=False)
     lot_status = models.CharField(max_length=10, blank=False, null=False)
     message = models.CharField(max_length=50, blank=False, null=False)
-    unixtime = UnixDateTimeField(blank=False)
+    reserve_message = models.CharField(max_length=20, blank=False, null=False)
+    #unixtime = UnixDateTimeField(blank=False)
+    unixtime = models.BigIntegerField(blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return (self.bid_id, 
+                self.username,
+                self.bid_amount,
+                self.bid_status,
+                self.lot_status,
+                self.message,
+                self.reserve_message,
+                self.unixtime)
+
+    def __str__(self):
+        return f'{self.bid_id}'
 
 # -----------------------------------------------------------------------------
 
@@ -142,7 +157,7 @@ class EnglishAuctionLot(AuctionLot):
     reserve_price = models.DecimalField(null=True, blank=True, default=None,
                                         validators=[validate_decimals],
                                         max_digits=10, decimal_places=2)
-    min_increment = models.DecimalField(null=False, blank=False, default=None,
+    min_increment = models.DecimalField(null=False, blank=False, default=0.01,
                                         validators=[validate_decimals],
                                         max_digits=10, decimal_places=2)
 
@@ -162,7 +177,7 @@ class DutchAuctionLot(AuctionLot):
     reserve_price = models.DecimalField(null=True, blank=True, default=None,
                                         validators=[validate_decimals],
                                         max_digits=10, decimal_places=2)
-    min_decrement = models.DecimalField(null=False, blank=False, default=None,
+    min_decrement = models.DecimalField(null=False, blank=False, default=0.01,
                                         validators=[validate_decimals],
                                         max_digits=10, decimal_places=2)
 

@@ -194,7 +194,7 @@ class AuctionLotDetail(APIView):
 
         if consumer.connected_to_exchange():
             consumer.get_messages()
-            saved, errored = consumer.save_messages_to_db()
+            consumer.save_messages_to_db()
 
         # gather and return bid history data
         auction = self.get_auction(lot_id)
@@ -203,7 +203,7 @@ class AuctionLotDetail(APIView):
 
         bids = None
         try:
-            bids = BidHistory.objects.filter(lot=lot)
+            bids = BidHistory.objects.filter(lot=lot).order_by('-unixtime')
         except Exception as e:
             logger.error("Bid history fail! [%s]",e)
 

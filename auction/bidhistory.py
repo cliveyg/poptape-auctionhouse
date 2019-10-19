@@ -100,7 +100,6 @@ class LotQueueConsumer():
             bid_history.lot = lot
             try:
                 bid_history.save()
-                #logger.info(bid_history)
             except Exception as err:
                 # i'm expecting a few errors for example when trying to save
                 # a bid that has already been saved for some reason
@@ -108,6 +107,8 @@ class LotQueueConsumer():
                 errors = errors + 1
             else:
                 saved = saved + 1
-       
-        return (saved,errors)
+
+        logger.info("Bid history records saved: [%d], errored: [%d]",saved, errors)
+            
+        return
         

@@ -5,6 +5,7 @@ from rest_framework import serializers
 from auction.models import Auction, AuctionLot, BidHistory
 from auction.models import EnglishAuctionLot, BuyNowAuctionLot
 from auction.models import DutchAuctionLot
+from auction.models import DeliveryOptions, PaymentOptions
 
 #TODO: write serializer for bid history
 
@@ -43,8 +44,9 @@ class BidHistorySerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = BidHistory
-        fields = ('bid_id', 'username', 'bid_amount', 'bid_status', 'lot_status',
-                  'message', 'reserve_message', 'unixtime', 'created')
+        fields = ('bid_id', 'username', 'public_id', 'bid_amount', 'bid_status',
+                  'lot_status', 'message', 'reserve_message', 'unixtime',
+                  'created')
         read_only_fields = ('created',)
 
 # -----------------------------------------------------------------------------
@@ -69,7 +71,7 @@ class BuyNowAuctionLotSerializer(serializers.ModelSerializer):
         # meta class to map serializer's fields with the model fields.
         model = BuyNowAuctionLot
         fields = ('item_id', 'start_time', 'end_time', 'status', 'active',
-                  'quantity', 'start_price', 'reserve_price',
+                  'quantity', 'start_price', 'reserve_price', 'make_an_offer',
                   'min_increment', 'buy_now_price', 'created', 'modified')
         read_only_fields = ('created', 'modified')
 
@@ -85,3 +87,25 @@ class DutchAuctionLotSerializer(serializers.ModelSerializer):
                   'quantity', 'start_price', 'reserve_price',
                   'min_decrement', 'created', 'modified', 'lot_id')
         read_only_fields = ('created', 'modified')
+
+# -----------------------------------------------------------------------------
+
+class PaymentOptionsSerializer(serializers.ModelSerializer):
+    # serializer to map the model instance into JSON format
+
+    class Meta:
+        # meta class to map serializer's fields with the model fields.
+        model = PaymentOptions
+        fields = ('bank_transfer', 'mastercard', 'visa', 'amex', 'bitcoin',
+                  'paypal', 'venmo', 'cash', 'cheque' )
+
+# -----------------------------------------------------------------------------
+
+class DeliveryOptionsSerializer(serializers.ModelSerializer):
+    # serializer to map the model instance into JSON format
+
+    class Meta:
+        # meta class to map serializer's fields with the model fields.
+        model = DeliveryOptions
+        fields = ('postage', 'postage_cost', 'delivery', 'delivery_cost',
+                  'collection', 'collection_cost')

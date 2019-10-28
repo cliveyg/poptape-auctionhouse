@@ -76,6 +76,7 @@ class LotQueueConsumer():
 
         bid_history = BidHistory(bid_id = bid_body.get('bid_id'),
                                  username = bid_body.get('username'),
+                                 public_id = bid_body.get('public_id'),
                                  bid_amount = bid_body.get('bid_amount'),
                                  bid_status = bid_body.get('bid_status'),
                                  lot_status = bid_body.get('lot_status'),

@@ -7,9 +7,12 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from auction.models import Auction, EnglishAuctionLot, BuyNowAuctionLot
 from auction.models import AuctionLot, DutchAuctionLot, BidHistory
+from auction.models import DeliveryOptions, PaymentOptions
 from auction.serializers import AuctionSerializer, EnglishAuctionLotSerializer
 from auction.serializers import DutchAuctionLotSerializer, BuyNowAuctionLotSerializer
 from auction.serializers import BidHistorySerializer
+from auction.serializers import PaymentOptionsSerializer, DeliveryOptionsSerializer
+
 from rest_framework.exceptions import NotFound
 from django.db.models import Q
 
@@ -141,6 +144,18 @@ class AuctionByItem(APIView):
         except Auction.DoesNotExist:
             raise NotFound(detail="Nowt 'ere, auction lot not in auction", code=404)
 
+    def get_payments(self, auction_id):
+        try:
+            return PaymentOptions.objects.get(auction_id=auction_id)
+        except PaymentOptions.DoesNotExist:
+            raise NotFound(detail="Nowt 'ere, missing payment options for auction", code=404)        
+
+    def get_delivery_options(self, auction_id):
+        try:
+            return DeliveryOptions.objects.get(auction_id=auction_id)
+        except Auction.DoesNotExist:
+            raise NotFound(detail="Nowt 'ere, delivery options are missing", code=404)
+
     def get_data_objects(self, auctype):
         return model.get(auctype), serializer.get(auctype)
 
@@ -165,9 +180,17 @@ class AuctionByItem(APIView):
         auction = self.get_auction(auction_lot.lot_id)
         auction_serializer = AuctionSerializer(auction)
         auction_lot_serializer = self.get_lots(auction.type, auction.lots)
+
+        payment_options = self.get_payments(auction.auction_id)
+        pay_options_serializer = PaymentOptionsSerializer(payment_options)
+
+        delivery_options = self.get_delivery_options(auction.auction_id)
+        deliv_opts_serializer = DeliveryOptionsSerializer(delivery_options)
         
         auc_stuff = auction_serializer.data
         auc_stuff['lots'] = auction_lot_serializer.data
+        auc_stuff['payment_options'] = pay_options_serializer.data
+        auc_stuff['delivery_options'] = deliv_opts_serializer.data
 
         return Response({ 'auction': auc_stuff }, status=status.HTTP_200_OK)
 
@@ -355,35 +378,37 @@ class ComboAuctionCreate(APIView):
         if auction_type != 'multi' and auction_type != 'solo':
             return Response({ 'error': "Invalid auction type" }, status=status.HTTP_400_BAD_REQUEST)
 
+
+        if auction_type == 'multi':
+            return self.process_multi(request)
+        else:
+            return self.process_single(request) 
+
+
+    def process_multi(self, request):
+
+        return Response({ 'message': 'multi-lot auctions not available yet' }, 
+                        status=status.HTTP_100_CONTINUE)
+
         # we need to do additional checks on some fields that we require when 
         # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 
         # are required when creating an auction using this class
-        required_fields = ['type', 'start_time', 'end_time', 'currency', 'quantity']
-
-        # for multi auctions we need to add a required field
-        if auction_type == 'multi':
-            required_fields.extend(['name'])
+        required_fields = ['name', 'type', 'start_time', 'end_time', 'currency', 'quantity']
 
         missing = set(required_fields) - request.data.keys()
         if missing:
             return Response({ 'missing_fields': missing }, status=status.HTTP_400_BAD_REQUEST)
 
         # for multi auctions we need to remove the start and end times for auction lots
-        start_time = end_time = name = None
-        if auction_type == 'multi':        
-            start_time = request.data['start_time']
-            end_time = request.data['end_time']
-            del request.data['start_time']
-            del request.data['end_time']
-
-        if 'name' in request.data.keys():
-            name = request.data['name']
-            del request.data['name']
+        start_time = end_time = None
+        start_time = request.data['start_time']
+        end_time = request.data['end_time']
+        del request.data['start_time']
+        del request.data['end_time']
 
         # add uuids to create request here 
         request.data['auction_id'] = str(uuid.uuid4())
-        request.data['lot_id'] = str(uuid.uuid4())
         # public_id is stored in django User.username
         request.data['public_id'] = request.user.get_username()
 
@@ -393,24 +418,22 @@ class ComboAuctionCreate(APIView):
             _, serializer_obj = self.get_data_objects(auctype)
         else:
             return Response({ 'error': 'Unrecognized auction type' }, status=status.HTTP_400_BAD_REQUEST)
-    
-        lot_serializer = serializer_obj(data=request.data) 
-       
+
+        # need to deal with multiple lots here
+        lot_serializer = serializer_obj(data=request.data)
+
         #TODO: multi lots 
         if not lot_serializer.is_valid():
             return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        #request.data['lots'] = [request.data['lot_id']]
+        # add back in data for auction
+        request.data['start_time'] = start_time
+        request.data['end_time'] = end_time
+        request.data['multiple'] = True
+        request.data['name'] = name
 
-        if auction_type == 'multi': 
-            request.data['start_time'] = start_time
-            request.data['end_time'] = end_time
-            request.data['multiple'] = True
-            request.data['name'] = name
-            
-        else: 
-            # just add a single id to lots array
-            request.data['lots'] = [request.data['lot_id']]
+        # TODO: multi lots
+        request.data['lots'] = [request.data['lot_id']]
 
         #TODO : set active flag to true if start time is now or in past
 
@@ -424,6 +447,105 @@ class ComboAuctionCreate(APIView):
             except Exception as err:
                 logger.error(err)
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # we know we have successfully saved both lots and auction at this 
+            # point so we can create the delivery and payment records
+
+            return Response({ 'auction_id': request.data['auction_id'],
+                              'lot_id': request.data['lot_id'] },
+                            status=status.HTTP_201_CREATED)
+
+        return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def process_single(self, request):
+        
+        # we need to do additional checks on some fields that we require when 
+        # creating an auction. these are allowed to be null in our data models
+        # (and errors won't be captured by the serializer) but these fields 
+        # are required when creating an auction using this class
+
+        required_fields = ['type', 'start_time', 'end_time', 'currency', 'quantity']
+
+        missing = set(required_fields) - request.data.keys()
+        if missing:
+            return Response({ 'missing_fields': missing }, status=status.HTTP_400_BAD_REQUEST)
+
+        # check if at least one payment type is included
+        # TODO: put this list in either .env or a table
+        payment_methods = { 'pay_visa', 'pay_mastercard', 'pay_amex', 'pay_bank_transfer', 
+                            'pay_venmo', 'pay_paypal', 'pay_cash', 'pay_cheque', 'pay_bitcoin' }
+
+        input_set = set(request.data.keys()) 
+        chosen_payment_options = payment_methods.intersection(input_set)
+
+        if len(chosen_payment_options) == 0: 
+            return Response({ 'message': 'missing payment types' }, status=status.HTTP_400_BAD_REQUEST)
+
+        delivery_methods = {'postage', 'delivery', 'collection'}
+        chosen_delivery_options = delivery_methods.intersection(input_set)
+
+        if len(chosen_delivery_options) == 0:
+            return Response({ 'message': 'missing delivery options' }, status=status.HTTP_400_BAD_REQUEST)
+
+        if 'name' in request.data.keys():
+            del request.data['name']
+
+        # add uuids to create request here 
+        request.data['auction_id'] = str(uuid.uuid4())
+        request.data['lot_id'] = str(uuid.uuid4())
+        # public_id is stored in django User.username
+        request.data['public_id'] = request.user.get_username()
+        request.data['multiple'] = False
+
+        auctype = request.data['type'].upper()
+        serializer_obj = None
+        if auctype in serializer:
+            _, serializer_obj = self.get_data_objects(auctype)
+        else:
+            return Response({ 'error': 'Unrecognized auction type' }, status=status.HTTP_400_BAD_REQUEST)
+    
+        lot_serializer = serializer_obj(data=request.data) 
+
+        if not lot_serializer.is_valid():
+            return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # just add a single id to lots array
+        request.data['lots'] = [request.data['lot_id']]
+
+        #TODO : set active flag to true if start time is now or in past
+          
+        delivery_options = DeliveryOptions(auction_id = request.data['auction_id'],
+                                           collection = 'collection' in request.data,
+                                           delivery = 'delivery' in request.data,
+                                           postage = 'postage' in request.data)
+
+        payment_options = PaymentOptions(auction_id = request.data['auction_id'],
+                                         visa = 'pay_visa' in request.data,
+                                         mastercard = 'pay_mastercard' in request.data,
+                                         bank_transfer = 'pay_bank_transfer' in request.data,
+                                         bitcoin = 'pay_bitcoin' in request.data,
+                                         amex = 'pay_amex' in request.data,
+                                         cash = 'pay_cash' in request.data,
+                                         cheque = 'pay_cheque' in request.data,
+                                         venmo = 'pay_venmo' in request.data,
+                                         paypal = 'pay_paypal' in request.data)
+
+        # we now need to create an auction and add our auction lot to it
+        auction_serializer = AuctionSerializer(data=request.data)
+
+        if auction_serializer.is_valid():
+
+            # only save everything together
+            try:
+                auction_serializer.save()
+                lot_serializer.save()
+                delivery_options.save()
+                payment_options.save()
+            except Exception as err:
+                logger.error(err)
+                return Response({ 'message': 'ooh err, it didn\'t like that, check ya logs'}, 
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             return Response({ 'auction_id': request.data['auction_id'],
                               'lot_id': request.data['lot_id'] }, 

@@ -26,7 +26,7 @@ from auctionhouse.validators import validate_decimals
 # [5] reverse
 # [6] bidding fee
 # [7] buy it now
-# [8] make me an offer
+# [8] make me an offer - i'm treating this as 'buy it now' with a flag
 #
 # see https://en.wikipedia.org/wiki/Online_auction for more auction types
 #
@@ -98,16 +98,6 @@ class AuctionLot(models.Model):
     # start times (and end times) set to teh same value
     start_time = UnixDateTimeField(blank=True, null=True)
     end_time = UnixDateTimeField(blank=True, null=True)
-#    starting_bid = models.DecimalField(null=True, blank=True, default=None,
-#                                       validators=[validate_decimals],
-#                                       max_digits=10, decimal_places=2)
-#    current_bid = models.DecimalField(null=True, blank=True, default=None,
-#                                      validators=[validate_decimals],
-#                                      max_digits=10, decimal_places=2)
-#    winning_bid = models.DecimalField(null=True, blank=True, default=None,
-#                                      validators=[validate_decimals],
-#                                      max_digits=10, decimal_places=2)
-#    no_of_bids = models.IntegerField(null=False, default=0)
     quantity = models.IntegerField(null=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -119,25 +109,22 @@ class BidHistory(models.Model):
                               validators=[validate_uuid_from_model]) 
     lot = models.ForeignKey(AuctionLot, on_delete=models.CASCADE, related_name='lot')
     username = models.CharField(max_length=36, blank=False, null=False)
+    public_id = models.CharField(max_length=36, blank=False,
+                              validators=[validate_uuid_from_model])    
     bid_amount = models.DecimalField(null=True, blank=True, default=None,
                                    validators=[validate_decimals],
                                    max_digits=10, decimal_places=2)
-    #current_winning_bid = models.DecimalField(null=True, blank=True, default=None,
-    #                                          validators=[validate_decimals],
-    #                                          max_digits=10, decimal_places=2)
-    #current_winning_bid_id = models.CharField(max_length=36, blank=False, null=False,
-    #                                          validators=[validate_uuid_from_model])
     bid_status = models.CharField(max_length=10, blank=False, null=False)
     lot_status = models.CharField(max_length=10, blank=False, null=False)
     message = models.CharField(max_length=50, blank=False, null=False)
     reserve_message = models.CharField(max_length=20, blank=False, null=False)
-    #unixtime = UnixDateTimeField(blank=False)
     unixtime = models.BigIntegerField(blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return (self.bid_id, 
                 self.username,
+                self.public_id,
                 self.bid_amount,
                 self.bid_status,
                 self.lot_status,
@@ -167,6 +154,7 @@ class BuyNowAuctionLot(EnglishAuctionLot):
     buy_now_price = models.DecimalField(null=False, blank=False, default=None,
                                         validators=[validate_decimals],
                                         max_digits=10, decimal_places=2)
+    make_an_offer = models.BooleanField(null=False, default=False)
 
 # -----------------------------------------------------------------------------
 
@@ -182,3 +170,32 @@ class DutchAuctionLot(AuctionLot):
                                         max_digits=10, decimal_places=2)
 
 # -----------------------------------------------------------------------------
+
+class PaymentOptions(models.Model):
+    auction_id = models.CharField(max_length=36, blank=False, null=False)
+    bank_transfer = models.BooleanField(null=False, default=False)
+    mastercard = models.BooleanField(null=False, default=False)
+    visa = models.BooleanField(null=False, default=False)
+    amex = models.BooleanField(null=False, default=False)
+    bitcoin = models.BooleanField(null=False, default=False)
+    paypal = models.BooleanField(null=False, default=False)
+    venmo = models.BooleanField(null=False, default=False)
+    cash = models.BooleanField(null=False, default=False)
+    cheque = models.BooleanField(null=False, default=False)
+
+# -----------------------------------------------------------------------------
+
+class DeliveryOptions(models.Model):
+    auction_id = models.CharField(max_length=36, blank=False, null=False)
+    postage = models.BooleanField(null=False, default=False)
+    postage_cost = models.DecimalField(null=True, blank=True,
+                                       validators=[validate_decimals],
+                                       max_digits=10, decimal_places=2)
+    collection = models.BooleanField(null=False, default=False)
+    collection_cost= models.DecimalField(null=True, blank=True,
+                                         validators=[validate_decimals],
+                                         max_digits=10, decimal_places=2)
+    delivery = models.BooleanField(null=False, default=False)
+    delivery_cost= models.DecimalField(null=True, blank=True,
+                                       validators=[validate_decimals],
+                                       max_digits=10, decimal_places=2)

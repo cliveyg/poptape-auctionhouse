@@ -2,6 +2,7 @@
 /*
 /auction/*
 /auctionhouse/*
+/log/*
 /auctionhouse/.env
 /auction/tests/__pycache__
 /auctionhouse/tests/__pycache__

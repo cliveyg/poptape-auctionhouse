@@ -242,17 +242,25 @@ class AuctionLotDetail(APIView):
         json_lot_data['auction_id'] = auction.auction_id
         json_lot_data['public_id'] = auction.public_id
         json_lot_data['auction_type'] = auction.type
-        json_lot_data['start_time'] = lot.start_time
-        json_lot_data['end_time'] = lot.end_time
         json_lot_data['status'] = lot.status
+
+        start_time = end_time = None
+        if lot.start_time:
+            start_time = lot.start_time.timestamp() * 1000
+        if lot.end_time:
+            end_time = lot.end_time.timestamp() * 1000
+        json_lot_data['start_time'] = start_time
+        json_lot_data['end_time'] = end_time
 
         if auction.type == 'EN' or auction.type == 'BN' :
             json_lot_data['min_change'] = lot.min_increment
-            json_lot_data['start_price'] = lot.start_price
+            json_lot_data['start_price'] = lot.start_price or 0
+            json_lot_data['reserve_price'] = lot.reserve_price or 0
         elif auction.type == 'DU':
             json_lot_data['min_change'] = lot.min_decrement
-            json_lot_data['start_price'] = lot.start_price
-        
+            json_lot_data['start_price'] = lot.start_price or 0
+            json_lot_data['reserve_price'] = lot.reserve_price or 0
+
         json_lot_data['bids'] = json_bid_data
 
         return Response(json_lot_data, status=status.HTTP_200_OK)
@@ -338,34 +346,46 @@ class AuctionValid(RetrieveAPIView):
         #TODO: need to change as it's possible that bids may exist
         # and auction still be active but auctioneer service went
         # down.
-        try:
-            BidHistory.objects.filter(lot=lot)[:1].get()
-        except BidHistory.DoesNotExist:
-            start_time = end_time = None
-            if lot.start_time:
-                start_time = lot.start_time.timestamp() * 1000
-            if lot.end_time:
-                end_time = lot.end_time.timestamp() * 1000
+        # NOTE: Changed this but still not 100% sure if this is right way to go
+        start_time = end_time = None
+        if lot.start_time:
+            start_time = lot.start_time.timestamp() * 1000
+        if lot.end_time:
+            end_time = lot.end_time.timestamp() * 1000
 
-            auction_data = { 'auction_id': auction.auction_id,
-                             'auction_type': auction.type,
-                             'lot_id': lot.lot_id,
-                             'start_price': lot.start_price or 0,
-                             'reserve_price': lot.reserve_price or 0,
-                             'end_time': end_time,
-                             'start_time': start_time or 0,
-                             'username': request.user.get_short_name(),
-                             'public_id' : auction.public_id }
-            # need to add minimum increase or decrease (change)
-            if auction.type == 'EN' or auction.type == 'BN':
-                auction_data['min_change'] = lot.min_increment
-            elif auction.type == 'DU':
-                auction_data['min_change'] = lot.min_decrement
+        auction_data = { 'auction_id': auction.auction_id,
+                         'auction_type': auction.type,
+                         'lot_id': lot.lot_id,
+                         'reserve_price': lot.reserve_price or 0,
+                         'end_time': end_time,
+                         'start_time': start_time or 0,
+                         'public_id' : auction.public_id}
+
+        # need to add minimum increase or decrease (change)
+        if auction.type == 'EN' or auction.type == 'BN':
+            auction_data['min_change'] = lot.min_increment
+        elif auction.type == 'DU':
+            auction_data['min_change'] = lot.min_decrement
+
+        try:
+            bid_history = BidHistory.objects.filter(lot=lot).latest('created')
+        except BidHistory.DoesNotExist:
+
+            auction_data['start_price'] = lot.start_price or 0
+            auction_data['username'] = request.user.get_short_name()
+            auction_data['bid_history_exists'] = False
 
             # successfully passed all tests
             return Response(auction_data, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        # if we reach here we have bids and a history and bid_history var
+        # should contain latest bid data
+        auction_data['start_price'] = bid_history.bid_amount
+        auction_data['username'] = bid_history.username
+        auction_data['bid_history_exists'] = True
+
+        return Response(auction_data, status=status.HTTP_200_OK)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 # -----------------------------------------------------------------------------
 

@@ -43,7 +43,7 @@ class LotQueueConsumer():
                                      durable = False, 
                                      type = 'fanout')
             self.queue = Queue(name = self.queue_name, 
-                               durable = False,
+                               durable = True,
                                exchange = self.exchange)
             self.consumer = Consumer(self.connection, 
                                      queues = self.queue, 

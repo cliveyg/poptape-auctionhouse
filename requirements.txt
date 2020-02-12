@@ -8,7 +8,7 @@ cffi==1.12.3
 chardet==3.0.4
 coverage==4.5.3
 cryptography==2.7
-Django==2.2.4
+Django==2.2.10
 django-extensions==2.1.9
 django-filter==2.1.0
 django-money==0.15

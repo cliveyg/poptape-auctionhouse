@@ -46,8 +46,13 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 # print statements in docker logs
 ENV PYTHONUNBUFFERED=0
 
-# Run start script
+# run gunicorn
+#CMD ["gunicorn", "-b", "0.0.0.0:9100", "auctionhouse.wsgi:application"]
+#CMD ["python", "manage.py", "process_tasks"]
+
+# Run start script for background tasks
 CMD ["./run_app.sh"]
+#RUN ["python", "manage.py", "process_tasks"]
 
 # Make port 9100 available to the world outside this container
 EXPOSE 9100

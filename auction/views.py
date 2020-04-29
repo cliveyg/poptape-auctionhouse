@@ -1,5 +1,7 @@
 # auctionhouse/auction/views.py
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import AllowAny
+from auctionhouse.authentication import AdminOnlyAuthentication
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
@@ -17,6 +19,7 @@ from rest_framework.exceptions import NotFound
 from django.db.models import Q
 
 from auction.bidhistory import LotQueueConsumer
+from auction.janitor import process_finished_single_auctions
 
 import uuid
 import requests
@@ -40,6 +43,19 @@ model = {
 
 # -----------------------------------------------------------------------------
 # views
+# -----------------------------------------------------------------------------
+
+class AuctionJanitor(APIView):
+    authentication_classes = (AdminOnlyAuthentication,)
+
+    def get(self, request):
+
+        logger.info("before process_finished_auctions")
+        process_finished_single_auctions()
+        logger.info("after process_finished_auctions")
+
+        return Response({ 'woopy': 'fucking doo' }, status=status.HTTP_202_ACCEPTED)
+
 # -----------------------------------------------------------------------------
 
 class AuctionDetail(APIView):

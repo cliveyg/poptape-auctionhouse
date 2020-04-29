@@ -29,8 +29,10 @@ SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
 DEBUG = True
 #DEBUG = False
 
-
-ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
+allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
+allowed_hosts_array = allowed_hosts_string.split(",")
+ALLOWED_HOSTS = ["poptape.club"]
+#ALLOWED_HOSTS = allowed_hosts_array
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
 
@@ -46,8 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_extensions',
+    'background_task',
     'djmoney',
-    'auction'
+    'auction',
 ]
 
 MIDDLEWARE = [
@@ -68,10 +71,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         #'rest_framework.authentication.SessionAuthentication',
+        #'auctionhouse.authentication.AdminOnlyAuthentication',
         'auctionhouse.authentication.TokenAuth',
         'auctionhouse.authentication.CsrfExemptSessionAuthentication',
+        'auctionhouse.authentication.AdminOnlyAuthentication',
         #'rest_framework.authentication.TokenAuthentication',
-        #'rest_framework.authentication.BasicAuthentication',
         #'rest_framework.authentication.BasicAuthentication',
         #'rest_framework.authentication.SessionAuthentication',
     ],
@@ -98,8 +102,8 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            #'filename': '/var/log/poptape_auctionhouse.log',
-			'filename': 'log/poptape_auctionhouse.log',
+            'filename': '/var/log/poptape_auctionhouse.log',
+			#'filename': 'log/poptape_auctionhouse.log',
             'formatter': 'verbose',
         },
         'console': {
@@ -142,6 +146,7 @@ ADDRESS_URL = 'address/'
 # to avoide trips out to the internet when calling the microservice
 APISERVER_SERVER = os.getenv('APISERVER_URL')
 AUTH_SERVER_URL = os.getenv('AUTH_SERVER_URL')
+AUTH_SERVER_ADMIN_URL = os.getenv('AUTH_SERVER_ADMIN_URL')
 FOTOS_SERVER_URL = os.getenv('FOTOS_SERVER_URL')
 ADDRESS_SERVER_URL = os.getenv('ADDRESS_SERVER_URL')
 

@@ -6,6 +6,7 @@ from auction.views import AuctionDetail, AuctionListCreate
 from auction.views import AuctionLotListCreate, AuctionTypes
 from auction.views import ComboAuctionCreate, AuctionByItem
 from auction.views import AuctionValid, AuctionLotDetail
+from auction.views import AuctionJanitor
 
 urlpatterns = [
     #path('auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),
@@ -15,6 +16,9 @@ urlpatterns = [
 
     # create auction - probably superceded by ComboAuctionCreate
     path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
+
+    # create auction - probably superceded by ComboAuctionCreate
+    path('auctionhouse/janitor/', AuctionJanitor.as_view(), name='janitor'),
 
     # returns auction and lot data on a key of item_id
     path('auctionhouse/auction/item/<uuid:item_id>/', AuctionByItem.as_view(), name='auctionbyitem'),

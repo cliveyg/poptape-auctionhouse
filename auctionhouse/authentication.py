@@ -17,7 +17,44 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 
     def enforce_csrf(self, request):
         return True
-    
+
+# -----------------------------------------------------------------------------
+
+class AdminOnlyAuthentication(BaseAuthentication):
+
+    def authenticate(self, request, token=None):
+
+        #logger.info("Why you here Willis?")
+
+        if not request.META.get('HTTP_X_ACCESS_TOKEN'):
+            return None
+
+        # call authy with admin url
+        authy_url = settings.AUTH_SERVER_ADMIN_URL
+
+        headers = { 'Content-type': 'application/json',
+                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN') }
+
+        resp = requests.get(authy_url, headers=headers)
+
+        if resp.status_code == 200:
+
+            token_parts = request.META.get('HTTP_X_ACCESS_TOKEN').split(".")
+            #decoded_second_part = base64.b64decode(token_parts[1]+"===").decode("utf-8")  
+            try:
+                decoded_second_part = base64.urlsafe_b64decode(token_parts[1]+"===").decode("UTF-8")
+                py_dic = ast.literal_eval(decoded_second_part)
+            except Exception as err:
+                logger.error(err)
+                raise AuthenticationFailed
+
+            user = User(username = py_dic.get('public_id'), first_name=py_dic.get('username'))
+            return user, None
+
+        else:
+            raise AuthenticationFailed
+
+# -----------------------------------------------------------------------------    
 
 class TokenAuth(BaseAuthentication):
 
@@ -27,7 +64,6 @@ class TokenAuth(BaseAuthentication):
 
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
             return None
-            #raise AuthenticationFailed
 
         # call authy
         authy_url = settings.AUTH_SERVER_URL

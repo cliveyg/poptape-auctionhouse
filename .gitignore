@@ -13,6 +13,7 @@
 !auction/__init__.py
 !auction/admin.py
 !auction/apps.py
+!auction/janitor.py
 !auction/models.py
 !auction/serializers.py
 !auction/tests/tests_models.py

@@ -8,7 +8,7 @@ cffi==1.12.3
 chardet==3.0.4
 coverage==4.5.3
 cryptography==3.2
-Django==2.2.13
+Django==2.2.21
 django-background-tasks==1.2.0
 django-compat==1.0.15
 django-extensions==2.1.9

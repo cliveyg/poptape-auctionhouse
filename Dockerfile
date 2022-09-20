@@ -23,10 +23,10 @@ RUN apk --no-cache add libpq
 COPY . /auctionhouse
 WORKDIR /auctionhouse
 
-RUN rm .coverage
-RUN rm -r .git/
-RUN rm -r auction/tests
-RUN rm -r auctionhouse/tests
+RUN rm -f .coverage
+RUN rm -rf .git/
+RUN rm -rf auction/tests
+RUN rm -rf auctionhouse/tests
 RUN mkdir -p /auctionhouse/log
 
 # Install any needed packages specified in requirements.txt

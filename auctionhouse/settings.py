@@ -15,6 +15,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# fix for smart text and django v4
+import django
+from django.utils.encoding import smart_str
+django.utils.encoding.smart_text = smart_str
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -189,6 +194,9 @@ DATABASES = {
         #'ATOMIC_REQUESTS': True,
     }
 }
+
+# get rid of DEFAULT_AUTO_FIELD vwarnings
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

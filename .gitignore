@@ -43,3 +43,5 @@
 !auctionhouse/schemas/*
 !docker-compose.yml
 !Dockerfile
+!run_app.sh
+!manage.py

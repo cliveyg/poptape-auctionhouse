@@ -58,11 +58,11 @@ class AuctionType(models.Model):
         (BN, 'Buy Now'),
         (MO, 'Make Me An Offer'),
     )
-
+#models.AutoField(primary_key=True)
 # -----------------------------------------------------------------------------
 
 class Auction(models.Model):
-    auction_id = models.CharField(max_length=36, blank=False, unique=True, 
+    auction_id = models.CharField(max_length=36, blank=False, primary_key=True,
                                   validators=[validate_uuid_from_model])
     public_id = models.CharField(max_length=36, blank=False,
                                  validators=[validate_uuid_from_model])
@@ -85,7 +85,7 @@ class Auction(models.Model):
 # -----------------------------------------------------------------------------
 
 class AuctionLot(models.Model):
-    lot_id = models.CharField(max_length=36, blank=False, unique=True,
+    lot_id = models.CharField(max_length=36, blank=False, primary_key=True,
                                validators=[validate_uuid_from_model])
     item_id = models.CharField(max_length=36, blank=False, unique=True, 
                                validators=[validate_uuid_from_model])
@@ -105,7 +105,7 @@ class AuctionLot(models.Model):
 # -----------------------------------------------------------------------------
 
 class BidHistory(models.Model):
-    bid_id = models.CharField(max_length=36, blank=False, unique=True,
+    bid_id = models.CharField(max_length=36, blank=False, primary_key=True,
                               validators=[validate_uuid_from_model]) 
     lot = models.ForeignKey(AuctionLot, on_delete=models.CASCADE, related_name='lot')
     username = models.CharField(max_length=36, blank=False, null=False)

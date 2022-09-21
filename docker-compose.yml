@@ -12,7 +12,7 @@ services:
       - "1250:9100"
     restart: always
     volumes:
-      - /var/log:/auctionhouse/log
+      - /var/log:${LOGFILE}
     logging:
       driver: "json-file"
       options:
@@ -24,12 +24,12 @@ services:
     #image: poptape/auctionhouse/db:v0.1
     image: postgres:alpine
     restart: always
-    env_file:
-      - "auctionhouse/.env"
-#    environment:
-#      POSTGRES_PASSWORD: ${AUCTIONHOUSE_DB_PASS}
-#      POSTGRES_USER: ${AUCTIONHOUSE_DB_USER}
-#      POSTGRES_DB: ${AUCTIONHOUSE_DB_NAME}
+#    env_file:
+#      - "auctionhouse/.env"
+    environment:
+      POSTGRES_PASSWORD: ${AUCTIONHOUSE_DB_PASS}
+      POSTGRES_USER: ${AUCTIONHOUSE_DB_USER}
+      POSTGRES_DB: ${AUCTIONHOUSE_DB_NAME}
     ports:
       - "1251:5432"
     expose:

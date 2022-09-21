@@ -58,7 +58,7 @@ class AuctionType(models.Model):
         (BN, 'Buy Now'),
         (MO, 'Make Me An Offer'),
     )
-#models.AutoField(primary_key=True)
+
 # -----------------------------------------------------------------------------
 
 class Auction(models.Model):

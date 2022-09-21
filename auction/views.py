@@ -583,7 +583,9 @@ class ComboAuctionCreate(APIView):
                 return Response({ 'message': 'ooh err, it didn\'t like that, check ya logs'}, 
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            return Response({ 'auction_id': request.data['auction_id'],
+            aid = auction_serializer.Meta.model.auction_id
+
+            return Response({ 'auction_id': aid,
                               'lot_id': request.data['lot_id'] }, 
                             status=status.HTTP_201_CREATED)
 

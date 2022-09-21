@@ -12,7 +12,7 @@ Django==4.1.1
 django4-background-tasks==1.2.7
 django-compat==1.0.15
 django-extensions==3.2.1
-django-filter==2.1.0
+django-filter==2.4.0
 django-money==0.15
 django-unixdatetimefield==1.0.3
 djangorestframework==3.13.1

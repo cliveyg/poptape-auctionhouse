@@ -1,4 +1,9 @@
-version: '3'
+version: '3.4'
+
+volumes:
+  poptape_auctionhousedata:
+    name: poptape_auctionhousedata
+
 services:
   api:
     env_file:
@@ -21,11 +26,8 @@ services:
     networks:
       - net_poptape
   db:
-    #image: poptape/auctionhouse/db:v0.1
     image: postgres:alpine
     restart: always
-#    env_file:
-#      - "auctionhouse/.env"
     environment:
       POSTGRES_PASSWORD: ${AUCTIONHOUSE_DB_PASS}
       POSTGRES_USER: ${AUCTIONHOUSE_DB_USER}
@@ -41,6 +43,5 @@ services:
 networks:
   net_poptape:
     external: true
-volumes:
-  poptape_auctionhousedata:
+
   

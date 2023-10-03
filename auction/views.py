@@ -585,6 +585,10 @@ class ComboAuctionCreate(APIView):
 
             aid = auction_serializer.Meta.model.auction_id
 
+            if is_valid_uuid(request.data['lot_id']) is False:
+                return Response({ 'message': 'bad input data'},
+                                status=status.HTTP_400_BAD_REQUEST)
+
             return Response({ 'auction_id': aid,
                               'lot_id': request.data['lot_id'] }, 
                             status=status.HTTP_201_CREATED)
@@ -603,3 +607,12 @@ class ComboAuctionCreate(APIView):
     def create_message_queues(input_data):
 
         return True
+
+
+    def is_valid_uuid(value):
+        try:
+            uuid.UUID(str(value))
+
+            return True
+        except ValueError:
+            return False

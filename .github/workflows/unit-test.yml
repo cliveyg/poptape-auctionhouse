@@ -22,9 +22,9 @@ jobs:
         image: postgres
         # provide the login and db deets for postgres
         env:
-          POSTGRES_DB: poptape_address_test
-          POSTGRES_PASSWORD: ${{ secrets.TESTDB_PASSWORD }}
-          POSTGRES_USER: poptape_address_test
+          POSTGRES_DB: poptape_auctionhouse_test
+          POSTGRES_PASSWORD: poptape_auctionhouse_test
+          POSTGRES_USER: poptape_auctionhouse_test
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432

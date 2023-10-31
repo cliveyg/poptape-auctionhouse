@@ -23,7 +23,7 @@ jobs:
         # provide the login and db deets for postgres
         env:
           POSTGRES_DB: poptape_auctionhouse_test
-          POSTGRES_PASSWORD: poptape_auctionhouse_test
+          POSTGRES_PASSWORD: ${{ secrets.TESTDB_PASSWORD }}
           POSTGRES_USER: poptape_auctionhouse_test
         ports:
           # maps tcp port 5432 on service container to the host
@@ -50,3 +50,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+        # have to create an .env file to be able to run unit tests
+      - name: Create .env file from github secrets
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          mv .env auctionhouse/.

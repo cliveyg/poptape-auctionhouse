@@ -32,7 +32,7 @@ kombu
 MarkupSafe
 more-itertools
 prompt-toolkit
-psycopg2
+psycopg2-binary
 py-moneyed
 pycparser
 pyOpenSSL

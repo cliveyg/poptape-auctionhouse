@@ -2,6 +2,7 @@
 /*
 /auction/*
 /auctionhouse/*
+/auctionhouse.log
 /log/*
 /auctionhouse/.env
 /auction/tests/__pycache__
@@ -23,11 +24,9 @@
 !auction/views.py
 !auction/bidhistory.py
 !auction/migrations/
-!auction/migrations/__init__.py
+!auction/migrations/__init__.py\
 !auction/tests/
-!auction/tests/__init__.py
-!auction/tests/test_models.py
-!auction/tests/test_views.py
+!auction/tests/*
 !.gitignore
 !github/
 !auctionhouse/
@@ -46,6 +45,8 @@
 !requirements.txt
 !auctionhouse/schemas/
 !auctionhouse/schemas/*
+!auctionhouse/tests/
+!auctionhouse/tests/*
 !docker-compose.yml
 !Dockerfile
 !run_app.sh

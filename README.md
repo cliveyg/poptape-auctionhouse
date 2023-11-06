@@ -36,8 +36,7 @@ I'm also planning that this application can be used in live auctions in auction
 houses.
 
 ##### Note:
-This microservice is currently not working at all. It's not even at an alpha 
-stage.
+This microservice is only partially working. Extremely early alpha version.
 
 ##### API Routes:
 

@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from dotenv import load_dotenv
+import django
+from django.utils.encoding import smart_str
 
 load_dotenv()
 
 # fix for smart text and django v4
-import django
-from django.utils.encoding import smart_str
 django.utils.encoding.smart_text = smart_str
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -32,12 +32,12 @@ SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-#DEBUG = False
+# DEBUG = False
 
 allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
 allowed_hosts_array = allowed_hosts_string.split(",")
 ALLOWED_HOSTS = ["poptape.club"]
-#ALLOWED_HOSTS = allowed_hosts_array
+# ALLOWED_HOSTS = allowed_hosts_array
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
 
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     'background_task',
+    # 'django_nose',
     'djmoney',
     'auction',
 ]
@@ -75,14 +76,14 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework.authentication.SessionAuthentication',
-        #'auctionhouse.authentication.AdminOnlyAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'auctionhouse.authentication.AdminOnlyAuthentication',
         'auctionhouse.authentication.TokenAuth',
         'auctionhouse.authentication.CsrfExemptSessionAuthentication',
         'auctionhouse.authentication.AdminOnlyAuthentication',
-        #'rest_framework.authentication.TokenAuthentication',
-        #'rest_framework.authentication.BasicAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     # we only want to accept json input so default to json only
@@ -107,9 +108,6 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            # 'filename': '/Users/cliveglew/Desktop/Work/poptape/poptape-auctionhouse/auctionhouse.log',
-            # 'filename': '/var/log/poptape_auctionhouse.log',
-            # 'filename': 'log/poptape_auctionhouse.log',
             'filename': os.getenv('LOGFILE'),
             'formatter': 'verbose',
         },
@@ -150,7 +148,7 @@ AUTH_URL = 'authy/'
 ADDRESS_URL = 'address/'
 
 # NOTE: if running in docker use set these to internal docker network names
-# to avoide trips out to the internet when calling the microservice
+# to avoid trips out to the internet when calling the microservice
 APISERVER_SERVER = os.getenv('APISERVER_URL')
 AUTH_SERVER_URL = os.getenv('AUTH_SERVER_URL')
 AUTH_SERVER_ADMIN_URL = os.getenv('AUTH_SERVER_ADMIN_URL')
@@ -193,11 +191,11 @@ DATABASES = {
         'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
         'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
         'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
-        #'ATOMIC_REQUESTS': True,
+        # 'ATOMIC_REQUESTS': True,
     }
 }
 
-# get rid of DEFAULT_AUTO_FIELD vwarnings
+# get rid of DEFAULT_AUTO_FIELD warnings
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Password validation
@@ -219,8 +217,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -233,6 +229,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Use nose to run all tests
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+# NOSE_ARGS = [
+#    '--with-coverage',
+#    '--cover-package=auctionhouse,auction',
+# ]
 
 
 # Static files (CSS, JavaScript, Images)

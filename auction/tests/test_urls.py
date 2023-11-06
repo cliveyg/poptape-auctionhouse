@@ -6,7 +6,7 @@ from auction.urls import AuctionDetail, AuctionLotListCreate, ComboAuctionCreate
 import uuid
 
 
-class TestURLS(SimpleTestCase):
+class TestURLSResolve(SimpleTestCase):
 
     def test_api_auction_types_is_resolved(self):
         url = reverse('auctiontypes')
@@ -65,8 +65,6 @@ class TestURLS(SimpleTestCase):
         self.assertEquals(resolve(url).url_name, 'createlot')
         self.assertEquals(resolve(url).func.view_class, AuctionLotListCreate)
         self.assertEquals(resolve(url).route, '^auctionhouse/auction/lot/')
-
-#     path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),
 
     def test_api_combocreate_is_resolved(self):
         url = reverse('combocreate', args=['dutch'])

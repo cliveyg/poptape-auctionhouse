@@ -117,7 +117,7 @@ class AuctionDetail(APIView):
         # add a uuid to create request here
         request.data['lot_id'] = str(uuid.uuid4())
         auction = self.get_object(auction_id)
-        _, serializer_obj = self.get_data_objects(auctype)
+        _, serializer_obj = self.get_data_objects(auction.type)
         serializer = serializer_obj(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -293,7 +293,7 @@ class AuctionLotListCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get_lot_serializer(auction_type):
-        return serializer.get(auction_lot.type)
+        return serializer.get(auction_type)
 
     def get_auction(auction_id):
         try:
@@ -595,7 +595,7 @@ class ComboAuctionCreate(APIView):
 
             aid = auction_serializer.Meta.model.auction_id
 
-            if is_valid_uuid(request.data['lot_id']) is False:
+            if self.is_valid_uuid(request.data['lot_id']) is False:
                 return Response({ 'message': 'bad input data'},
                                 status=status.HTTP_400_BAD_REQUEST)
 

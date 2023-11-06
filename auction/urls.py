@@ -27,8 +27,7 @@ urlpatterns = [
     path('auctionhouse/auction/lot/<uuid:lot_uuid>/', AuctionLotDetail.as_view(), name="auctionlotdetail"),
 
     # this url is for checking whether the auctioneer microservice has been sent the correct data
-    path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/',
-                                                            AuctionValid.as_view(), name='validauction'),
+    path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/', AuctionValid.as_view(), name='validauction'),
 
     # read, edit, delete ops on auction
     path('auctionhouse/auction/<uuid:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),

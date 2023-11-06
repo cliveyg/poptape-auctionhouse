@@ -107,9 +107,10 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/Users/cliveglew/Desktop/Work/poptape/poptape-auctionhouse/auctionhouse.log',
+            # 'filename': '/Users/cliveglew/Desktop/Work/poptape/poptape-auctionhouse/auctionhouse.log',
             # 'filename': '/var/log/poptape_auctionhouse.log',
             # 'filename': 'log/poptape_auctionhouse.log',
+            'filename': os.getenv('LOGFILE'),
             'formatter': 'verbose',
         },
         'console': {

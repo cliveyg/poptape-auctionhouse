@@ -59,4 +59,5 @@ jobs:
 
       - name: Run django unit tests
         run: |
+          touch auctionhouse.log
           python manage.py test auctionhouse

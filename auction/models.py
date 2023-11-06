@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django_unixdatetimefield import UnixDateTimeField
-#from djmoney.models.fields import MoneyField
-
-from auctionhouse.validators import validate_currency, validate_uuid_from_model
+# from djmoney.models.fields import MoneyField
+# from auctionhouse.validators import validate_currency, validate_uuid_from_model
+from auctionhouse.validators import validate_uuid_from_model
 from auctionhouse.validators import validate_decimals
 
 # -----------------------------------------------------------------------------
@@ -37,7 +37,8 @@ from auctionhouse.validators import validate_decimals
 
 # -----------------------------------------------------------------------------
 
-#TODO: all the other auction types apart from english and buy now!
+# TODO: all the other auction types apart from english and buy now!
+
 
 class AuctionType(models.Model):
     EN = 'EN'
@@ -61,6 +62,7 @@ class AuctionType(models.Model):
 
 # -----------------------------------------------------------------------------
 
+
 class Auction(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, primary_key=True,
                                   validators=[validate_uuid_from_model])
@@ -68,8 +70,7 @@ class Auction(models.Model):
                                  validators=[validate_uuid_from_model])
     lots = ArrayField(models.CharField(max_length=36, 
                                        blank=False, null=False,
-                                       validators=[validate_uuid_from_model]),
-                                       size=500)
+                                       validators=[validate_uuid_from_model]), size=500)
     type = models.CharField(max_length=15, 
                             choices=AuctionType.AUCTION_CHOICES) 
     name = models.CharField(max_length=100, blank=True)
@@ -84,9 +85,10 @@ class Auction(models.Model):
 
 # -----------------------------------------------------------------------------
 
+
 class AuctionLot(models.Model):
     lot_id = models.CharField(max_length=36, blank=False, primary_key=True,
-                               validators=[validate_uuid_from_model])
+                              validators=[validate_uuid_from_model])
     item_id = models.CharField(max_length=36, blank=False, unique=True, 
                                validators=[validate_uuid_from_model])
     status = models.CharField(max_length=20, blank=False, default="created")
@@ -104,16 +106,17 @@ class AuctionLot(models.Model):
 
 # -----------------------------------------------------------------------------
 
+
 class BidHistory(models.Model):
     bid_id = models.CharField(max_length=36, blank=False, primary_key=True,
                               validators=[validate_uuid_from_model]) 
     lot = models.ForeignKey(AuctionLot, on_delete=models.CASCADE, related_name='lot')
     username = models.CharField(max_length=36, blank=False, null=False)
     public_id = models.CharField(max_length=36, blank=False,
-                              validators=[validate_uuid_from_model])    
+                                 validators=[validate_uuid_from_model])
     bid_amount = models.DecimalField(null=True, blank=True, default=None,
-                                   validators=[validate_decimals],
-                                   max_digits=10, decimal_places=2)
+                                     validators=[validate_decimals],
+                                     max_digits=10, decimal_places=2)
     bid_status = models.CharField(max_length=10, blank=False, null=False)
     lot_status = models.CharField(max_length=10, blank=False, null=False)
     message = models.CharField(max_length=50, blank=False, null=False)
@@ -137,6 +140,7 @@ class BidHistory(models.Model):
 
 # -----------------------------------------------------------------------------
 
+
 class EnglishAuctionLot(AuctionLot): 
     start_price = models.DecimalField(null=True, blank=True, default=None, 
                                       validators=[validate_decimals],
@@ -150,6 +154,7 @@ class EnglishAuctionLot(AuctionLot):
 
 # -----------------------------------------------------------------------------
 
+
 class BuyNowAuctionLot(EnglishAuctionLot):
     buy_now_price = models.DecimalField(null=False, blank=False, default=None,
                                         validators=[validate_decimals],
@@ -157,6 +162,7 @@ class BuyNowAuctionLot(EnglishAuctionLot):
     make_an_offer = models.BooleanField(null=False, default=False)
 
 # -----------------------------------------------------------------------------
+
 
 class DutchAuctionLot(AuctionLot):
     start_price = models.DecimalField(null=False, blank=False, default=None,
@@ -170,6 +176,7 @@ class DutchAuctionLot(AuctionLot):
                                         max_digits=10, decimal_places=2)
 
 # -----------------------------------------------------------------------------
+
 
 class PaymentOptions(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, null=False)
@@ -185,6 +192,7 @@ class PaymentOptions(models.Model):
 
 # -----------------------------------------------------------------------------
 
+
 class DeliveryOptions(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, null=False)
     postage = models.BooleanField(null=False, default=False)
@@ -192,10 +200,10 @@ class DeliveryOptions(models.Model):
                                        validators=[validate_decimals],
                                        max_digits=10, decimal_places=2)
     collection = models.BooleanField(null=False, default=False)
-    collection_cost= models.DecimalField(null=True, blank=True,
-                                         validators=[validate_decimals],
-                                         max_digits=10, decimal_places=2)
+    collection_cost = models.DecimalField(null=True, blank=True,
+                                          validators=[validate_decimals],
+                                          max_digits=10, decimal_places=2)
     delivery = models.BooleanField(null=False, default=False)
-    delivery_cost= models.DecimalField(null=True, blank=True,
-                                       validators=[validate_decimals],
-                                       max_digits=10, decimal_places=2)
+    delivery_cost = models.DecimalField(null=True, blank=True,
+                                        validators=[validate_decimals],
+                                        max_digits=10, decimal_places=2)

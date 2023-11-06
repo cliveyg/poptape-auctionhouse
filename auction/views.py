@@ -45,6 +45,7 @@ model = {
 # views
 # -----------------------------------------------------------------------------
 
+
 class AuctionJanitor(APIView):
     authentication_classes = (AdminOnlyAuthentication,)
 
@@ -57,6 +58,7 @@ class AuctionJanitor(APIView):
         return Response({ 'woopy': 'fucking doo' }, status=status.HTTP_202_ACCEPTED)
 
 # -----------------------------------------------------------------------------
+
 
 class AuctionDetail(APIView):
     permission_classes = (IsAuthenticated,)
@@ -124,6 +126,7 @@ class AuctionDetail(APIView):
 
 # -----------------------------------------------------------------------------
 
+
 class AuctionListCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -143,6 +146,7 @@ class AuctionListCreate(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # -----------------------------------------------------------------------------
+
 
 class AuctionByItem(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -211,6 +215,7 @@ class AuctionByItem(APIView):
         return Response({ 'auction': auc_stuff }, status=status.HTTP_200_OK)
 
 # -----------------------------------------------------------------------------
+
 
 class AuctionLotDetail(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -283,6 +288,7 @@ class AuctionLotDetail(APIView):
 
 # -----------------------------------------------------------------------------
 
+
 class AuctionLotListCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -296,6 +302,7 @@ class AuctionLotListCreate(APIView):
             raise NotFound(detail="Nowt 'ere, resource not found", code=404)
 
 # -----------------------------------------------------------------------------
+
 
 class AuctionTypes(RetrieveAPIView):
     permission_classes = (AllowAny,)
@@ -312,8 +319,8 @@ class AuctionTypes(RetrieveAPIView):
         return Response(message, status=status.HTTP_200_OK)
 
 # -----------------------------------------------------------------------------
-# class for testing validity of auction data sent to auctioneer microservice
-# the service only needs to know if the auction exists and the lot is from 
+# class for testing validity of auction data sent to auctioneer microservice.
+# the service only needs to know if the auction exists and the lot is from
 # that particular auction and that the user trying to use the auction service
 # is the valid user to do this
 # we also check if there is any bid history because if there is then the user
@@ -321,6 +328,7 @@ class AuctionTypes(RetrieveAPIView):
 # to recreate) which we do not allow.
 # returns either 200 or 406 along with a subset of auction/lot data
 # TODO: decide which data to return
+
 
 class AuctionValid(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
@@ -359,8 +367,8 @@ class AuctionValid(RetrieveAPIView):
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         # look for bid history
-        #TODO: need to change as it's possible that bids may exist
-        # and auction still be active but auctioneer service went
+        # TODO: need to change as it's possible that bids may exist
+        # and auction still be active but auctioneer service went
         # down.
         # NOTE: Changed this but still not 100% sure if this is right way to go
         start_time = end_time = None
@@ -394,7 +402,7 @@ class AuctionValid(RetrieveAPIView):
             # successfully passed all tests
             return Response(auction_data, status=status.HTTP_200_OK)
 
-        # if we reach here we have bids and a history and bid_history var
+        # if we reach here we have bids and a history and bid_history var
         # should contain latest bid data
         auction_data['start_price'] = bid_history.bid_amount
         auction_data['username'] = bid_history.username
@@ -405,11 +413,12 @@ class AuctionValid(RetrieveAPIView):
 
 # -----------------------------------------------------------------------------
 
+
 class ComboAuctionCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, auction_type, format=None):
-        #TODO: refactor for when we accept multiple lot auctions - currently only half done 
+        # TODO: refactor for when we accept multiple lot auctions - currently only half done
 
         if auction_type != 'multi' and auction_type != 'solo':
             return Response({ 'error': "Invalid auction type" }, status=status.HTTP_400_BAD_REQUEST)
@@ -426,10 +435,11 @@ class ComboAuctionCreate(APIView):
         return Response({ 'message': 'multi-lot auctions not available yet' }, 
                         status=status.HTTP_100_CONTINUE)
 
-        # we need to do additional checks on some fields that we require when 
-        # creating an auction. these are allowed to be null in our data models
+        # we need to do additional checks on some fields that we require when
+        # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 
         # are required when creating an auction using this class
+
         required_fields = ['name', 'type', 'start_time', 'end_time', 'currency', 'quantity']
 
         missing = set(required_fields) - request.data.keys()
@@ -458,7 +468,7 @@ class ComboAuctionCreate(APIView):
         # need to deal with multiple lots here
         lot_serializer = serializer_obj(data=request.data)
 
-        #TODO: multi lots 
+        # TODO: multi lots
         if not lot_serializer.is_valid():
             return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -468,10 +478,10 @@ class ComboAuctionCreate(APIView):
         request.data['multiple'] = True
         request.data['name'] = name
 
-        # TODO: multi lots
+        # TODO: multi lots
         request.data['lots'] = [request.data['lot_id']]
 
-        #TODO : set active flag to true if start time is now or in past
+        # TODO : set active flag to true if start time is now or in past
 
         # we now need to create an auction and add our auction lot to it
         auction_serializer = AuctionSerializer(data=request.data)
@@ -485,7 +495,7 @@ class ComboAuctionCreate(APIView):
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             # we know we have successfully saved both lots and auction at this 
-            # point so we can create the delivery and payment records
+            # point so we can create the delivery and payment records
 
             return Response({ 'auction_id': request.data['auction_id'],
                               'lot_id': request.data['lot_id'] },
@@ -497,7 +507,7 @@ class ComboAuctionCreate(APIView):
     def process_single(self, request):
         
         # we need to do additional checks on some fields that we require when 
-        # creating an auction. these are allowed to be null in our data models
+        # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 
         # are required when creating an auction using this class
 
@@ -549,7 +559,7 @@ class ComboAuctionCreate(APIView):
         # just add a single id to lots array
         request.data['lots'] = [request.data['lot_id']]
 
-        #TODO : set active flag to true if start time is now or in past
+        # TODO : set active flag to true if start time is now or in past
           
         delivery_options = DeliveryOptions(auction_id = request.data['auction_id'],
                                            collection = 'collection' in request.data,
@@ -599,9 +609,9 @@ class ComboAuctionCreate(APIView):
         return model.get(auctype), serializer.get(auctype) 
 
     def get(self, request, format=None):
-        #queryset = Auction.objects.all()
-        #serializer = AuctionSerializer(queryset, many=True)
-        #return Response(serializer.data, status=status.HTTP_200_OK)
+        # queryset = Auction.objects.all()
+        # serializer = AuctionSerializer(queryset, many=True)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({ 'meep': True }, status=status.HTTP_201_CREATED)
 
     def create_message_queues(input_data):
@@ -612,7 +622,6 @@ class ComboAuctionCreate(APIView):
     def is_valid_uuid(value):
         try:
             uuid.UUID(str(value))
-
             return True
         except ValueError:
             return False

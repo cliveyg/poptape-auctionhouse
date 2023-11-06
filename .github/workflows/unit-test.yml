@@ -61,3 +61,4 @@ jobs:
         run: |
           touch auctionhouse.log
           python manage.py test auctionhouse
+          python manage.py test auction

@@ -23,7 +23,7 @@ urlpatterns = [
     # returns auction and lot data on a key of item_id
     path('auctionhouse/auction/item/<uuid:item_id>/', AuctionByItem.as_view(), name='auctionbyitem'),
 
-    # returns an auction lot's details including bid history
+    # returns an auction lot's details including bid history
     path('auctionhouse/auction/lot/<uuid:lot_uuid>/', AuctionLotDetail.as_view(), name="auctionlotdetail"),
 
     # this url is for checking whether the auctioneer microservice has been sent the correct data

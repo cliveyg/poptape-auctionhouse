@@ -4,14 +4,14 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import json
 from os.path import join, dirname
-from jsonschema import validate, draft7_format_checker
+from jsonschema import validate, Draft7Validator
 
 
 def assert_valid_schema(data, schema_file):
     """ Checks whether the given data matches the schema """
 
     schema = _load_json_schema(schema_file)
-    return validate(data, schema, format_checker=draft7_format_checker)
+    return validate(data, schema, format_checker=Draft7Validator.FORMAT_CHECKER)
 
 
 def _load_json_schema(filename):

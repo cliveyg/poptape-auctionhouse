@@ -1,17 +1,17 @@
 from mock import patch
-from auction.models import Auction, AuctionType, AuctionLot
 from auction.views import AuctionDetail
 import uuid
 import json
 from datetime import datetime, timedelta
 from django.urls import reverse
-# from rest_framework.response import Response
 from httmock import all_requests, response, HTTMock
+from rest_framework import status
+from rest_framework.response import Response
 from auction.serializers import AuctionSerializer, AuctionLotSerializer
 from auction.serializers import EnglishAuctionLotSerializer
 from auction.serializers import DutchAuctionLotSerializer, BuyNowAuctionLotSerializer
 from auction.models import EnglishAuctionLot, BuyNowAuctionLot, DutchAuctionLot
-
+from auction.models import Auction, AuctionType, AuctionLot
 
 serializer = {
     "EN": EnglishAuctionLotSerializer,
@@ -134,3 +134,15 @@ def test_detail_view(client):
                 assert json_object['auction']['auction_id'] == auction_obj.auction_id
                 assert json_object['auction']['name'] == auction_obj.name
                 assert json_object['auction']['type'] == AuctionType.EN
+
+
+def test_detail_view_not_found(client):
+
+    response_from_get = Response({}, status=status.HTTP_404_NOT_FOUND)
+
+    with patch.object(AuctionDetail, 'get', return_value=response_from_get):
+        with HTTMock(response_content):
+            url = reverse('auctiondetail', kwargs={'auction_id': str(uuid.uuid4())})
+            headers = {'Content-type': 'application/json', 'X_ACCESS_TOKEN': mock_access_token()}
+            resp = client.get(url, headers=headers)
+            assert resp.status_code == 404

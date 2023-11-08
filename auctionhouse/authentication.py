@@ -25,9 +25,10 @@ class AdminOnlyAuthentication(BaseAuthentication):
 
     def authenticate(self, request, token=None):
 
-        # logger.info("Why you here Willis?")
+        # logger.critical("Why you here Diane?")
 
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
+            # logger.critical("Returning nowt")
             return None
 
         # call authy with admin url
@@ -62,9 +63,10 @@ class TokenAuth(BaseAuthentication):
 
     def authenticate(self, request, token=None):
 
-        # logger.info("Why you here Willis?")
+        # logger.critical("Why you here Willis?")
 
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
+            # logger.critical("Returning nada")
             return None
 
         # call authy

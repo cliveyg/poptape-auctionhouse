@@ -1,5 +1,5 @@
 from mock import patch
-from auction.views import AuctionDetail
+from auction.views import AuctionDetail, AuctionByItem
 import uuid
 import json
 from datetime import datetime, timedelta
@@ -143,6 +143,17 @@ def test_detail_view_not_found(client):
     with patch.object(AuctionDetail, 'get', return_value=response_from_get):
         with HTTMock(response_content):
             url = reverse('auctiondetail', kwargs={'auction_id': str(uuid.uuid4())})
+            headers = {'Content-type': 'application/json', 'X_ACCESS_TOKEN': mock_access_token()}
+            resp = client.get(url, headers=headers)
+            assert resp.status_code == 404
+
+def test_get_auction_by_item_view_not_found(client):
+
+    response_from_get = Response({}, status=status.HTTP_404_NOT_FOUND)
+
+    with patch.object(AuctionByItem, 'get', return_value=response_from_get):
+        with HTTMock(response_content):
+            url = reverse('auctionbyitem', kwargs={'item_id': str(uuid.uuid4())})
             headers = {'Content-type': 'application/json', 'X_ACCESS_TOKEN': mock_access_token()}
             resp = client.get(url, headers=headers)
             assert resp.status_code == 404

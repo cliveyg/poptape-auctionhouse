@@ -191,6 +191,13 @@ DATABASES = {
         'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
         'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
         'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
+        'TEST': {
+            'NAME': os.getenv('TEST_AUCTIONHOUSE_DB_NAME'),
+            'USER': os.getenv('TEST_AUCTIONHOUSE_DB_USER'),
+            'PASSWORD': os.getenv('TEST_AUCTIONHOUSE_DB_PASS'),
+            'HOST': os.getenv('TEST_AUCTIONHOUSE_DB_HOST'),
+            'PORT': os.getenv('TEST_AUCTIONHOUSE_DB_PORT'),
+        }
         # 'ATOMIC_REQUESTS': True,
     }
 }

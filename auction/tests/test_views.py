@@ -7,11 +7,12 @@ from datetime import datetime, timedelta
 from django.urls import reverse
 from auction.serializers import AuctionSerializer, AuctionLotSerializer
 from rest_framework.response import Response
-from httmock import all_requests, urlmatch, response, HTTMock
+from httmock import urlmatch, response, HTTMock
 from rest_framework import status
 
 
-@all_requests
+# @all_requests
+@urlmatch(netloc='https://poptape.club/authy/checkaccess/10')
 def response_content(_, request):
     headers = {'content-type': 'application/json',
                'Set-Cookie': 'foo=bar;'}
@@ -58,6 +59,9 @@ def create_auction_data():
 
 def test_detail_view(client):
 
+    """
+    Not sure this is actually all that useful as a test as I had to mock so many things
+    """
     auction_data = create_auction_data()
     response_from_get = Response({ 'auction': auction_data }, status=status.HTTP_200_OK)
 

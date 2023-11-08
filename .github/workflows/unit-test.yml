@@ -62,3 +62,4 @@ jobs:
           touch auctionhouse.log
           python manage.py test auctionhouse
           python manage.py test auction
+          pytest --ds=auctionhouse.settings -W ignore::DeprecationWarning -W ignore::PendingDeprecationWarning auction/tests/test_views.py

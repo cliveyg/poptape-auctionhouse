@@ -51,3 +51,4 @@
 !Dockerfile
 !run_app.sh
 !manage.py
+!pytest.ini

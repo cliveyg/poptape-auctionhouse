@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timedelta
 from django.urls import reverse
 # from rest_framework.response import Response
-from httmock import urlmatch, response, HTTMock
+from httmock import all_requests, response, HTTMock
 from auction.serializers import AuctionSerializer, AuctionLotSerializer
 from auction.serializers import EnglishAuctionLotSerializer
 from auction.serializers import DutchAuctionLotSerializer, BuyNowAuctionLotSerializer
@@ -29,7 +29,8 @@ NOW = datetime.utcnow()
 NOW_PLUS_TEN = NOW + timedelta(days=10)
 
 
-@urlmatch(netloc='https://poptape.club/authy/checkaccess/10')
+# @urlmatch(netloc='https://poptape.club/authy/checkaccess/10')
+@all_requests
 def response_content(_, request):
     headers = {'content-type': 'application/json'}
     content = {'public_id': 'blah'}
@@ -132,3 +133,4 @@ def test_detail_view(client):
                 assert resp.status_code == 200
                 assert json_object['auction']['auction_id'] == auction_obj.auction_id
                 assert json_object['auction']['name'] == auction_obj.name
+                assert json_object['auction']['type'] == AuctionType.EN

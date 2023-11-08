@@ -12,7 +12,6 @@ from auction.serializers import EnglishAuctionLotSerializer
 from auction.serializers import DutchAuctionLotSerializer, BuyNowAuctionLotSerializer
 from auction.models import EnglishAuctionLot, BuyNowAuctionLot, DutchAuctionLot
 from auction.models import Auction, AuctionType, AuctionLot
-from rest_framework.exceptions import NotFound
 
 serializer = {
     "EN": EnglishAuctionLotSerializer,

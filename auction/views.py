@@ -5,7 +5,6 @@ from auctionhouse.authentication import AdminOnlyAuthentication
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from auction.models import Auction, EnglishAuctionLot, BuyNowAuctionLot
 from auction.models import AuctionLot, DutchAuctionLot, BidHistory
@@ -22,8 +21,6 @@ from auction.bidhistory import LotQueueConsumer
 from auction.janitor import process_finished_single_auctions
 
 import uuid
-import requests
-from datetime import datetime
 
 # get an instance of a logger
 import logging

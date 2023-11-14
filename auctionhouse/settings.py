@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # 'django_nose',
     'djmoney',
     'auction',
+    'coverage',
 ]
 
 MIDDLEWARE = [

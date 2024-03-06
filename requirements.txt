@@ -44,7 +44,7 @@ prompt-toolkit==3.0.39
 psycopg2-binary==2.9.9
 py-moneyed==3.0
 pycparser==2.21
-pyOpenSSL==23.3.0
+pyOpenSSL==24.0.0
 pyrsistent==0.20.0
 pytest==7.4.3
 pytest-django==4.6.0

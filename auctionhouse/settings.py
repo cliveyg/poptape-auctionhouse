@@ -36,7 +36,7 @@ DEBUG = True
 
 allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
 allowed_hosts_array = allowed_hosts_string.split(",")
-ALLOWED_HOSTS = ["poptape.club"]
+ALLOWED_HOSTS = ["poptape.club","poptape.local"]
 # ALLOWED_HOSTS = allowed_hosts_array
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 

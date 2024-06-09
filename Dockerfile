@@ -16,7 +16,7 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev
 # add bash etc as alpine version doesn't have these
 RUN apk add linux-headers
 RUN apk add --no-cache bash gawk sed grep bc coreutils
-RUN apk --no-cache add libpq
+RUN apk --no-cache add libpq postgresql-client
 
 # this needs to match the directory/package name of the python app
 # TODO: Copy only specific needed files and folders across
@@ -28,7 +28,9 @@ RUN rm -rf .git/
 RUN rm -rf auction/tests
 RUN rm -rf auctionhouse/tests
 RUN mkdir -p /auctionhouse/log
-RUN touch /auctionhouse/log/auctionhouse.log
+#RUN whoami
+#RUN touch /auctionhouse/log/auctionhouse.log
+#RUN chmod 777 /auctionhouse/log/auctionhouse.log
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip

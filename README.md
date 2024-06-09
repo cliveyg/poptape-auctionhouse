@@ -1,5 +1,7 @@
 # poptape-auctionhouse
-  
+![Unit tests](https://github.com/cliveyg/poptape-auctionhouse/actions/workflows/unit-test.yml/badge.svg) ![Tests passed](https://img.shields.io/endpoint?url=X&label=Tests) ![Test coverage](https://img.shields.io/endpoint?url=X&label=Test%20Coverage)
+
+
 A microservice written in Python Django that controls auctions, i.e. create,
 delete, update an auction with items or lots and start times etc. Also in this
 microservice are items or lots but I may spin this out into a seperate micro-

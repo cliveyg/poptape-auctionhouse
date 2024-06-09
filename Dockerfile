@@ -28,6 +28,7 @@ RUN rm -rf .git/
 RUN rm -rf auction/tests
 RUN rm -rf auctionhouse/tests
 RUN mkdir -p /auctionhouse/log
+RUN touch /auctionhouse/log/auctionhouse.log
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip

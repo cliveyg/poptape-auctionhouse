@@ -62,7 +62,7 @@ jobs:
           touch auctionhouse.log
           python manage.py test auctionhouse
           python manage.py test auction
-          coverage run -m --omit="*/test*" pytest -v --junitxml=junit.xml --html=report.html --ds=auctionhouse.settings -W ignore::DeprecationWarning -W ignore::PendingDeprecationWarning auction/tests/test_views.py
+          coverage run -m --omit="*/test*" pytest -v --junitxml=junit.xml --ds=auctionhouse.settings -W ignore::DeprecationWarning -W ignore::PendingDeprecationWarning auction/tests/test_views.py
           coverage xml
           echo "$(coverage report -m )"
           covRes="$(coverage report -m --fail-under=30)"

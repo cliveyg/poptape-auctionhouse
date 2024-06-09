@@ -24,7 +24,7 @@ services:
         max-size: "10Mb"
         max-file: "5"
     networks:
-      - net_poptape
+      - poptape
   db:
     image: postgres:alpine
     restart: always
@@ -39,9 +39,9 @@ services:
     volumes:
       - poptape_auctionhousedata:/var/lib/postgresql/data
     networks:
-      - net_poptape
+      - poptape
 networks:
-  net_poptape:
+  poptape:
     external: true
 
   

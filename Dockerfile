@@ -16,7 +16,7 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev
 # add bash etc as alpine version doesn't have these
 RUN apk add linux-headers
 RUN apk add --no-cache bash gawk sed grep bc coreutils
-RUN apk --no-cache add libpq postgresql-client
+RUN apk --no-cache add libpq postgresql-client curl
 
 # this needs to match the directory/package name of the python app
 # TODO: Copy only specific needed files and folders across
@@ -27,22 +27,16 @@ RUN rm -f .coverage
 RUN rm -rf .git/
 RUN rm -rf auction/tests
 RUN rm -rf auctionhouse/tests
+RUN rm -rf htmlcov
+RUN rm -rf vauc
+RUN rm -f docker-compose.yml
+RUN rm -f .DS_Store
+RUN rm -rf .idea
 RUN mkdir -p /auctionhouse/log
-#RUN whoami
-#RUN touch /auctionhouse/log/auctionhouse.log
-#RUN chmod 777 /auctionhouse/log/auctionhouse.log
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
-
-# Define environment variables here
-# args are passed it from cli or docker-compose.yml
-#ARG poptape_auth_user
-#ARG poptape_auth_pass
-#ENV NAME cliveyg
-#ENV POPTAPE_AUTH_USER {$poptape_auth_user}
-#ENV POPTAPE_AUTH_PASS {$poptape_auth_pass}
 
 # if -u flag in CMD below doesn't work 
 # then uncomment this to see python

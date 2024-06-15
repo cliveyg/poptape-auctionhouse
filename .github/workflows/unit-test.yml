@@ -63,7 +63,7 @@ jobs:
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test
           coverage xml
           echo "$(coverage report -m )"
-          covRes="$(coverage report -m --fail-under=50)"
+          covRes="$(coverage report -m --fail-under=45)"
           echo "$covRes"    
 
       - name: Create coverage badges

@@ -52,7 +52,7 @@ class AuctionJanitor(APIView):
         process_finished_single_auctions()
         logger.info("after process_finished_auctions")
 
-        return Response({ 'woopy': 'fucking doo' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'woopy': 'doo' }, status=status.HTTP_202_ACCEPTED)
 
 # -----------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 # poptape-auctionhouse
-![Unit tests](https://github.com/cliveyg/poptape-auctionhouse/actions/workflows/unit-test.yml/badge.svg) ![Test coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/299fc9fb14577f6f78b190c4b7aa558a4d5620c6/poptape-auctionhouse-cobertura-coverage.json&label=Test%20coverage)
+![Unit tests](https://github.com/cliveyg/poptape-auctionhouse/actions/workflows/unit-test.yml/badge.svg) ![Tests passed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/299fc9fb14577f6f78b190c4b7aa558a4d5620c6/poptape-auctionhouse-junit-tests.json&label=Tests) ![Test coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/299fc9fb14577f6f78b190c4b7aa558a4d5620c6/poptape-auctionhouse-cobertura-coverage.json&label=Test%20coverage)
 <!-- (![Tests passed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/299fc9fb14577f6f78b190c4b7aa558a4d5620c6/poptape-auctionhouse-junit-tests.json&label=Tests)) -->
 
 A microservice written in Python Django that controls auctions, i.e. create,
@@ -9,7 +9,7 @@ service in the future.
 
 Please see [this gist](https://gist.github.com/cliveyg/cf77c295e18156ba74cda46949231d69) to see how this microservice works as part of the auction system software.
 
-I've made various design decisions that I may chnage such as that an item can
+I've made various design decisions that I may change such as that an item can
 appear in more than one auction and have different prices in different auctions.
 It may turn out to be better to make items unique to an auction with only one 
 price. An item or lot can only be in one live auction at a time. 

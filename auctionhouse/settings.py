@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
 from dotenv import load_dotenv
 import django
 from django.utils.encoding import smart_str
@@ -183,24 +184,34 @@ WSGI_APPLICATION = 'auctionhouse.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('AUCTIONHOUSE_DB_NAME'),
-        'USER': os.getenv('AUCTIONHOUSE_DB_USER'),
-        'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
-        'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
-        'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
-        'TEST': {
-            'NAME': os.getenv('TEST_AUCTIONHOUSE_DB_NAME'),
-            'USER': os.getenv('TEST_AUCTIONHOUSE_DB_USER'),
-            'PASSWORD': os.getenv('TEST_AUCTIONHOUSE_DB_PASS'),
-            'HOST': os.getenv('TEST_AUCTIONHOUSE_DB_HOST'),
-            'PORT': os.getenv('TEST_AUCTIONHOUSE_DB_PORT'),
+# uses sqlite for when running tests so that running tests in
+# github actions works okay
+if sys.argv[1] == 'test':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
-        # 'ATOMIC_REQUESTS': True,
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('AUCTIONHOUSE_DB_NAME'),
+            'USER': os.getenv('AUCTIONHOUSE_DB_USER'),
+            'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
+            'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
+            'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
+            'TEST': {
+                'NAME': os.getenv('TEST_AUCTIONHOUSE_DB_NAME'),
+                'USER': os.getenv('TEST_AUCTIONHOUSE_DB_USER'),
+                'PASSWORD': os.getenv('TEST_AUCTIONHOUSE_DB_PASS'),
+                'HOST': os.getenv('TEST_AUCTIONHOUSE_DB_HOST'),
+                'PORT': os.getenv('TEST_AUCTIONHOUSE_DB_PORT'),
+            }
+            # 'ATOMIC_REQUESTS': True,
+        }
+    }
 
 # get rid of DEFAULT_AUTO_FIELD warnings
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

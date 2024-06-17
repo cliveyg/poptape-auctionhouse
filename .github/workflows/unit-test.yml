@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9] # Using a list so it's extensible for future use
-    services:
+    #services:
       # label used to access the service container
       #postgres:
       #  # dockerhub image

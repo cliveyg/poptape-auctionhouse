@@ -186,7 +186,7 @@ WSGI_APPLICATION = 'auctionhouse.wsgi.application'
 
 # uses sqlite for when running tests so that running tests in
 # github actions works okay
-if sys.argv[1] == 'test':
+if sys.argv[1] == 'GOTHRU':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

@@ -56,7 +56,6 @@ jobs:
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
           mv .env auctionhouse/.
-          echo "${{secrets.ENV_FILE}}" | sed 's/./&‌/g'
 
       - name: Run unit tests and coverage reports
         run: |

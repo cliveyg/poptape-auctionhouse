@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import resolve, reverse
 from auction.urls import AuctionTypes, AuctionListCreate, AuctionJanitor
-from auction.urls import AuctionByItem, AuctionLotDetail, AuctionValid
+from auction.urls import AuctionByItem, AuctionLotDetail, AuctionValid, Return404
 from auction.urls import AuctionDetail, AuctionLotListCreate, ComboAuctionCreate
 import uuid
 
@@ -72,3 +72,8 @@ class TestURLSResolve(SimpleTestCase):
         self.assertEquals(resolve(url).func.view_class, ComboAuctionCreate)
         self.assertEquals(resolve(url).route, '^auctionhouse/<str:auction_type>/auction/')
         self.assertEquals(resolve(url).captured_kwargs['auction_type'], 'dutch')
+    def test_api_404_is_resolved(self):
+        url = reverse('404')
+        self.assertEquals(resolve(url).url_name, '404')
+        self.assertEquals(resolve(url).func.view_class, Return404)
+        self.assertEquals(resolve(url).route, '^auctionhouse/$')

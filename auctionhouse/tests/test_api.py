@@ -24,3 +24,9 @@ class TestAPIPaths(TestCase):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/some404')
         assert r.status_code == 404
+
+    def test_return_error_for_non_json(self):
+        c = RequestsClient()
+        header = {'Content-Type': 'application/html'}
+        r = c.get('http://localhost/auctionhouse/status', headers=header)
+        assert r.status_code == 400

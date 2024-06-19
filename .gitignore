@@ -5,7 +5,7 @@
 /auctionhouse.log
 /log/*
 /auctionhouse/.env
-/auctionhouse/.envORG
+/auctionhouse/.env
 /auction/tests/__pycache__
 /auctionhouse/tests/__pycache__
 /auction/migrations/__pycache__

@@ -12,6 +12,9 @@ from django.test import TestCase
 #from auctionhouse.views import StatusView
 #from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TestAPIPaths(TestCase):
 
@@ -29,4 +32,5 @@ class TestAPIPaths(TestCase):
         c = RequestsClient()
         header = {'Content-Type': 'application/html'}
         r = c.get('http://localhost/auctionhouse/status', headers=header)
+        logger.info("This is an info message %d",r.status_code)
         assert r.status_code == 400

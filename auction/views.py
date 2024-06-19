@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework.permissions import AllowAny
 from auctionhouse.authentication import AdminOnlyAuthentication
 from rest_framework import status
+from rest_framework import renderers
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
@@ -316,12 +317,11 @@ class AuctionTypes(RetrieveAPIView):
         return Response(message, status=status.HTTP_200_OK)
 class Return404(RetrieveAPIView):
     permission_classes = (AllowAny,)
+    renderer_classes = [renderers.JSONRenderer]
 
     def get(self, request, *args, **kwargs):
         # simply returns a 404
-
         message = {'message': 'Not found'}
-
         return Response(message, status=status.HTTP_404_NOT_FOUND)
 
 # -----------------------------------------------------------------------------

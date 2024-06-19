@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import sys
 from dotenv import load_dotenv
 import django
 from django.utils.encoding import smart_str
@@ -30,6 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
+APPEND_SLASH = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -72,6 +72,9 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'rest_framework.permissions.AllowAny',
@@ -91,9 +94,6 @@ REST_FRAMEWORK = {
     # we only want to accept json input so default to json only
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
     ),
 }
 
@@ -187,8 +187,6 @@ WSGI_APPLICATION = 'auctionhouse.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-# uses sqlite for when running tests so that running tests in
-# github actions works okay
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

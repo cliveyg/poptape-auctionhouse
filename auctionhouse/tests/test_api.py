@@ -39,7 +39,7 @@ class TestAPIPaths(TestCase):
         # logger.info("This is an info message %d", r.status_code)
         # assert r.status_code == 400
         c = APIClient()
-        # c.headers = {'Content-Type': 'application/html'}
+        c.headers = {'Content-Type': 'text/html'}
         r = c.get('http://localhost/auctionhouse/status')
         logger.info("Status code is %d", r.status_code)
         assert 1 == 1

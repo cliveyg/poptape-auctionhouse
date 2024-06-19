@@ -31,6 +31,7 @@
 !github/
 !auctionhouse/
 !auctionhouse/.env.example
+!/auctionhouse/.envtest
 !auctionhouse/settings.py
 !auctionhouse/__init__.py
 !README.md

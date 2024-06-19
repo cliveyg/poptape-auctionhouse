@@ -57,6 +57,7 @@ jobs:
         run: |
           echo "${{ secrets.ENV_FILE }}" > .envG
           mv .envG auctionhouse/.
+          mv auctionhouse/.envtest auctionhouse/.env
           cat auctionhouse/.env
 
       - name: Run unit tests and coverage reports

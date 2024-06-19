@@ -10,11 +10,12 @@
 from django.test import TestCase
 #from django.urls import resolve, reverse
 #from auctionhouse.views import StatusView
-from rest_framework.test import APIClient
+#from rest_framework.test import APIClient
+from rest_framework.test import RequestsClient
 
 class TestAPIPaths(TestCase):
 
     def test_status_ok_no_auth(self):
-        c = APIClient()
-        r = c.get('auctionhouse/status')
+        c = RequestsClient()
+        r = c.get('http://localhost/auctionhouse/status')
         assert r.status_code == 200

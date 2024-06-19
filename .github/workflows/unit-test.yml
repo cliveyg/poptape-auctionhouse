@@ -58,7 +58,11 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .envG
           mv .envG auctionhouse/.
           mv auctionhouse/.envtest auctionhouse/.env
+          echo "+++++++++++++++++++++++++++++++++++++++++++++++"
+          echo "+++++++++++++++++++++++++++++++++++++++++++++++"
           cat auctionhouse/.env
+          echo "+++++++++++++++++++++++++++++++++++++++++++++++"
+          echo "+++++++++++++++++++++++++++++++++++++++++++++++"
 
       - name: Run unit tests and coverage reports
         run: |

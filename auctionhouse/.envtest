@@ -11,3 +11,4 @@ TEST_AUCTIONHOUSE_DB_PORT=5432
 TEST_AUCTIONHOUSE_DB_NAME=test_poptape_auctionhouse
 TEST_AUCTIONHOUSE_DB_USER=test_poptape_auctionhouse
 TEST_AUCTIONHOUSE_DB_PASS=bcfs873264c2kjewbcmjg
+LOGFILE=auctionhouse.log

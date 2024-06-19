@@ -32,8 +32,8 @@ SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
 APPEND_SLASH = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+#DEBUG = True
+DEBUG = False
 
 allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
 allowed_hosts_array = allowed_hosts_string.split(",")

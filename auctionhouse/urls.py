@@ -23,8 +23,6 @@ from auctionhouse.views import StatusView
 urlpatterns = [
     path('auctionhouse/admin/', admin.site.urls),
     path('auctionhouse/status/', StatusView.as_view(), name="status"),
-    #path('auctionhouse', RedirectView.as_view(url='/auctionhouse/status')),
-    #url(r'^', include('auction.urls')),
     re_path(r'^', include('auction.urls')),
 ]
 

@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
 APPEND_SLASH = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+# DEBUG = True
 DEBUG = False
 
 allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
@@ -72,10 +72,10 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'auctionhouse.negotiation.IgnoreClientContentNegotiation',
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
+    # 'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'auctionhouse.negotiation.IgnoreClientContentNegotiation',
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'rest_framework.permissions.AllowAny',

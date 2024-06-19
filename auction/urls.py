@@ -7,6 +7,7 @@ from auction.views import AuctionLotListCreate, AuctionTypes
 from auction.views import ComboAuctionCreate, AuctionByItem
 from auction.views import AuctionValid, AuctionLotDetail
 from auction.views import AuctionJanitor, Return404
+from auction.views import custom404
 
 urlpatterns = [
     #path('auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),
@@ -42,3 +43,5 @@ urlpatterns = [
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+
+handler404 = custom404

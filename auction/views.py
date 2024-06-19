@@ -5,6 +5,8 @@ from auctionhouse.authentication import AdminOnlyAuthentication
 from rest_framework import status
 from rest_framework import renderers
 from rest_framework.response import Response
+from django.http import JsonResponse
+
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
 from auction.models import Auction, EnglishAuctionLot, BuyNowAuctionLot
@@ -315,12 +317,13 @@ class AuctionTypes(RetrieveAPIView):
                                      {'key': 'DU', 'label': 'Dutch'}] }
 
         return Response(message, status=status.HTTP_200_OK)
-class Return404(RetrieveAPIView):
+class Return404(APIView):
     permission_classes = (AllowAny,)
     renderer_classes = [renderers.JSONRenderer]
 
     def get(self, request, *args, **kwargs):
         # simply returns a 404
+        logger.info("In Return404.get")
         message = {'message': 'Not found'}
         return Response(message, status=status.HTTP_404_NOT_FOUND)
 
@@ -631,3 +634,6 @@ class ComboAuctionCreate(APIView):
             return True
         except ValueError:
             return False
+
+def custom404(request, exception=None):
+    return JsonResponse({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND)

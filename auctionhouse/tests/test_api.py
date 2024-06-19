@@ -29,6 +29,7 @@ class TestAPIPaths(TestCase):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/some404')
         assert r.status_code == 404
+        logger.info("Content-Type is %d", r.headers.get('Content-Type'))
         assert r.headers.get('Content-Type') == 'application/json'
 
     def test_return_error_for_non_json(self):
@@ -38,7 +39,7 @@ class TestAPIPaths(TestCase):
         # logger.info("This is an info message %d", r.status_code)
         # assert r.status_code == 400
         c = APIClient()
-        c.headers = {'Content-Type': 'application/html'}
+        # c.headers = {'Content-Type': 'application/html'}
         r = c.get('http://localhost/auctionhouse/status')
         logger.info("Status code is %d", r.status_code)
         assert 1 == 1

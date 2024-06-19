@@ -5,6 +5,7 @@
 /auctionhouse.log
 /log/*
 /auctionhouse/.env
+/auctionhouse/.envORG
 /auction/tests/__pycache__
 /auctionhouse/tests/__pycache__
 /auction/migrations/__pycache__
@@ -31,7 +32,6 @@
 !github/
 !auctionhouse/
 !auctionhouse/.env.example
-!/auctionhouse/.envtest
 !auctionhouse/settings.py
 !auctionhouse/__init__.py
 !README.md

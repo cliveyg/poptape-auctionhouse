@@ -1,6 +1,5 @@
 # poptape-auctionhouse
 ![Unit tests](https://github.com/cliveyg/poptape-auctionhouse/actions/workflows/unit-test.yml/badge.svg) ![Tests passed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/acfe7b07a27654e6444fab32866845f229dba170/poptape-auctionhouse-junit-tests.json&label=Tests) ![Test coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/299fc9fb14577f6f78b190c4b7aa558a4d5620c6/poptape-auctionhouse-cobertura-coverage.json&label=Test%20coverage)
-<!-- (![Tests passed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/299fc9fb14577f6f78b190c4b7aa558a4d5620c6/poptape-auctionhouse-junit-tests.json&label=Tests)) -->
 
 A microservice written in Python Django that controls auctions, i.e. create,
 delete, update an auction with items or lots and start times etc. Also in this

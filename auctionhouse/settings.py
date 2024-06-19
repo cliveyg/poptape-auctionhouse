@@ -72,6 +72,7 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'auctionhouse.negotiation.IgnoreClientContentNegotiation',
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),

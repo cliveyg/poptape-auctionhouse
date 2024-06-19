@@ -19,3 +19,8 @@ class TestAPIPaths(TestCase):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/status')
         assert r.status_code == 200
+
+    def test_return_404(self):
+        c = RequestsClient()
+        r = c.get('http://localhost/auctionhouse/some404')
+        assert r.status_code == 404

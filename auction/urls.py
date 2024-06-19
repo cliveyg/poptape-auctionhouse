@@ -6,7 +6,7 @@ from auction.views import AuctionDetail, AuctionListCreate
 from auction.views import AuctionLotListCreate, AuctionTypes
 from auction.views import ComboAuctionCreate, AuctionByItem
 from auction.views import AuctionValid, AuctionLotDetail
-from auction.views import AuctionJanitor
+from auction.views import AuctionJanitor, Return404
 
 urlpatterns = [
     #path('auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),
@@ -38,6 +38,7 @@ urlpatterns = [
     # allows easier creation of auctions and lots - one http call instead of two or more
     path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),
 
+    re_path(r'^auctionhouse/$', Return404, name='404'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -314,6 +314,15 @@ class AuctionTypes(RetrieveAPIView):
                                      {'key': 'DU', 'label': 'Dutch'}] }
 
         return Response(message, status=status.HTTP_200_OK)
+class Return404(RetrieveAPIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        # simply returns a 404
+
+        message = {'message': 'Not found'}
+
+        return Response(message, status=status.HTTP_404_NOT_FOUND)
 
 # -----------------------------------------------------------------------------
 # class for testing validity of auction data sent to auctioneer microservice.

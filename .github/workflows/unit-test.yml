@@ -22,9 +22,9 @@ jobs:
         image: postgres
         # provide the login and db deets for postgres
         env:
-          POSTGRES_DB: poptape_auctionhouse_test
-          POSTGRES_PASSWORD: bcfs873264c2kjewbcmjg
-          POSTGRES_USER: poptape_auctionhouse_test
+          POSTGRES_DB: poptape_auctionhouse
+          POSTGRES_PASSWORD: supersecretpassword
+          POSTGRES_USER: poptape_auctionhouse
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432

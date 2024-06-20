@@ -23,7 +23,7 @@ class TestAPIPaths(TestCase):
         logger.debug("Content-Type is %s", r.headers.get('Content-Type'))
         assert r.headers.get('Content-Type') == 'application/json'
 
-    def test_return_error_for_non_json(self):
+    def test_return_status_when_content_type_incorrect(self):
         c = RequestsClient()
         header = {'Content-Type': 'text/html'}
         r = c.get('http://localhost/auctionhouse/status', headers=header)

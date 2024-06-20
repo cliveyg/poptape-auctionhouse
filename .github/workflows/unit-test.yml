@@ -64,10 +64,10 @@ jobs:
         run: |
           touch auctionhouse.log
           echo "RUNNING MIGRATE"
-          manage.py migrate --fake auction zero
+          python manage.py migrate --fake auction zero
           rm -rf migrations
-          manage.py makemigrations auction
-          manage.py migrate --fake auction
+          python manage.py makemigrations auction
+          python manage.py migrate --fake auction
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test
           coverage xml
           echo "$(coverage report -m )"

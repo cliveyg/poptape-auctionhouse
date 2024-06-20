@@ -7,9 +7,12 @@ import datetime
 
 
 def create_test(cls):
+    test_id = str(uuid.uuid4())
     cls.Test1 = Testy.objects.create(
-        test_id = str(uuid.uuid4())
+        test_id = test_id,
+        public_id = str(uuid.uuid4())
     )
+    return test_id
 
 
 def create_auction(cls):

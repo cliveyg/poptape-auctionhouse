@@ -71,8 +71,8 @@ class Testy(models.Model):
                             choices=AuctionType.AUCTION_CHOICES)
     name = models.CharField(max_length=100, blank=True)
     multiple = models.BooleanField(default=False, null=False)
-    start_time = UnixDateTimeField(blank=True)
-    end_time = UnixDateTimeField(blank=True)
+    start_time = models.DateTimeField(blank=True)
+    end_time = models.DateTimeField(blank=True)
     status = models.CharField(max_length=20, blank=False, default="created")
 
 class Auction(models.Model):

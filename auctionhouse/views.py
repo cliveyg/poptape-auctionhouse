@@ -22,7 +22,6 @@ class StatusView(RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         # simply returns a 200 ok with a message 
         logger.info("auctionhouse/views/StatusView.get")
-
         message = { 'message': 'System running...', 'version': 0.5 }
 
         return Response(message, status=status.HTTP_200_OK)

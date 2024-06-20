@@ -3,6 +3,7 @@
 from django.test import TestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
+from .test_setup import createAuction
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,6 +20,10 @@ def ordered(obj):
 
 
 class TestAPIPaths(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        createAuction(cls)
 
     def test_status_ok_no_auth(self):
         c = RequestsClient()
@@ -72,3 +77,4 @@ class TestAPIPaths(TestCase):
         c = RequestsClient()
         r = c.put('http://localhost/auctionhouse/auction/types', data={'blah': 'yarp'})
         assert r.status_code == 405
+

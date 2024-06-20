@@ -48,3 +48,8 @@ class TestAPIPaths(TestCase):
         returned_data = r.json()
         assert r.status_code == 200
         assert ordered(expected) == ordered(returned_data)
+
+    def test_try_to_delete_auction_types(self):
+        c = RequestsClient()
+        r = c.delete('http://localhost/auctionhouse/auction/types')
+        assert r.status_code == 405

@@ -10,7 +10,10 @@ def create_test(cls):
     test_id = str(uuid.uuid4())
     cls.Test1 = Testy.objects.create(
         test_id = test_id,
-        public_id = str(uuid.uuid4())
+        public_id = str(uuid.uuid4()),
+        type = "English",
+        name = "Testttty",
+        multiple = False
     )
     return test_id
 

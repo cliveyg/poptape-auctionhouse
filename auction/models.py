@@ -63,10 +63,14 @@ class AuctionType(models.Model):
 # -----------------------------------------------------------------------------
 
 class Testy(models.Model):
-        test_id = models.CharField(max_length=36, blank=False, primary_key=True,
-                                   validators=[validate_uuid_from_model])
-        public_id = models.CharField(max_length=36, blank=False,
-                                     validators=[validate_uuid_from_model])
+    test_id = models.CharField(max_length=36, blank=False, primary_key=True,
+                               validators=[validate_uuid_from_model])
+    public_id = models.CharField(max_length=36, blank=False,
+                                 validators=[validate_uuid_from_model])
+    type = models.CharField(max_length=15,
+                            choices=AuctionType.AUCTION_CHOICES)
+    name = models.CharField(max_length=100, blank=True)
+    multiple = models.BooleanField(default=False, null=False)
 
 class Auction(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, primary_key=True,

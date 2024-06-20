@@ -60,8 +60,10 @@ jobs:
       - name: Run unit tests and coverage reports
         run: |
           touch auctionhouse.log
-          python manage.py makemigrations
-          python manage.py migrate
+          echo "RUNNING MAKE MIGRATIONS"
+          manage.py makemigrations
+          echo "RUNNING MIGRATE"
+          manage.py migrate
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test
           coverage xml
           echo "$(coverage report -m )"

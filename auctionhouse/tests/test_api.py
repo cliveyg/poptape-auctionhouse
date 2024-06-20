@@ -33,6 +33,12 @@ class TestAPIPaths(TestCase):
         logger.debug("Content-Type is %s", r.headers.get('Content-Type'))
         assert r.headers.get('Content-Type') == 'application/json'
 
+    def test_delete_non_existent_resource(self):
+        c = RequestsClient()
+        r = c.delete('http://localhost/auctionhouse/blinky')
+        assert r.status_code == 404
+        assert r.headers.get('Content-Type') == 'application/json'
+
     def test_return_status_when_content_type_incorrect(self):
         c = RequestsClient()
         header = {'Content-Type': 'text/html'}

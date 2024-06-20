@@ -3,6 +3,7 @@
 from django.test import TestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
+from .test_setup import create_test, create_auction
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,6 +20,13 @@ def ordered(obj):
 
 
 class TestAPIPaths(TestCase):
+
+    auction_id = ""
+    @classmethod
+    def setUpTestData(cls):
+        create_test(cls)
+        #auction_id = create_auction(cls)
+        #logger.debug("Auction id is [%s]", auction_id)
 
     def test_status_ok_no_auth(self):
         c = RequestsClient()

@@ -39,9 +39,6 @@ urlpatterns = [
     # allows easier creation of auctions and lots - one http call instead of two or more
     path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),
 
-    # re_path(r'^auctionhouse/$', Return404.as_view(), name='404'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
-
-# handler404 = custom404

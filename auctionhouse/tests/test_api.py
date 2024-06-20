@@ -28,10 +28,6 @@ class TestAPIPaths(TestCase):
         header = {'Content-Type': 'text/html'}
         r = c.get('http://localhost/auctionhouse/status', headers=header)
         logger.debug("Content-Type is %s", r.headers.get('Content-Type'))
-        logger.debug("Status code is %d", r.status_code)
-        # assert r.status_code == 400
-#        c = APIClient()
-#        c.headers = {'Content-Type': 'text/html'}
-#        r = c.get('http://localhost/auctionhouse/status')
-#        logger.info("Status code is %d", r.status_code)
-        assert 1 == 1
+        assert r.headers.get('Content-Type') == 'application/json'
+        assert r.status_code == 200
+

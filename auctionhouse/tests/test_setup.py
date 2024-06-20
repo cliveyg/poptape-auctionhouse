@@ -3,7 +3,8 @@
 from auction.models import Auction
 from auction.models import Testy
 import uuid
-import datetime
+#import datetime
+from django_unixdatetimefield import UnixDateTimeField
 
 
 def create_test(cls):
@@ -14,8 +15,8 @@ def create_test(cls):
         type = "English",
         name = "Testttty",
         multiple = False,
-        start_time = datetime.datetime(2015, 2, 21, 19, 38, 32, 209148),
-        end_time = datetime.datetime(2115, 2, 21, 19, 38, 32, 209148),
+        start_time = UnixDateTimeField(),
+        end_time = UnixDateTimeField(),
         status = "created"
     )
     return test_id
@@ -34,8 +35,8 @@ def create_auction(cls):
         name = "Auction 1",
         multiple = False,
         active = True,
-        start_time = datetime.datetime(2015, 2, 21, 19, 38, 32, 209148),
-        end_time = datetime.datetime(2115, 2, 21, 19, 38, 32, 209148),
+        start_time = UnixDateTimeField(),
+        end_time = UnixDateTimeField(),
         currency = "GBP"
     )
     return auction_id

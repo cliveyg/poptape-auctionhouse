@@ -3,7 +3,7 @@
 from django.test import TestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
-from .test_setup import create_auction
+from .test_setup import create_test
 import logging
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class TestAPIPaths(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        create_auction(cls)
+        create_test(cls)
 
     def test_status_ok_no_auth(self):
         c = RequestsClient()

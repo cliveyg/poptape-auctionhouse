@@ -1,8 +1,17 @@
 # auctionhouse/tests/test_setup.py
 
-from auction.models import Auction
+#from auction.models import Auction
+from auction.models import Testy
 import uuid
 import datetime
+
+
+def create_test(cls):
+    cls.Test1 = Testy.objects.create(
+        test_id = str(uuid.uuid4())
+    )
+
+
 def create_auction(cls):
 
     cls.Auction1 = Auction.objects.create(

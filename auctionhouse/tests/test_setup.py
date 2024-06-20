@@ -3,20 +3,23 @@
 from auction.models import Auction
 from auction.models import Testy
 import uuid
-#import datetime
-from django_unixdatetimefield import UnixDateTimeField
+import datetime
+#from django_unixdatetimefield import UnixDateTimeField
 
 
 def create_test(cls):
+    
     test_id = str(uuid.uuid4())
+    timestamp = datetime.now().timestamp()
+
     cls.Test1 = Testy.objects.create(
         test_id = test_id,
         public_id = str(uuid.uuid4()),
         type = "English",
         name = "Testttty",
         multiple = False,
-        start_time = UnixDateTimeField(),
-        end_time = UnixDateTimeField(),
+        start_time = timestamp,
+        end_time = timestamp.timedelta(days=1),
         status = "created"
     )
     return test_id
@@ -25,6 +28,7 @@ def create_test(cls):
 def create_auction(cls):
 
     auction_id = str(uuid.uuid4())
+    timestamp = datetime.now().timestamp()
 
     cls.Auction1 = Auction.objects.create(
         auction_id = auction_id,
@@ -35,8 +39,8 @@ def create_auction(cls):
         name = "Auction 1",
         multiple = False,
         active = True,
-        start_time = UnixDateTimeField(),
-        end_time = UnixDateTimeField(),
+        start_time = timestamp,
+        end_time = timestamp.timedelta(days=1),
         currency = "GBP"
     )
     return auction_id

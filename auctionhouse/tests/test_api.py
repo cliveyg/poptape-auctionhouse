@@ -25,8 +25,8 @@ class TestAPIPaths(TestCase):
     @classmethod
     def setUpTestData(cls):
         create_test(cls)
-        auction_id = create_auction(cls)
-        logger.debug("Auction id is [%s]", auction_id)
+        #auction_id = create_auction(cls)
+        #logger.debug("Auction id is [%s]", auction_id)
 
     def test_status_ok_no_auth(self):
         c = RequestsClient()

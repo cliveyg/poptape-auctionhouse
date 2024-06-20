@@ -7,6 +7,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# helper function to compare json objects
+def ordered(obj):
+    if isinstance(obj, dict):
+        return sorted((k, ordered(v)) for k, v in obj.items())
+    if isinstance(obj, list):
+        return sorted(ordered(x) for x in obj)
+    else:
+        return obj
 
 class TestAPIPaths(TestCase):
 
@@ -31,3 +39,12 @@ class TestAPIPaths(TestCase):
         assert r.headers.get('Content-Type') == 'application/json'
         assert r.status_code == 200
 
+    def test_get_auction_types(self):
+        c = RequestsClient()
+        r = c.get('http://localhost/auctionhouse/auction/types')
+        expected = { 'valid_types': [ {'key': 'EN', 'label': 'English'},
+                                      {'key': 'BN', 'label': 'Buy Now'},
+                                      {'key': 'DU', 'label': 'Dutch'}] }
+        returned_data = r.json()
+        assert r.status_code == 200
+        assert ordered(expected) == ordered(returned_data)

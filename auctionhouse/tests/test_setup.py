@@ -19,10 +19,12 @@ def create_auction(cls):
     cls.Auction1 = Auction.objects.create(
         auction_id = auction_id,
         public_id = str(uuid.uuid4()),
+        status = "created",
         lots = [str(uuid.uuid4()), str(uuid.uuid4())],
         type = "Buy Now",
         name = "Auction 1",
         multiple = False,
+        active = True,
         start_time = datetime.datetime(2015, 2, 21, 19, 38, 32, 209148),
         end_time = datetime.datetime(2115, 2, 21, 19, 38, 32, 209148),
         currency = "GBP"

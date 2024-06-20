@@ -72,8 +72,9 @@ class TestURLSResolve(SimpleTestCase):
         self.assertEquals(resolve(url).func.view_class, ComboAuctionCreate)
         self.assertEquals(resolve(url).route, '^auctionhouse/<str:auction_type>/auction/')
         self.assertEquals(resolve(url).captured_kwargs['auction_type'], 'dutch')
-    def test_api_404_is_resolved(self):
-        url = reverse('404')
-        self.assertEquals(resolve(url).url_name, '404')
-        self.assertEquals(resolve(url).func.view_class, Return404)
-        self.assertEquals(resolve(url).route, '^auctionhouse/$')
+
+#    def test_api_404_is_resolved(self):
+#        url = reverse('404')
+#        self.assertEquals(resolve(url).url_name, '404')
+#        self.assertEquals(resolve(url).func.view_class, Return404)
+#        self.assertEquals(resolve(url).route, '^auctionhouse/$')

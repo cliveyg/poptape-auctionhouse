@@ -44,4 +44,4 @@ urlpatterns = [
 
 urlpatterns = format_suffix_patterns(urlpatterns)
 
-handler404 = custom404
+# handler404 = custom404

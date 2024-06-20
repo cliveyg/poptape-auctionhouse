@@ -27,4 +27,4 @@ urlpatterns = [
     re_path(r'^', include('auction.urls')),
 ]
 
-# handler404 = custom404
+handler404 = custom404

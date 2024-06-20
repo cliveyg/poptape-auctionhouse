@@ -5,7 +5,7 @@
 /auctionhouse.log
 /log/*
 /auctionhouse/.env
-/auctionhouse/.envORG
+/auctionhouse/.env
 /auction/tests/__pycache__
 /auctionhouse/tests/__pycache__
 /auction/migrations/__pycache__
@@ -40,6 +40,7 @@
 !auctionhouse/validators.py
 !auctionhouse/assertions.py
 !auctionhouse/authentication.py
+!auctionhouse/negotiation.py
 !auctionhouse/wsgi.py
 !auctionhouse/tests/tests_paths.py
 !auctionhouse/tests/__init__.py

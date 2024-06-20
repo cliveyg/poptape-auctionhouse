@@ -19,6 +19,7 @@ from django.urls import path, re_path
 from django.conf.urls import include
 # from django.views.generic import RedirectView
 from auctionhouse.views import StatusView
+from auction.views import custom404
 
 urlpatterns = [
     path('auctionhouse/admin/', admin.site.urls),
@@ -26,4 +27,4 @@ urlpatterns = [
     re_path(r'^', include('auction.urls')),
 ]
 
-
+handler404 = custom404

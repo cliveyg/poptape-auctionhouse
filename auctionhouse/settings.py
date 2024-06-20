@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import sys
 from dotenv import load_dotenv
 import django
 from django.utils.encoding import smart_str
@@ -30,10 +29,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
+APPEND_SLASH = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
 allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
 allowed_hosts_array = allowed_hosts_string.split(",")
@@ -72,6 +72,10 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    # 'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'auctionhouse.negotiation.IgnoreClientContentNegotiation',
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'rest_framework.permissions.AllowAny',
@@ -91,7 +95,7 @@ REST_FRAMEWORK = {
     # we only want to accept json input so default to json only
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
-    )
+    ),
 }
 
 # logging
@@ -184,34 +188,24 @@ WSGI_APPLICATION = 'auctionhouse.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-# uses sqlite for when running tests so that running tests in
-# github actions works okay
-if sys.argv[1] == 'GOTHRU':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('AUCTIONHOUSE_DB_NAME'),
+        'USER': os.getenv('AUCTIONHOUSE_DB_USER'),
+        'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
+        'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
+        'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
+        'TEST': {
+            'NAME': os.getenv('TEST_AUCTIONHOUSE_DB_NAME'),
+            'USER': os.getenv('TEST_AUCTIONHOUSE_DB_USER'),
+            'PASSWORD': os.getenv('TEST_AUCTIONHOUSE_DB_PASS'),
+            'HOST': os.getenv('TEST_AUCTIONHOUSE_DB_HOST'),
+            'PORT': os.getenv('TEST_AUCTIONHOUSE_DB_PORT'),
         }
+        # 'ATOMIC_REQUESTS': True,
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv('AUCTIONHOUSE_DB_NAME'),
-            'USER': os.getenv('AUCTIONHOUSE_DB_USER'),
-            'PASSWORD': os.getenv('AUCTIONHOUSE_DB_PASS'),
-            'HOST': os.getenv('AUCTIONHOUSE_DB_HOST'),
-            'PORT': os.getenv('AUCTIONHOUSE_DB_PORT'),
-            'TEST': {
-                'NAME': os.getenv('TEST_AUCTIONHOUSE_DB_NAME'),
-                'USER': os.getenv('TEST_AUCTIONHOUSE_DB_USER'),
-                'PASSWORD': os.getenv('TEST_AUCTIONHOUSE_DB_PASS'),
-                'HOST': os.getenv('TEST_AUCTIONHOUSE_DB_HOST'),
-                'PORT': os.getenv('TEST_AUCTIONHOUSE_DB_PORT'),
-            }
-            # 'ATOMIC_REQUESTS': True,
-        }
-    }
+}
 
 # get rid of DEFAULT_AUTO_FIELD warnings
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

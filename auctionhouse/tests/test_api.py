@@ -7,6 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 # helper function to compare json objects
 def ordered(obj):
     if isinstance(obj, dict):
@@ -15,6 +16,7 @@ def ordered(obj):
         return sorted(ordered(x) for x in obj)
     else:
         return obj
+
 
 class TestAPIPaths(TestCase):
 
@@ -42,9 +44,9 @@ class TestAPIPaths(TestCase):
     def test_get_auction_types(self):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/auction/types')
-        expected = { 'valid_types': [ {'key': 'EN', 'label': 'English'},
-                                      {'key': 'BN', 'label': 'Buy Now'},
-                                      {'key': 'DU', 'label': 'Dutch'}] }
+        expected = {'valid_types': [{'key': 'EN', 'label': 'English'},
+                                    {'key': 'BN', 'label': 'Buy Now'},
+                                    {'key': 'DU', 'label': 'Dutch'}]}
         returned_data = r.json()
         assert r.status_code == 200
         assert ordered(expected) == ordered(returned_data)
@@ -52,4 +54,9 @@ class TestAPIPaths(TestCase):
     def test_try_to_delete_auction_types(self):
         c = RequestsClient()
         r = c.delete('http://localhost/auctionhouse/auction/types')
+        assert r.status_code == 405
+
+    def test_try_to_edit_auction_types(self):
+        c = RequestsClient()
+        r = c.put('http://localhost/auctionhouse/auction/types', data={'blah': 'yarp'})
         assert r.status_code == 405

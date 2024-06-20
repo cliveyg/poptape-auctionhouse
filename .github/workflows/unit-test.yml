@@ -57,13 +57,17 @@ jobs:
         run: |
           echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
 
+        #echo "RUNNING MAKE MIGRATIONS"
+        #python manage.py makemigrations
+
       - name: Run unit tests and coverage reports
         run: |
           touch auctionhouse.log
-          echo "RUNNING MAKE MIGRATIONS"
-          python manage.py makemigrations
           echo "RUNNING MIGRATE"
-          python manage.py migrate
+          manage.py migrate --fake auction zero
+          rm -rf migrations
+          manage.py makemigrations auction
+          manage.py migrate --fake auction
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test
           coverage xml
           echo "$(coverage report -m )"

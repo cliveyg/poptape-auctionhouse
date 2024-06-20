@@ -13,7 +13,10 @@ def create_test(cls):
         public_id = str(uuid.uuid4()),
         type = "English",
         name = "Testttty",
-        multiple = False
+        multiple = False,
+        start_time = datetime.datetime(2015, 2, 21, 19, 38, 32, 209148),
+        end_time = datetime.datetime(2115, 2, 21, 19, 38, 32, 209148),
+        status = "created"
     )
     return test_id
 

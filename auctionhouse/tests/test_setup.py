@@ -2,7 +2,8 @@
 
 from auction.models import Auction
 import uuid
-def createAuction(cls):
+import datetime
+def create_auction(cls):
 
     cls.Auction1 = Auction.objects.create(
         auction_id = str(uuid.uuid4()),
@@ -11,6 +12,8 @@ def createAuction(cls):
         type = "Buy Now",
         name = "Auction 1",
         multiple = False,
+        start_time = datetime.datetime(2015, 2, 21, 19, 38, 32, 209148),
+        end_time = datetime.datetime(2115, 2, 21, 19, 38, 32, 209148),
         currency = "GBP"
     )
 #auction_id = models.CharField(max_length=36, blank=False, primary_key=True,

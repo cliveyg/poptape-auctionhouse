@@ -82,7 +82,7 @@ class TokenAuth(BaseAuthentication):
         try:
             resp = requests.get(authy_url, headers=headers)
         except Exception as e:
-            logger.critical("error is [%s]", e)
+            logger.error("Error calling auth server: [%s]", e)
 
         logger.critical("Represent!")
 

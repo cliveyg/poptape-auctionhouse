@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 def mocked_auth_success(*args, **kwargs):
 
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
-    logger.info("URL is [%s]", args[0])
 
     for x in args:
         logger.info("ARGS ARE: [%s]", str(x))
@@ -28,18 +27,18 @@ def mocked_auth_success(*args, **kwargs):
     r = Mock(spec=Response)
 
     #return MockResponse({"public_id": "blah"}, 200)
-    if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
-        logger.debug("MEEEEEP")
-        r.status_code = 200
-        r.headers = {'Content-Type': 'application/json'}
-        r.json.return_value = {'public_id': 'Yarp'}
-        return r
+    #if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
+    logger.debug("MEEEEEP")
+    r.status_code = 200
+    r.headers = {'Content-Type': 'application/json'}
+    r.json.return_value = {'public_id': 'Yarp'}
+    return r
         #return ({"public_id": "blah"}, 200)
     #elif args[0] == 'http://someotherurl.com/anothertest.json':
     #    return MockResponse({"key2": "value2"}, 200)
-    r.status_code = 404
-    r.headers = {'Content-Type': 'application/json'}
-    return r
+    #r.status_code = 404
+    #r.headers = {'Content-Type': 'application/json'}
+    #return r
     #return MockResponse(None, 404)
 
 # @urlmatch(path=r"(.*)authy/checkaccess/10$")
@@ -77,7 +76,7 @@ class TestAPIPaths(TestCase):
     #     auction_id = create_auction(self)
     #     logger.debug("Auction id is [%s]", self.auction_id)
 
-    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success(settings.AUTH_SERVER_URL))
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
         logger.debug("++++++++++++++++ test_get_auction_by_id ++++++++++++++++++")

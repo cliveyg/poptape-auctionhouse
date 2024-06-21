@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 logger = logging.getLogger(__name__)
 
 
-def mocked_auth_success(*args, **kwargs):
+def mocked_auth_success():
 
     logger.debug("WOOOOOOOOOOOOOOOP!")
     user = User(username=str(uuid.uuid4()), first_name="Yarp")

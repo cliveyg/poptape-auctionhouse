@@ -58,10 +58,10 @@ class TestAPIPaths(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        logger.debug("======================= setUpTestData ============================")
+        #logger.debug("======================= setUpTestData ============================")
         cls.auction_id = create_auction(cls)
-        logger.debug("Auction id is [%s]", cls.auction_id)
-        logger.debug("==================================================================")
+        #logger.debug("Auction id is [%s]", cls.auction_id)
+        #logger.debug("==================================================================")
 
     # def setUp(self):
     #     auction_id = create_auction(self)

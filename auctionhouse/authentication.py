@@ -63,7 +63,7 @@ class TokenAuth(BaseAuthentication):
 
     def authenticate(self, request, token=None):
 
-        # logger.critical("Why you here Willis?")
+        logger.critical("Why you here Willis?")
 
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
             # logger.critical("Returning nada")

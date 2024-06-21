@@ -63,13 +63,10 @@ class TokenAuth(BaseAuthentication):
 
     def authenticate(self, request, token=None):
 
-        logger.critical("Why you here Willis?")
+        # logger.critical("Why you here Willis?")
 
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
-            # logger.critical("Returning nada")
             return None
-
-        logger.critical("Say my name!")
 
         # call authy
         authy_url = settings.AUTH_SERVER_URL
@@ -77,18 +74,12 @@ class TokenAuth(BaseAuthentication):
         headers = {'Content-type': 'application/json',
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
 
-        logger.critical("headers are [%s]", headers)
-
         try:
             resp = requests.get(authy_url, headers=headers)
         except Exception as e:
             logger.error("Error calling auth server: [%s]", e)
 
-        logger.critical("Represent!")
-
         if resp.status_code == 200:
-
-            logger.critical("NOW WE TALKIN")
 
             token_parts = request.META.get('HTTP_X_ACCESS_TOKEN').split(".")
             # decoded_second_part = base64.b64decode(token_parts[1]+"===").decode("utf-8")

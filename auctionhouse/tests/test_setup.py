@@ -52,10 +52,3 @@ def create_auction_and_lots(cls):
     )
 
     return auction_id
-    '''
-    cls.User1 = User.objects.create(
-        username = public_id,
-        firstname = "blingy"
-    )
-    return auction_id, public_id
-    '''

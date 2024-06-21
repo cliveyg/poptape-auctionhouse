@@ -64,7 +64,6 @@ class AuctionDetail(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, auction_id):
-        logger.info("IN get_object")
         try:
             return Auction.objects.get(auction_id=auction_id)
         except Exception as e:

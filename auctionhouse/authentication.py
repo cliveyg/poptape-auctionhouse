@@ -81,7 +81,11 @@ class TokenAuth(BaseAuthentication):
         
         resp = requests.get(authy_url, headers=headers)
 
+        logger.critical("Represent!")
+
         if resp.status_code == 200:
+
+            logger.critical("NOW WE TALKIN")
 
             token_parts = request.META.get('HTTP_X_ACCESS_TOKEN').split(".")
             # decoded_second_part = base64.b64decode(token_parts[1]+"===").decode("utf-8")

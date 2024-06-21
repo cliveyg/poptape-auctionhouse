@@ -23,6 +23,11 @@ def mocked_requests_get(*args, **kwargs):
 
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
     logger.info("URL is [%s]", args[0])
+
+    for x in args:
+        logger.info("ARGS ARE: [%s]", str(x))
+    for arg in kwargs:
+        logger.info("KWARG ARG IS: [%s]", str(arg))
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
 
     if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':

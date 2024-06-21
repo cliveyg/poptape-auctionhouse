@@ -5,8 +5,18 @@ from django.test import TestCase
 from rest_framework.test import RequestsClient
 from .test_setup import create_auction
 import logging
+from httmock import urlmatch, HTTMock, response
+import uuid
 
 logger = logging.getLogger(__name__)
+
+
+@urlmatch(path=r"(.*)/poptape-authy-api-1:8001/authy/checkaccess/10")
+def auth_response_ok(url, request):
+    headers = {'content-type': 'application/json'}
+    content = {'public_id': str(uuid.uuid4())}
+    logger.debug("URL is [%s]", url)
+    return response(200, content, headers, None, 5, request)
 
 
 # helper function to compare json objects
@@ -21,13 +31,21 @@ def ordered(obj):
 
 class TestAPIPaths(TestCase):
 
-    auction_id = ""
     @classmethod
-    def setUpTestData(cls):
-        #test_id = create_test(cls)
-        #logger.debug("Test id is [%s]", test_id)
-        auction_id = create_auction(cls)
+    def setUpTestData(self):
+        self.auction_id = create_auction(self)
+        logger.debug("Auction id is [%s]", self.auction_id)
+
+    def setUp(self):
+        auction_id = create_auction(self)
         logger.debug("Auction id is [%s]", auction_id)
+
+    def test_get_auction_by_id(self):
+        c = RequestsClient()
+        with HTTMock(auth_response_ok):
+            r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id)
+        assert r.status_code == 200
+        assert r.headers.get('Content-Type') == 'application/json'
 
     def test_status_ok_no_auth(self):
         c = RequestsClient()

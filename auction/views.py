@@ -64,9 +64,11 @@ class AuctionDetail(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, auction_id):
+        logger.info("IN get_object")
         try:
             return Auction.objects.get(auction_id=auction_id)
-        except Auction.DoesNotExist:
+        except Exception as e:
+            logger.error("BAD JUJU [%s]", e)
             raise NotFound(detail="Nowt 'ere, resource not found", code=404)
 
     def get_data_objects(self, auctype):

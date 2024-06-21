@@ -78,8 +78,11 @@ class TokenAuth(BaseAuthentication):
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
 
         logger.critical("headers are [%s]", headers)
-        
-        resp = requests.get(authy_url, headers=headers)
+
+        try:
+            resp = requests.get(authy_url, headers=headers)
+        except Exception as e:
+            logger.critical("error is [%s]", e)
 
         logger.critical("Represent!")
 

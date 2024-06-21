@@ -17,7 +17,7 @@ class ModelsTestCase(TestCase):
 
     def setUp(self):
         print('test_setUp')
-        """
+
         self.english_auc = EnglishAuctionLot.objects.create(lot_id = LOT_ID,
                                                             item_id = ITEM_ID,
                                                             start_time = NOW,
@@ -30,7 +30,7 @@ class ModelsTestCase(TestCase):
                                                             start_price = 99.50,
                                                             reserve_price = 145.80,
                                                             min_increment = 0.50)
-                                                            """
+
         self.english_auc = EnglishAuctionLot.objects.create(start_price = 99.50,
                                                             reserve_price = 145.80,
                                                             min_increment = 0.50)

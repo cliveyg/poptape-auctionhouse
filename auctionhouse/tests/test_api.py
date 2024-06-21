@@ -52,7 +52,7 @@ class TestAPIPaths(TransactionTestCase):
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
 
-    def test_fail_get_auction_no_auth(self, mock_get):
+    def test_fail_get_auction_no_auth(self):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id)
         assert r.status_code == 403

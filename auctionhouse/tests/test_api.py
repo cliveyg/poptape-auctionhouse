@@ -22,7 +22,7 @@ def mocked_requests_get(*args, **kwargs):
             return self.json_data
 
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
-    logger.info("URL is [%]", args[0])
+    logger.info("URL is [%s]", args[0])
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
 
     if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':

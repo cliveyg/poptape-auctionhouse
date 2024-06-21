@@ -21,6 +21,10 @@ def mocked_requests_get(*args, **kwargs):
         def json(self):
             return self.json_data
 
+    logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
+    logger.info("URL is [%]", args[0])
+    logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
+
     if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
         return MockResponse({"public_id": "blah"}, 200)
     elif args[0] == 'http://someotherurl.com/anothertest.json':

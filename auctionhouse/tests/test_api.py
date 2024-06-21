@@ -6,21 +6,16 @@ from rest_framework.test import RequestsClient
 from django.conf import settings
 from .test_setup import create_auction
 import logging
+from requests.models import Response
 # from httmock import all_requests, HTTMock, response
 # import uuid
+from unittest.mock import Mock
 from unittest import mock
 
 logger = logging.getLogger(__name__)
 
 
 def mocked_auth_success(*args, **kwargs):
-    class MockResponse:
-        def __init__(self, json_data, status_code):
-            self.json_data = json_data
-            self.status_code = status_code
-
-        def json(self):
-            return self.json_data
 
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
     logger.info("URL is [%s]", args[0])
@@ -30,15 +25,22 @@ def mocked_auth_success(*args, **kwargs):
     for arg in kwargs:
         logger.info("KWARG ARG IS: [%s]", str(arg))
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
+    r = Mock(spec=Response)
 
     #return MockResponse({"public_id": "blah"}, 200)
     if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
         logger.debug("MEEEEEP")
-        return MockResponse({"public_id": "blah"}, 200)
-    elif args[0] == 'http://someotherurl.com/anothertest.json':
-        return MockResponse({"key2": "value2"}, 200)
-
-    return MockResponse(None, 404)
+        r.status_code = 200
+        r.headers = {'Content-Type': 'application/json'}
+        r.json.return_value = {'public_id': 'Yarp'}
+        return r
+        #return ({"public_id": "blah"}, 200)
+    #elif args[0] == 'http://someotherurl.com/anothertest.json':
+    #    return MockResponse({"key2": "value2"}, 200)
+    r.status_code = 404
+    r.headers = {'Content-Type': 'application/json'}
+    return r
+    #return MockResponse(None, 404)
 
 # @urlmatch(path=r"(.*)authy/checkaccess/10$")
 # @all_requests

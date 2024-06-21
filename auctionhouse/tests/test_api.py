@@ -1,6 +1,6 @@
 # auctionhouse/tests/test_api.py
 # from django.test import SimpleTestCase
-from django.test import TestCase
+from django.test import TransactionTestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
 from django.conf import settings
@@ -60,8 +60,7 @@ def ordered(obj):
     else:
         return obj
 
-
-class TestAPIPaths(TestCase):
+class TestAPIPaths(TransactionTestCase):
 
     auction_id = ""
 

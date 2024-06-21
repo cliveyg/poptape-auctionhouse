@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django_unixdatetimefield import UnixDateTimeField
-from model_utils import InheritanceCastModel
 # from djmoney.models.fields import MoneyField
 # from auctionhouse.validators import validate_currency, validate_uuid_from_model
 from auctionhouse.validators import validate_uuid_from_model

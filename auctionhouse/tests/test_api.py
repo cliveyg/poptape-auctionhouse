@@ -4,7 +4,7 @@ from django.test import TestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
 from django.conf import settings
-from .test_setup import create_auction
+from .test_setup import create_auction_and_lots
 import logging
 from requests.models import Response
 # from httmock import all_requests, HTTMock, response
@@ -68,7 +68,7 @@ class TestAPIPaths(TestCase):
     @classmethod
     def setUpTestData(cls):
         #logger.debug("======================= setUpTestData ============================")
-        cls.auction_id = create_auction(cls)
+        cls.auction_id = create_auction_and_lots(cls)
         #logger.debug("Auction id is [%s]", cls.auction_id)
         #logger.debug("==================================================================")
 

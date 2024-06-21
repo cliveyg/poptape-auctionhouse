@@ -69,11 +69,15 @@ class TokenAuth(BaseAuthentication):
             # logger.critical("Returning nada")
             return None
 
+        logger.critical("Say my name!")
+
         # call authy
         authy_url = settings.AUTH_SERVER_URL
 
         headers = {'Content-type': 'application/json',
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
+
+        logger.critical("headers are [%s]", headers)
         
         resp = requests.get(authy_url, headers=headers)
 

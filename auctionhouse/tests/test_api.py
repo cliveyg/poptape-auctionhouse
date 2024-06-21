@@ -82,7 +82,7 @@ class TestAPIPaths(TestCase):
     #     auction_id = create_auction(self)
     #     logger.debug("Auction id is [%s]", self.auction_id)
 
-    @mock.patch('auctionhouse.authentication', side_effect=mocked_auth_success)
+    @mock.patch('auctionhouse.authentication.TokenAuth.authenticate', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
         logger.debug("++++++++++++++++ test_get_auction_by_id ++++++++++++++++++")

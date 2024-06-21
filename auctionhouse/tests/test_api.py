@@ -47,6 +47,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
+        logger.info("CRFETED AUC ID [%s]", self.auction_id)
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id, headers=header)
         assert r.status_code == 200

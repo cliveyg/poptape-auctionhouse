@@ -89,8 +89,11 @@ class AuctionDetail(APIView):
 
         logger.info("INSIDE THE GET")
         auction = self.get_object(auction_id)
+        logger.info("AFTER GET_OBJECT")
         auction_serializer = AuctionSerializer(auction)
+        logger.info("AFTER auction_serializer")
         auction_lot_serializer = self.get_lots(auction.type, auction.lots)
+        logger.info("AFTER auction_lot_serializer")
 
         auc_stuff = auction_serializer.data
         auc_stuff['lots'] = auction_lot_serializer.data

@@ -25,7 +25,7 @@ def validate_decimals(value):
         return round(float(value), 2)
     except:
         raise ValidationError(
-            _('%(value)s is not an integer or a number to two decimal places'),
+            ('%(value)s is not an integer or a number to two decimal places'),
             params={'value': value},
         )
 
@@ -51,8 +51,8 @@ def json_schema_validation(data, schema_uri):
         raise ValidationError("Input is not valid json")
 
     # not fussed about being super quick here as validating urls when 
-    # creating api paths is not an everyminute occurence only when 
-    # creating a record
+    # creating api paths is not an everyminute occurence only when
+    # creating a record
     filepath = os.path.abspath(os.path.dirname(__file__))
     full_filename = filepath + schema_uri
 

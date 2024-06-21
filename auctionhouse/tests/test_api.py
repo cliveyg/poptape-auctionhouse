@@ -1,5 +1,7 @@
 # auctionhouse/tests/test_api.py
 # from django.test import SimpleTestCase
+import uuid
+
 from django.test import TestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
@@ -8,9 +10,15 @@ import logging
 # from httmock import all_requests, HTTMock, response
 # import uuid
 from unittest import mock
+from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
+
+def mocked_auth_success(*args, **kwargs):
+
+    user = User(username=str(uuid.uuid4()), first_name="Yarp")
+    return user, None
 
 def mocked_requests_get(*args, **kwargs):
     class MockResponse:
@@ -73,7 +81,7 @@ class TestAPIPaths(TestCase):
     #     auction_id = create_auction(self)
     #     logger.debug("Auction id is [%s]", self.auction_id)
 
-    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_requests_get)
+    @mock.patch('auctionhouse.authentication', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
         logger.debug("++++++++++++++++ test_get_auction_by_id ++++++++++++++++++")

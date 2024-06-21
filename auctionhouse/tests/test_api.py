@@ -72,7 +72,7 @@ class TestAPIPaths(TestCase):
         c = RequestsClient()
         logger.debug("++++++++++++++++ test_get_auction_by_id ++++++++++++++++++")
         # with HTTMock(auth_response_ok):
-        header = {'HTTP_X_ACCESS_TOKEN': 'sometoken'}
+        header = {'HTTP_X_ACCESS_TOKEN': 'sometoken', 'x-access-token': 'yarp'}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id, headers=header)
         logger.debug("Auction id is [%s]", self.auction_id)
         logger.debug("Status code is [%d]", r.status_code)

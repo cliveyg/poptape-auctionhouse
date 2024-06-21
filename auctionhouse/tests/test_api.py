@@ -31,14 +31,16 @@ def ordered(obj):
 
 class TestAPIPaths(TestCase):
 
+    auction_id = ""
+    
     @classmethod
     def setUpTestData(self):
         self.auction_id = create_auction(self)
         logger.debug("Auction id is [%s]", self.auction_id)
 
-    def setUp(self):
-        auction_id = create_auction(self)
-        logger.debug("Auction id is [%s]", auction_id)
+    # def setUp(self):
+    #     auction_id = create_auction(self)
+    #     logger.debug("Auction id is [%s]", self.auction_id)
 
     def test_get_auction_by_id(self):
         c = RequestsClient()

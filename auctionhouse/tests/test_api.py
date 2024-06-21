@@ -1,27 +1,19 @@
 # auctionhouse/tests/test_api.py
 # from django.test import SimpleTestCase
-import uuid
-
 from django.test import TestCase
 # from rest_framework.test import APIClient
 from rest_framework.test import RequestsClient
+from django.conf import settings
 from .test_setup import create_auction
 import logging
 # from httmock import all_requests, HTTMock, response
 # import uuid
 from unittest import mock
-from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
 
-def mocked_auth_success():
-
-    logger.debug("WOOOOOOOOOOOOOOOP!")
-    user = User(username=str(uuid.uuid4()), first_name="Yarp")
-    return user, None
-
-def mocked_requests_get(*args, **kwargs):
+def mocked_auth_success(*args, **kwargs):
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
@@ -39,13 +31,14 @@ def mocked_requests_get(*args, **kwargs):
         logger.info("KWARG ARG IS: [%s]", str(arg))
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
 
-    return MockResponse({"public_id": "blah"}, 200)
-    #if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
-    #    return MockResponse({"public_id": "blah"}, 200)
-    #elif args[0] == 'http://someotherurl.com/anothertest.json':
-    #    return MockResponse({"key2": "value2"}, 200)
+    #return MockResponse({"public_id": "blah"}, 200)
+    if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
+        logger.debug("MEEEEEP")
+        return MockResponse({"public_id": "blah"}, 200)
+    elif args[0] == 'http://someotherurl.com/anothertest.json':
+        return MockResponse({"key2": "value2"}, 200)
 
-    #return MockResponse(None, 404)
+    return MockResponse(None, 404)
 
 # @urlmatch(path=r"(.*)authy/checkaccess/10$")
 # @all_requests
@@ -74,7 +67,7 @@ class TestAPIPaths(TestCase):
     @classmethod
     def setUpTestData(cls):
         #logger.debug("======================= setUpTestData ============================")
-        cls.auction_id = create_auction(cls)
+        cls.auction_id, cls.public_id = create_auction(cls)
         #logger.debug("Auction id is [%s]", cls.auction_id)
         #logger.debug("==================================================================")
 
@@ -82,18 +75,19 @@ class TestAPIPaths(TestCase):
     #     auction_id = create_auction(self)
     #     logger.debug("Auction id is [%s]", self.auction_id)
 
-    @mock.patch('auctionhouse.authentication.TokenAuth.authenticate', mocked_auth_success)
-    def test_get_auction_by_id(self):
+    @mock.patch('auctionhouse.authentication', side_effect=mocked_auth_success(settings.AUTH_SERVER_URL))
+    def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
         logger.debug("++++++++++++++++ test_get_auction_by_id ++++++++++++++++++")
         # with HTTMock(auth_response_ok):
-        header = {'x-access-token': 'yarp'}
+        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id, headers=header)
         logger.debug("Auction id is [%s]", self.auction_id)
         logger.debug("Status code is [%d]", r.status_code)
         logger.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
+
 '''
     def test_status_ok_no_auth(self):
         c = RequestsClient()

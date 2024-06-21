@@ -5,13 +5,14 @@ from django.test import TestCase
 from rest_framework.test import RequestsClient
 from .test_setup import create_auction
 import logging
-from httmock import urlmatch, HTTMock, response
+from httmock import all_requests, HTTMock, response
 import uuid
 
 logger = logging.getLogger(__name__)
 
 
-@urlmatch(path=r"(.*)authy/checkaccess/10$")
+#@urlmatch(path=r"(.*)authy/checkaccess/10$")
+@all_requests
 def auth_response_ok(url, request):
     logger.debug("@@@@@@@@@@@@@@@@@@@@ auth_response_ok @@@@@@@@@@@@@@@@@@@@@@@")
     headers = {'content-type': 'application/json'}
@@ -36,10 +37,10 @@ class TestAPIPaths(TestCase):
 
     @classmethod
     def setUpTestData(self):
-        logger.debug("===================================================")
+        logger.debug("======================= setUpTestData ============================")
         self.auction_id = create_auction(self)
         logger.debug("Auction id is [%s]", self.auction_id)
-        logger.debug("===================================================")
+        logger.debug("==================================================================")
 
     # def setUp(self):
     #     auction_id = create_auction(self)
@@ -47,12 +48,12 @@ class TestAPIPaths(TestCase):
 
     def test_get_auction_by_id(self):
         c = RequestsClient()
-        logger.debug("++++++++++++++++++++++++++++++++++")
+        logger.debug("++++++++++++++++ test_get_auction_by_id ++++++++++++++++++")
         with HTTMock(auth_response_ok):
             r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id)
         logger.debug("Auction id is [%s]", self.auction_id)
         logger.debug("Status code is [%d]", r.status_code)
-        logger.debug("++++++++++++++++++++++++++++++++++")
+        logger.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
 

@@ -30,12 +30,13 @@ def mocked_requests_get(*args, **kwargs):
         logger.info("KWARG ARG IS: [%s]", str(arg))
     logger.info("_+_+_+_+_+__++_+_+_+_+_+_+_+_+_+_+_+_")
 
-    if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
-        return MockResponse({"public_id": "blah"}, 200)
-    elif args[0] == 'http://someotherurl.com/anothertest.json':
-        return MockResponse({"key2": "value2"}, 200)
+    return MockResponse({"public_id": "blah"}, 200)
+    #if args[0] == 'http://poptape-authy-api-1:8001/authy/checkaccess/10':
+    #    return MockResponse({"public_id": "blah"}, 200)
+    #elif args[0] == 'http://someotherurl.com/anothertest.json':
+    #    return MockResponse({"key2": "value2"}, 200)
 
-    return MockResponse(None, 404)
+    #return MockResponse(None, 404)
 
 # @urlmatch(path=r"(.*)authy/checkaccess/10$")
 # @all_requests

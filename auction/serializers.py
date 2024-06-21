@@ -33,9 +33,6 @@ class AuctionLotSerializer(serializers.ModelSerializer):
         model = AuctionLot
         fields = ('item_id', 'start_time', 'end_time', 'status', 'active',
                   'quantity', 'created', 'modified')
-#        fields = ('item_id', 'starting_bid', 'current_bid', 'winning_bid',
-#                  'start_time', 'end_time', 'status', 'active',
-#                  'quantity', 'created', 'modified')
         read_only_fields = ('created', 'modified')
 
 # -----------------------------------------------------------------------------

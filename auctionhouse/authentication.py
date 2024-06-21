@@ -66,7 +66,6 @@ class TokenAuth(BaseAuthentication):
         # logger.critical("Why you here Willis?")
 
         if not request.META.get('HTTP_X_ACCESS_TOKEN'):
-            # logger.critical("Returning nada")
             return None
 
         # call authy
@@ -74,8 +73,11 @@ class TokenAuth(BaseAuthentication):
 
         headers = {'Content-type': 'application/json',
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
-        
-        resp = requests.get(authy_url, headers=headers)
+
+        try:
+            resp = requests.get(authy_url, headers=headers)
+        except Exception as e:
+            logger.error("Error calling auth server: [%s]", e)
 
         if resp.status_code == 200:
 

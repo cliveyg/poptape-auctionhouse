@@ -1,5 +1,5 @@
 # auctionhouse/tests/test_api.py
-# import uuid
+import uuid
 
 from django.test import TransactionTestCase
 from rest_framework.test import RequestsClient
@@ -8,8 +8,6 @@ import logging
 from requests.models import Response
 from unittest.mock import Mock
 from unittest import mock
-from jsondiff import diff
-import json
 from auction.models import Auction, EnglishAuctionLot
 
 logger = logging.getLogger(__name__)
@@ -50,13 +48,13 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
 
-#    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
-#    def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
-#        c = RequestsClient()
-#        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-#        r = c.get('http://localhost/auctionhouse/auction/notvaliduuid', headers=header)
-#        assert r.status_code == 404
-#        assert r.headers.get('Content-Type') == 'application/json'
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        r = c.get('http://localhost/auctionhouse/auction/notvaliduuid', headers=header)
+        assert r.status_code == 404
+        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
@@ -65,16 +63,14 @@ class TestAPIPaths(TransactionTestCase):
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
         returned_data = r.json()
         assert returned_data.get("auction").get("auction_id") == self.auction.auction_id
-        # assert diff(returned_data.get("auction"), json.dumps(self.auction.__dict__)) == {}
         assert r.url == "http://localhost/auctionhouse/auction/"+self.auction.auction_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
 
 
-'''
     def test_fail_get_auction_no_auth(self):
         c = RequestsClient()
-        r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id)
+        r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/')
         assert r.status_code == 403
         assert r.headers.get('Content-Type') == 'application/json'
 
@@ -82,7 +78,7 @@ class TestAPIPaths(TransactionTestCase):
     def test_fail_get_auction_by_id_404(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        r = c.get('http://localhost/auctionhouse/auction/'+str(uuid.uuid4()), headers=header)
+        r = c.get('http://localhost/auctionhouse/auction/'+str(uuid.uuid4())+'/', headers=header)
         assert r.status_code == 404
         assert r.headers.get('Content-Type') == 'application/json'
 
@@ -138,4 +134,3 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         r = c.put('http://localhost/auctionhouse/auction/types', data={'blah': 'yarp'})
         assert r.status_code == 405
-'''

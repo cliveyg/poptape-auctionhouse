@@ -33,7 +33,6 @@ importlib-metadata
 iniconfig
 jsonschema
 jsonschema-specifications
-jsondiff
 kombu
 MarkupSafe
 mock

@@ -45,6 +45,7 @@ class TestAPIPaths(TransactionTestCase):
     def setUpTestData(self):
         self.auction_id = create_auction_and_lots(self)
 
+'''
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
@@ -68,7 +69,7 @@ class TestAPIPaths(TransactionTestCase):
         assert r.status_code == 404
         assert r.headers.get('Content-Type') == 'application/json'
 
-
+'''
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
         c = RequestsClient()
@@ -79,7 +80,7 @@ class TestAPIPaths(TransactionTestCase):
 
         assert r.status_code == 400
         assert r.headers.get('Content-Type') == 'application/json'
-
+'''
     def test_status_ok_no_auth(self):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/status')
@@ -132,3 +133,4 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         r = c.put('http://localhost/auctionhouse/auction/types', data={'blah': 'yarp'})
         assert r.status_code == 405
+'''

@@ -56,5 +56,8 @@ def create_auction_and_lots(cls):
         reserve_price = 500.00,
         min_increment = 15.00
     )
+    lots = [EnglishAuctionLot() for _ in range(2)]
+    lots.append(cls.AucLot1)
+    lots.append(cls.AucLot2)
 
-    return auction_id
+    return cls.Auction1, lots

@@ -42,8 +42,8 @@ class TestAPIPaths(TransactionTestCase):
     auction_id = ""
 
     @classmethod
-    def setUpTestData(self):
-        self.auction_id = create_auction_and_lots(self)
+    def setUpTestData(cls):
+        cls.auction_id = create_auction_and_lots(cls)
 
 
 #    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)

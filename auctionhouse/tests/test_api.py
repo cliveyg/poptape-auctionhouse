@@ -8,6 +8,7 @@ import logging
 from requests.models import Response
 from unittest.mock import Mock
 from unittest import mock
+from auction.models import Auction, EnglishAuctionLot
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,7 @@ def mocked_auth_fail_403(*args, **kwargs):
     r.json.return_value = {'public_id': 'Yarp'}
     return r
 
+
 # helper function to compare json objects
 def ordered(obj):
     if isinstance(obj, dict):
@@ -39,24 +41,36 @@ def ordered(obj):
 
 class TestAPIPaths(TransactionTestCase):
 
-    auction_id = ""
-
     @classmethod
-    def setUpTestData(self):
-        self.auction_id = create_auction_and_lots(self)
+    def setUp(cls):
+        cls.auction = Auction()
+        cls.lots = [EnglishAuctionLot() for _ in range(2)]
+        cls.auction, cls.lots = create_auction_and_lots(cls)
+
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        r = c.get('http://localhost/auctionhouse/auction/notvaliduuid', headers=header)
+        assert r.status_code == 404
+        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
-        logger.info("CRFETED AUC ID [%s]", self.auction_id)
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id, headers=header)
+        r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
+        returned_data = r.json()
+        assert returned_data.get("auction").get("auction_id") == self.auction.auction_id
+        assert r.url == "http://localhost/auctionhouse/auction/"+self.auction.auction_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
 
+
     def test_fail_get_auction_no_auth(self):
         c = RequestsClient()
-        r = c.get('http://localhost/auctionhouse/auction/'+self.auction_id)
+        r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/')
         assert r.status_code == 403
         assert r.headers.get('Content-Type') == 'application/json'
 
@@ -64,19 +78,9 @@ class TestAPIPaths(TransactionTestCase):
     def test_fail_get_auction_by_id_404(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        r = c.get('http://localhost/auctionhouse/auction/'+str(uuid.uuid4()), headers=header)
+        r = c.get('http://localhost/auctionhouse/auction/'+str(uuid.uuid4())+'/', headers=header)
         assert r.status_code == 404
         assert r.headers.get('Content-Type') == 'application/json'
-
-
-#    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
-#    def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
-#        c = RequestsClient()
-#        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-#        r = c.get('http://localhost/auctionhouse/auction/notvaliduuid', headers=header)
-#        logger.info("STAT CODE IS [$d]", r.status_code)
-#        assert r.status_code == 999
-#        assert r.headers.get('Content-Type') == 'application/json'
 
     def test_status_ok_no_auth(self):
         c = RequestsClient()

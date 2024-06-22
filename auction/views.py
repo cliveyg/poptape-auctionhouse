@@ -2,10 +2,12 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.permissions import AllowAny
 from auctionhouse.authentication import AdminOnlyAuthentication
+from auctionhouse.validators import validate_uuid_from_model
 from rest_framework import status
 from rest_framework import renderers
 from rest_framework.response import Response
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
 
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
@@ -22,6 +24,7 @@ from django.db.models import Q
 
 from auction.bidhistory import LotQueueConsumer
 from auction.janitor import process_finished_single_auctions
+
 
 import uuid
 
@@ -50,7 +53,7 @@ class AuctionJanitor(APIView):
     authentication_classes = (AdminOnlyAuthentication,)
 
     def get(self, request):
-
+        logger.info("IN AuctionJanitor_GET")
         logger.info("before process_finished_auctions")
         process_finished_single_auctions()
         logger.info("after process_finished_auctions")
@@ -88,13 +91,9 @@ class AuctionDetail(APIView):
 
     def get(self, request, auction_id, format=None):
 
-        logger.info("INSIDE THE GET")
-        auction = self.get_object(auction_id)
-        logger.info("AFTER GET_OBJECT")
+        auction = self.get_object(str(auction_id))
         auction_serializer = AuctionSerializer(auction)
-        logger.info("AFTER auction_serializer")
         auction_lot_serializer = self.get_lots(auction.type, auction.lots)
-        logger.info("AFTER auction_lot_serializer")
 
         auc_stuff = auction_serializer.data
         auc_stuff['lots'] = auction_lot_serializer.data
@@ -144,8 +143,8 @@ class AuctionListCreate(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, format=None): 
-
+    def get(self, request, format=None):
+        logger.info("IN AuctionListCreate_GET")
         queryset = Auction.objects.all()
         serializer = AuctionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -201,6 +200,7 @@ class AuctionByItem(APIView):
 
     def get(self, request, item_id, format=None):
 
+        logger.info("IN AuctionByItem_GET")
         auction_lot = self.get_object(item_id)
         auction = self.get_auction(auction_lot.lot_id)
         auction_serializer = AuctionSerializer(auction)
@@ -236,6 +236,7 @@ class AuctionLotDetail(APIView):
         return model.get(auctype), serializer.get(auctype)
 
     def get(self, request, lot_uuid):
+        logger.info("IN AuctionLotDetail_GET")
         lot_id = str(lot_uuid)
 
         # get rabbitmq messages (if any) and save to db
@@ -348,6 +349,8 @@ class AuctionValid(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, auction_id, lot_id, format=None):
+
+        logger.info("IN AuctionValid_GET")
 
         lot = auction = None
 
@@ -626,6 +629,7 @@ class ComboAuctionCreate(APIView):
         # queryset = Auction.objects.all()
         # serializer = AuctionSerializer(queryset, many=True)
         # return Response(serializer.data, status=status.HTTP_200_OK)
+        logger.info("IN COMBO_AUCTION_CREATE_GET")
         return Response({ 'meep': True }, status=status.HTTP_201_CREATED)
 
     def create_message_queues(input_data):

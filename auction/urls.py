@@ -12,11 +12,11 @@ from auction.views import custom404
 urlpatterns = [
     #path('auctionhouse/auction/', include('rest_framework.urls', namespace='rest_framework')),
 
+    # read, edit, delete ops on auction
+    path('auctionhouse/auction/<uuid:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
+
     # returns auction types available
     path('auctionhouse/auction/types/', AuctionTypes.as_view(), name='auctiontypes'),
-
-    # create auction - probably superceded by ComboAuctionCreate
-    path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
 
     # create auction - probably superceded by ComboAuctionCreate
     path('auctionhouse/janitor/', AuctionJanitor.as_view(), name='janitor'),
@@ -30,15 +30,14 @@ urlpatterns = [
     # this url is for checking whether the auctioneer microservice has been sent the correct data
     path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/', AuctionValid.as_view(), name='validauction'),
 
-    # read, edit, delete ops on auction
-    path('auctionhouse/auction/<uuid:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
-
     # create auction lot - probably superceded by ComboAuctionCreate
     path('auctionhouse/auction/lot/', AuctionLotListCreate.as_view(), name='createlot'),
 
     # allows easier creation of auctions and lots - one http call instead of two or more
     path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),
 
+    # create auction - probably superceded by ComboAuctionCreate
+    path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

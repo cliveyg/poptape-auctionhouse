@@ -1,6 +1,6 @@
 # auctionhouse/tests/test_setup.py
 
-from auction.models import Auction, AuctionLot
+from auction.models import Auction, EnglishAuctionLot
 from django.contrib.auth.models import User
 from auction.models import Testy
 import uuid
@@ -22,7 +22,7 @@ def create_auction_and_lots(cls):
         public_id = public_id,
         status = "created",
         lots = [lot1_id, lot2_id],
-        type = "Buy Now",
+        type = "EN",
         name = "Auction 1",
         multiple = False,
         active = True,
@@ -31,24 +31,30 @@ def create_auction_and_lots(cls):
         currency = "GBP"
     )
 
-    cls.AucLot1 = AuctionLot.objects.create(
+    cls.AucLot1 = EnglishAuctionLot.objects.create(
         lot_id = lot1_id,
         item_id = str(uuid.uuid4()),
         status = "created",
         active = False,
         start_time = now,
         end_time = tomorrow,
-        quantity = 1
+        quantity = 1,
+        start_price = 1.00,
+        reserve_price = 30.00,
+        min_increment = 1.00
     )
 
-    cls.AucLot2 = AuctionLot.objects.create(
+    cls.AucLot2 = EnglishAuctionLot.objects.create(
         lot_id = lot2_id,
         item_id = str(uuid.uuid4()),
         status = "created",
         active = False,
         start_time = now,
         end_time = tomorrow,
-        quantity = 1
+        quantity = 1,
+        start_price = 10.00,
+        reserve_price = 500.00,
+        min_increment = 15.00
     )
 
     return auction_id

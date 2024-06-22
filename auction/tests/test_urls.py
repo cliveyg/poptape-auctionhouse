@@ -57,7 +57,7 @@ class TestURLSResolve(SimpleTestCase):
         url = reverse('auctiondetail', args=[auc_uuid])
         self.assertEquals(resolve(url).url_name, 'auctiondetail')
         self.assertEquals(resolve(url).func.view_class, AuctionDetail)
-        self.assertEquals(resolve(url).route, '^auctionhouse/auction/<str:auction_id>/')
+        self.assertEquals(resolve(url).route, '^auctionhouse/auction/<uuid:auction_id>/')
         self.assertEquals(resolve(url).captured_kwargs['auction_id'], auc_uuid)
 
     def test_api_createlot_is_resolved(self):

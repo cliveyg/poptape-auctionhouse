@@ -68,6 +68,7 @@ class AuctionDetail(APIView):
 
     def get_object(self, auction_id):
         try:
+            logger.info("ZZZ Found auction")
             return Auction.objects.get(auction_id=auction_id)
         except Exception as e:
             logger.error("BAD JUJU [%s]", e)

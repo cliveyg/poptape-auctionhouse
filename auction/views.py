@@ -2,10 +2,12 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.permissions import AllowAny
 from auctionhouse.authentication import AdminOnlyAuthentication
+from auctionhouse.validators import validate_uuid_from_model
 from rest_framework import status
 from rest_framework import renderers
 from rest_framework.response import Response
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
 
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
@@ -22,6 +24,7 @@ from django.db.models import Q
 
 from auction.bidhistory import LotQueueConsumer
 from auction.janitor import process_finished_single_auctions
+
 
 import uuid
 
@@ -88,13 +91,18 @@ class AuctionDetail(APIView):
 
     def get(self, request, auction_id, format=None):
 
-        logger.info("INSIDE THE GET")
+        try:
+            validate_uuid_from_model(auction_id)
+        except ValidationError as e:
+            logger.debug("Invalid UUID [%s]", e)
+            return Response({'message': 'invalid uuid'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error("Exception in auction_id [%s]", e)
+            return Response({'message': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+
         auction = self.get_object(auction_id)
-        logger.info("AFTER GET_OBJECT")
         auction_serializer = AuctionSerializer(auction)
-        logger.info("AFTER auction_serializer")
         auction_lot_serializer = self.get_lots(auction.type, auction.lots)
-        logger.info("AFTER auction_lot_serializer")
 
         auc_stuff = auction_serializer.data
         auc_stuff['lots'] = auction_lot_serializer.data

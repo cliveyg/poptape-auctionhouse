@@ -39,10 +39,8 @@ def ordered(obj):
 
 class TestAPIPaths(TransactionTestCase):
 
-    auction_id = ""
-
     @classmethod
-    def setUpTestData(cls):
+    def setUp(cls):
         cls.auction_id = create_auction_and_lots(cls)
 
 

@@ -28,7 +28,7 @@ urlpatterns = [
     path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/', AuctionValid.as_view(), name='validauction'),
 
     # read, edit, delete ops on auction
-    path('auctionhouse/auction/<uuid:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
+    path('auctionhouse/auction/<str:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
 
     # create auction lot - probably superceded by ComboAuctionCreate
     path('auctionhouse/auction/lot/', AuctionLotListCreate.as_view(), name='createlot'),

@@ -94,7 +94,7 @@ class AuctionDetail(APIView):
 
         logger.info("IN AuctionDetail_GET")
         try:
-            validate_uuid_from_model(str(auction_id))
+            validate_uuid_from_model(auction_id)
         except ValidationError as e:
             logger.debug("Invalid UUID [%s]", e)
             return Response({'message': 'invalid uuid'}, status=status.HTTP_400_BAD_REQUEST)

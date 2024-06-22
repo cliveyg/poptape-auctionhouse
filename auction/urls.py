@@ -16,9 +16,6 @@ urlpatterns = [
     path('auctionhouse/auction/types/', AuctionTypes.as_view(), name='auctiontypes'),
 
     # create auction - probably superceded by ComboAuctionCreate
-    # path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
-
-    # create auction - probably superceded by ComboAuctionCreate
     path('auctionhouse/janitor/', AuctionJanitor.as_view(), name='janitor'),
 
     # returns auction and lot data on a key of item_id
@@ -39,6 +36,8 @@ urlpatterns = [
     # allows easier creation of auctions and lots - one http call instead of two or more
     path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),
 
+    # create auction - probably superceded by ComboAuctionCreate
+    path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

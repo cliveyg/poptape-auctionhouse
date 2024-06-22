@@ -27,11 +27,11 @@ urlpatterns = [
     # this url is for checking whether the auctioneer microservice has been sent the correct data
     path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/', AuctionValid.as_view(), name='validauction'),
 
-    # read, edit, delete ops on auction
-    path('auctionhouse/auction/<str:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
-
     # create auction lot - probably superceded by ComboAuctionCreate
     path('auctionhouse/auction/lot/', AuctionLotListCreate.as_view(), name='createlot'),
+
+    # read, edit, delete ops on auction
+    path('auctionhouse/auction/<str:auction_id>/', AuctionDetail.as_view(), name='auctiondetail'),
 
     # allows easier creation of auctions and lots - one http call instead of two or more
     path('auctionhouse/<str:auction_type>/auction/', ComboAuctionCreate.as_view(), name='combocreate'),

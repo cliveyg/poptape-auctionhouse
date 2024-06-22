@@ -16,7 +16,7 @@ urlpatterns = [
     path('auctionhouse/auction/types/', AuctionTypes.as_view(), name='auctiontypes'),
 
     # create auction - probably superceded by ComboAuctionCreate
-    path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
+    # path('auctionhouse/auction/', AuctionListCreate.as_view(), name='createauction'),
 
     # create auction - probably superceded by ComboAuctionCreate
     path('auctionhouse/janitor/', AuctionJanitor.as_view(), name='janitor'),

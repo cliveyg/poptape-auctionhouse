@@ -92,19 +92,19 @@ class AuctionDetail(APIView):
 
     def get(self, request, auction_id, format=None):
 
-        logger.info("IN AuctionDetail_GET")
-        try:
-            validate_uuid_from_model(auction_id)
-        except ValidationError as e:
-            logger.debug("Invalid UUID [%s]", e)
-            return Response({'message': 'invalid uuid'}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            logger.error("Exception in auction_id [%s]", e)
-            return Response({'message': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+        # logger.info("IN AuctionDetail_GET")
+        # try:
+        #     validate_uuid_from_model(str(auction_id))
+        # except ValidationError as e:
+        #     logger.debug("Invalid UUID [%s]", e)
+        #     return Response({'message': 'invalid uuid'}, status=status.HTTP_400_BAD_REQUEST)
+        # except Exception as e:
+        #     logger.error("Exception in auction_id [%s]", e)
+        #     return Response({'message': 'error'}, status=status.HTTP_400_BAD_REQUEST)
 
         logger.info("IN AUCTION_DETAIL_GET - getting auction")
 
-        auction = self.get_object(auction_id)
+        auction = self.get_object(str(auction_id))
         logger.info("IN AUCTION_DETAIL_GET - got auction")
         auction_serializer = AuctionSerializer(auction)
         auction_lot_serializer = self.get_lots(auction.type, auction.lots)

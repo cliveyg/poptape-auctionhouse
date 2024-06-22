@@ -52,12 +52,10 @@ class TestAPIPaths(TransactionTestCase):
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
         r = c.get('http://localhost/auctionhouse/auction/notvaliduuid', headers=header)
 
-        logger.debug("STAT CODE IS [$d]", str(r.status_code))
-
         assert r.status_code == 404
         assert r.headers.get('Content-Type') == 'application/json'
 
-'''
+
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
@@ -133,4 +131,4 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         r = c.put('http://localhost/auctionhouse/auction/types', data={'blah': 'yarp'})
         assert r.status_code == 405
-'''
+

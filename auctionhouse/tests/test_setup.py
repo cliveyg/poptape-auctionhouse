@@ -6,7 +6,9 @@ from auction.models import Testy
 import uuid
 from datetime import datetime, timedelta
 # from django_unixdatetimefield import UnixDateTimeField
+import logging
 
+logger = logging.getLogger(__name__)
 
 def create_auction_and_lots(cls):
 
@@ -60,4 +62,6 @@ def create_auction_and_lots(cls):
     lots.append(cls.AucLot1)
     lots.append(cls.AucLot2)
 
-    return cls.Auction1, lots.copy()
+    logger.info("LOTS :[%s]", lots)
+
+    return cls.Auction1, lots

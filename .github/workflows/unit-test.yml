@@ -68,10 +68,9 @@ jobs:
           python manage.py migrate --fake auction
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test 
           coverage xml
-          pytest -v --junitxml=junit.xml
           echo "$(coverage report -m )"
           covRes="$(coverage report -m --fail-under=45)"
-          echo "$covRes"    
+          echo "$covRes"
 
       - name: Create coverage badges
         uses: gaelgirodon/ci-badges-action@v1

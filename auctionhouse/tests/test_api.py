@@ -81,8 +81,10 @@ class TestAPIPaths(TransactionTestCase):
         assert r.headers.get('Content-Type') == 'application/json'
         assert returned_data['lot_id'] == self.lots[0].lot_id
         assert returned_data['auction_id'] == self.auction.auction_id
-        assert returned_data['public_id'] == self.lots[0].public_id
-        assert returned_data['start_price'] == str(self.lots[0].start_price)
+        assert returned_data['public_id'] == self.auction.public_id
+        assert returned_data['start_price'] == self.lots[0].start_price
+        assert returned_data['min_increment'] == self.lots[0].min_increment
+        assert returned_data['reserve_price'] == self.lots[0].reserve_price
 '''
     def test_fail_get_auction_no_auth(self):
         c = RequestsClient()

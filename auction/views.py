@@ -114,7 +114,7 @@ class AuctionDetail(APIView):
     def delete(self, request, auction_id, format=None):
         auction = self.get_object(auction_id)
         auction.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_410_GONE)
 
     # posting to this url actually creates a child resource
     def post(self, request, auction_id, format=None):

@@ -8,7 +8,6 @@ import logging
 from requests.models import Response
 from unittest.mock import Mock
 from unittest import mock
-# from auction.models import Auction, EnglishAuctionLot
 from auction.models import Auction
 
 logger = logging.getLogger(__name__)
@@ -62,11 +61,10 @@ class TestAPIPaths(TransactionTestCase):
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
         returned_data = r.json()
-        assert returned_data.get("auction").get("auction_id") == self.auction.auction_id
-        assert returned_data.get("auction").get("public_id") == self.auction.public_id
-        logger.info("RET DATA LOT ID IS [%s]", returned_data['auction']['lots'][0]['lot_id'])
-        logger.info("ORIG DATA LOT ID IS [%s]", self.lots[0].lot_id)
+        assert returned_data['auction']['auction_id'] == self.auction.auction_id
+        assert returned_data['auction']['public_id'] == self.auction.public_id
         assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
+        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id
         assert r.url == "http://localhost/auctionhouse/auction/"+self.auction.auction_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'

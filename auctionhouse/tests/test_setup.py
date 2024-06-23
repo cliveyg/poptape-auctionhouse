@@ -1,14 +1,8 @@
 # auctionhouse/tests/test_setup.py
 
 from auction.models import Auction, EnglishAuctionLot
-# from django.contrib.auth.models import User
-# from auction.models import Testy
 import uuid
 from datetime import datetime, timedelta
-# from django_unixdatetimefield import UnixDateTimeField
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 def create_auction_and_lots(cls):
@@ -60,8 +54,5 @@ def create_auction_and_lots(cls):
         min_increment = 15.00
     )
     lots = [cls.AucLot1, cls.AucLot2]
-
-    logger.info("LENGTH OF LOTS IS: %d", len(lots))
-    logger.info("LOTS :[%s]", lots)
 
     return cls.Auction1, lots

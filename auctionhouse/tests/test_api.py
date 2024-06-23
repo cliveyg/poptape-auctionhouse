@@ -50,11 +50,12 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+                   'Content-Type': 'application/json', }
         assert self.auction.currency == 'GBP'
         dicky = self.auction.__dict__
         dicky['currency'] = 'BRL'
-        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=header)
+        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=headers)
         returned_data = r.json()
         logger.debug("RET DATA IS %s", returned_data)
         assert returned_data['currency'] == 'BRL'

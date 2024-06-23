@@ -60,7 +60,7 @@ class TestAPIPaths(TransactionTestCase):
         del dicky['modified']
         dicky['currency'] = 'BRL'
         td1 = dicky['start_time']
-        dicky['start_time'] = eval(td1)
+        dicky['start_time'] = str(td1)
         logger.debug("DICKY NOW IS %s", dicky)
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=headers)
         returned_data = r.json()

@@ -53,9 +53,11 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
                    'Content-Type': 'application/json'}
+
         assert self.auction.currency == 'GBP'
+
         dicky = self.auction.__dict__
-        logger.debug("DICKY THEN IS %s", dicky)
+        # have to remove and change some stuff to make this work
         del dicky['_state']
         del dicky['created']
         del dicky['modified']
@@ -64,19 +66,15 @@ class TestAPIPaths(TransactionTestCase):
         dicky['start_time'] = str(td1)
         td2 = dicky['end_time']
         dicky['end_time'] = str(td2)
-        logger.debug("DICKY NOW IS %s", dicky)
-        in_jase = json.dumps(dicky)
-        logger.debug("IN JASE IS %s", dicky)
-        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=in_jase, headers=headers)
-        # returned_data = r.json()
+
+        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=json.dumps(dicky), headers=headers)
         returned_data = r.json()
-        logger.debug("RET DATA IS %s", returned_data)
-        logger.debug("RET STAT CODE IS %s", r.status_code)
+
         assert returned_data['currency'] == 'BRL'
         assert returned_data['auction_id'] == self.auction.auction_id
         assert returned_data['public_id'] == self.auction.public_id
-        assert returned_data['lots'][0]['lot_id'] == self.lots[0].lot_id
-        assert returned_data['lots'][1]['lot_id'] == self.lots[1].lot_id
+        assert returned_data['lots'][0]== self.lots[0].lot_id
+        assert returned_data['lots'][1] == self.lots[1].lot_id
         assert r.url == 'http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'
         assert r.status_code == 202
         assert r.headers.get('Content-Type') == 'application/json'
@@ -99,8 +97,8 @@ class TestAPIPaths(TransactionTestCase):
         returned_data = r.json()
         assert returned_data['auction']['auction_id'] == self.auction.auction_id
         assert returned_data['auction']['public_id'] == self.auction.public_id
-        assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
-        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id
+        assert returned_data['auction']['lots'][0]== self.lots[0].lot_id
+        assert returned_data['auction']['lots'][1] == self.lots[1].lot_id
         assert r.url == 'http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'

@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework import renderers
 from rest_framework.response import Response
 from django.http import JsonResponse
-from rest_framework.parsers import JSONParser
 from django.core.exceptions import ValidationError
 
 from rest_framework.generics import RetrieveAPIView
@@ -105,11 +104,7 @@ class AuctionDetail(APIView):
         auction = self.get_object(auction_id)
         # don't want to let user change auction id so make sure they can't 
         # overwrite it in the json by overwriting it ourselves
-        logger.debug("REQUEST DATA BEF IS %s", request.data)
         request.data['auction_id'] = str(auction_id)
-        logger.debug("REQUEST DATA AFTER IS %s", request.data)
-        # put_data = JSONParser().parse(request.data)
-        # serializer = AuctionSerializer(auction, data=put_data)
         serializer = AuctionSerializer(auction, data=request.data)
         if serializer.is_valid():
             serializer.save()

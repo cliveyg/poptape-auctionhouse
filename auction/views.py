@@ -280,11 +280,11 @@ class AuctionLotDetail(APIView):
         json_lot_data['end_time'] = end_time
 
         if auction.type == 'EN' or auction.type == 'BN' :
-            json_lot_data['min_change'] = lot.min_increment
+            json_lot_data['min_increment'] = lot.min_increment
             json_lot_data['start_price'] = lot.start_price or 0
             json_lot_data['reserve_price'] = lot.reserve_price or 0
         elif auction.type == 'DU':
-            json_lot_data['min_change'] = lot.min_decrement
+            json_lot_data['min_decrement'] = lot.min_decrement
             json_lot_data['start_price'] = lot.start_price or 0
             json_lot_data['reserve_price'] = lot.reserve_price or 0
 

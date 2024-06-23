@@ -70,7 +70,7 @@ class TestAPIPaths(TransactionTestCase):
         logger.debug("IN JASE IS %s", dicky)
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=in_jase, headers=headers)
         # returned_data = r.json()
-
+        returned_data = r.json()
         logger.debug("RET DATA IS %s", returned_data)
         logger.debug("RET STAT CODE IS %s", r.status_code)
         assert returned_data['currency'] == 'BRL'

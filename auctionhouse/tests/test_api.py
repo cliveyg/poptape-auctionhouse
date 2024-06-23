@@ -56,11 +56,14 @@ class TestAPIPaths(TransactionTestCase):
         dicky = self.auction.__dict__
         logger.debug("DICKY THEN IS %s", dicky)
         del dicky['_state']
+        del dicky['public_id']
         del dicky['created']
         del dicky['modified']
         dicky['currency'] = 'BRL'
         td1 = dicky['start_time']
         dicky['start_time'] = str(td1)
+        td2 = dicky['end_time']
+        dicky['end_time'] = str(td2)
         logger.debug("DICKY NOW IS %s", dicky)
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=headers)
         returned_data = r.json()

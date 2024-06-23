@@ -54,10 +54,13 @@ class TestAPIPaths(TransactionTestCase):
                    'Content-Type': 'application/json'}
         assert self.auction.currency == 'GBP'
         dicky = self.auction.__dict__
+        logger.debug("DICKY THEN IS %s", dicky)
         dicky['currency'] = 'BRL'
+        logger.debug("DICKY NOW IS %s", dicky)
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=headers)
         returned_data = r.json()
         logger.debug("RET DATA IS %s", returned_data)
+        logger.debug("RET STAT CODE IS %s", r.status_code)
         assert returned_data['currency'] == 'BRL'
         assert returned_data['auction_id'] == self.auction.auction_id
         assert returned_data['public_id'] == self.auction.public_id

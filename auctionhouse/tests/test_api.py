@@ -80,7 +80,7 @@ class TestAPIPaths(TransactionTestCase):
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
         assert returned_data['lot_id'] == self.lots[0].lot_id
-        assert returned_data['auction_id'] == self.lots[0].auction_id
+        assert returned_data['auction_id'] == self.auction.auction_id
         assert returned_data['public_id'] == self.lots[0].public_id
         assert returned_data['start_price'] == str(self.lots[0].start_price)
 '''

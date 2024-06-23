@@ -46,7 +46,6 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction = Auction()
         cls.lots = [EnglishAuctionLot() for _ in range(2)]
         cls.auction, cls.lots = create_auction_and_lots(cls)
-        cls.auction.lots = cls.lots
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
@@ -65,8 +64,8 @@ class TestAPIPaths(TransactionTestCase):
         assert returned_data.get("auction").get("auction_id") == self.auction.auction_id
         assert returned_data.get("auction").get("public_id") == self.auction.public_id
         logger.info("RET DATA LOT ID IS [%s]", returned_data['auction']['lots'][0]['lot_id'])
-        logger.info("ORIG DATA LOT ID IS [%s]", self.auction.lots[0].lot_id)
-        assert returned_data['auction']['lots'][0]['lot_id'] == self.auction.lots[0].lot_id
+        logger.info("ORIG DATA LOT ID IS [%s]", self.lots[0].lot_id)
+        assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
         assert r.url == "http://localhost/auctionhouse/auction/"+self.auction.auction_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'

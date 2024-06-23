@@ -57,7 +57,6 @@ class TestAPIPaths(TransactionTestCase):
         dicky = self.auction.__dict__
         logger.debug("DICKY THEN IS %s", dicky)
         del dicky['_state']
-        del dicky['public_id']
         del dicky['created']
         del dicky['modified']
         dicky['currency'] = 'BRL'

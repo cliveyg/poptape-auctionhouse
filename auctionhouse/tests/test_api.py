@@ -5,6 +5,7 @@ from django.test import TransactionTestCase
 from rest_framework.test import RequestsClient
 from .test_setup import create_auction_and_lots
 import logging
+import json
 from requests.models import Response
 from unittest.mock import Mock
 from unittest import mock
@@ -65,7 +66,9 @@ class TestAPIPaths(TransactionTestCase):
         td2 = dicky['end_time']
         dicky['end_time'] = str(td2)
         logger.debug("DICKY NOW IS %s", dicky)
-        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', json=dicky, headers=headers)
+        in_jase = json.dumps(dicky)
+        logger.debug("IN JASE IS %s", dicky)
+        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=in_jase, headers=headers)
         returned_data = r.json()
         logger.debug("RET DATA IS %s", returned_data)
         logger.debug("RET STAT CODE IS %s", r.status_code)

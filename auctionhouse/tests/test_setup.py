@@ -59,7 +59,7 @@ def create_auction_and_lots(cls):
         reserve_price = 500.00,
         min_increment = 15.00
     )
-    lots = [EnglishAuctionLot(), cls.AucLot1, cls.AucLot2]
+    lots = [cls.AucLot1, cls.AucLot2]
 
     logger.info("LENGTH OF LOTS IS: %d", len(lots))
     logger.info("LOTS :[%s]", lots)

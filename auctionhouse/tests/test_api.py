@@ -8,7 +8,8 @@ import logging
 from requests.models import Response
 from unittest.mock import Mock
 from unittest import mock
-from auction.models import Auction, EnglishAuctionLot
+# from auction.models import Auction, EnglishAuctionLot
+from auction.models import Auction
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ class TestAPIPaths(TransactionTestCase):
     @classmethod
     def setUp(cls):
         cls.auction = Auction()
-        cls.lots = [EnglishAuctionLot()]
+        cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)

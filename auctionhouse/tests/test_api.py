@@ -57,7 +57,7 @@ class TestAPIPaths(TransactionTestCase):
         logger.debug("DICKY THEN IS %s", dicky)
         del dicky['_state']
         del dicky['created']
-        del dickey['modified']
+        del dicky['modified']
         dicky['currency'] = 'BRL'
         td1 = dicky['start_time']
         dicky['start_time'] = eval(td1)

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 import base64
 import ast
-from requests import Request
+from requests import Response
 import requests
 
 # get an instance of a logger
@@ -38,7 +38,7 @@ class AdminOnlyAuthentication(BaseAuthentication):
         headers = {'Content-type': 'application/json',
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
 
-        resp = Request
+        resp = Response
         try:
             resp = requests.get(authy_url, headers=headers)
         except Exception as e:
@@ -78,7 +78,7 @@ class TokenAuth(BaseAuthentication):
 
         headers = {'Content-type': 'application/json',
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
-        resp = Request
+        resp = Response
         try:
             resp = requests.get(authy_url, headers=headers)
         except Exception as e:

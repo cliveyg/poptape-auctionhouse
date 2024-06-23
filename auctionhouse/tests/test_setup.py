@@ -60,4 +60,4 @@ def create_auction_and_lots(cls):
     lots.append(cls.AucLot1)
     lots.append(cls.AucLot2)
 
-    return cls.Auction1, lots
+    return cls.Auction1, lots.copy()

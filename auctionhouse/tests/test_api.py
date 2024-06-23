@@ -63,6 +63,8 @@ class TestAPIPaths(TransactionTestCase):
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
         returned_data = r.json()
         assert returned_data.get("auction").get("auction_id") == self.auction.auction_id
+        assert returned_data.get("auction").get("public_id") == self.auction.public_id
+        assert returned_data['auction']['lots'][0]['lot_id'] == self.auction.lots[0].lot_id
         assert r.url == "http://localhost/auctionhouse/auction/"+self.auction.auction_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'

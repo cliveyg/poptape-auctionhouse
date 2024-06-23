@@ -73,7 +73,7 @@ class TokenAuth(BaseAuthentication):
 
         headers = {'Content-type': 'application/json',
                    'x-access-token': request.META.get('HTTP_X_ACCESS_TOKEN')}
-
+        resp = None
         try:
             resp = requests.get(authy_url, headers=headers)
         except Exception as e:

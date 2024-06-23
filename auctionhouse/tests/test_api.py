@@ -47,6 +47,7 @@ class TestAPIPaths(TransactionTestCase):
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}

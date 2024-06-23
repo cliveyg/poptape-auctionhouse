@@ -55,7 +55,12 @@ class TestAPIPaths(TransactionTestCase):
         assert self.auction.currency == 'GBP'
         dicky = self.auction.__dict__
         logger.debug("DICKY THEN IS %s", dicky)
+        del dicky['_state']
+        del dicky['created']
+        del dickey['modified']
         dicky['currency'] = 'BRL'
+        td1 = dicky['start_time']
+        dicky['start_time'] = eval(td1)
         logger.debug("DICKY NOW IS %s", dicky)
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=headers)
         returned_data = r.json()

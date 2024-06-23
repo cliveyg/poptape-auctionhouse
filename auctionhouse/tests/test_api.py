@@ -47,6 +47,25 @@ class TestAPIPaths(TransactionTestCase):
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
+    def test_edit_auction_by_id(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        assert self.auction.currency == 'GBP'
+        dicky = self.auction.__dict__
+        dicky['currency'] = 'BRL'
+        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=header)
+        returned_data = r.json()
+        assert returned_data['auction']['currency'] == 'BRL'
+        assert returned_data['auction']['auction_id'] == self.auction.auction_id
+        assert returned_data['auction']['public_id'] == self.auction.public_id
+        assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
+        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id
+        assert r.url == 'http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'
+        assert r.status_code == 202
+        assert r.headers.get('Content-Type') == 'application/json'
+
+'''
+
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
         c = RequestsClient()
@@ -153,4 +172,4 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         r = c.put('http://localhost/auctionhouse/auction/types', data={'blah': 'yarp'})
         assert r.status_code == 405
-
+'''

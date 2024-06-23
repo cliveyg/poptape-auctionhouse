@@ -108,7 +108,7 @@ class AuctionDetail(APIView):
         serializer = AuctionSerializer(auction, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, auction_id, format=None):

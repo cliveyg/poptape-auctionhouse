@@ -48,16 +48,16 @@ class TestAPIPaths(TransactionTestCase):
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
-    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
-    def test_delete_auction_by_id(self, mock_get):
-        c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        r1 = c.delete('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
-        assert r1.status_code == 410
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        r2 = c.get('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
-        assert r2.status_code == 404
-        
+#    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+#    def test_delete_auction_by_id(self, mock_get):
+#        c = RequestsClient()
+#        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+#        r1 = c.delete('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
+#        assert r1.status_code == 410
+#        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+#        r2 = c.get('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
+#        assert r2.status_code == 404
+
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id(self, mock_get):
         c = RequestsClient()

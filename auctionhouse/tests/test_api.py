@@ -46,7 +46,7 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction = Auction()
         cls.lots = [EnglishAuctionLot() for _ in range(2)]
         cls.auction, cls.lots = create_auction_and_lots(cls)
-
+        cls.auction.lots = cls.lots
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):

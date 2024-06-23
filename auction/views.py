@@ -105,6 +105,7 @@ class AuctionDetail(APIView):
         auction = self.get_object(auction_id)
         # don't want to let user change auction id so make sure they can't 
         # overwrite it in the json by overwriting it ourselves
+        logger.debug("REQUEST DATA IS %s", request.data)
         put_data = JSONParser().parse(request.data)
         put_data['auction_id'] = auction_id
         serializer = AuctionSerializer(auction, data=put_data)

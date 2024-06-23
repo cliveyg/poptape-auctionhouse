@@ -66,8 +66,9 @@ jobs:
           rm -rf migrations
           python manage.py makemigrations auction
           python manage.py migrate --fake auction
-          coverage run --omit="*/migrations/*,*/tests/*"  manage.py test
+          coverage run --omit="*/migrations/*,*/tests/*"  manage.py test 
           coverage xml
+          pytest -v --junitxml=junit.xml
           echo "$(coverage report -m )"
           covRes="$(coverage report -m --fail-under=45)"
           echo "$covRes"    

@@ -69,7 +69,7 @@ class LotQueueConsumer():
         return "Howdy neighbour!"
 
     def process_message(self, body, message):
-        # get the message data and create BidHistory records
+        # get the message data and create BidHistory records
         bid_body = json.loads(body)
 
         self.auction_type = bid_body.get('auction_type').upper()

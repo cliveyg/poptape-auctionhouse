@@ -51,7 +51,7 @@ class TestAPIPaths(TransactionTestCase):
     def test_edit_auction_by_id(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
-                   'Content-Type': 'application/json', }
+                   'Content-Type': 'application/json'}
         assert self.auction.currency == 'GBP'
         dicky = self.auction.__dict__
         dicky['currency'] = 'BRL'

@@ -56,11 +56,12 @@ class TestAPIPaths(TransactionTestCase):
         dicky['currency'] = 'BRL'
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=dicky, headers=header)
         returned_data = r.json()
-        assert returned_data['auction']['currency'] == 'BRL'
-        assert returned_data['auction']['auction_id'] == self.auction.auction_id
-        assert returned_data['auction']['public_id'] == self.auction.public_id
-        assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
-        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id
+        logger.debug("RET DATA IS %s", returned_data)
+        assert returned_data['currency'] == 'BRL'
+        assert returned_data['auction_id'] == self.auction.auction_id
+        assert returned_data['public_id'] == self.auction.public_id
+        assert returned_data['lots'][0]['lot_id'] == self.lots[0].lot_id
+        assert returned_data['lots'][1]['lot_id'] == self.lots[1].lot_id
         assert r.url == 'http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'
         assert r.status_code == 202
         assert r.headers.get('Content-Type') == 'application/json'

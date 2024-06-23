@@ -62,18 +62,6 @@ class AuctionType(models.Model):
 
 # -----------------------------------------------------------------------------
 
-class Testy(models.Model):
-    test_id = models.CharField(max_length=36, blank=False, primary_key=True,
-                               validators=[validate_uuid_from_model])
-    public_id = models.CharField(max_length=36, blank=False,
-                                 validators=[validate_uuid_from_model])
-    type = models.CharField(max_length=15,
-                            choices=AuctionType.AUCTION_CHOICES)
-    name = models.CharField(max_length=100, blank=True)
-    multiple = models.BooleanField(default=False, null=False)
-    start_time = models.DateTimeField(blank=True)
-    end_time = models.DateTimeField(blank=True)
-    status = models.CharField(max_length=20, blank=False, default="created")
 
 class Auction(models.Model):
     auction_id = models.CharField(max_length=36, blank=False, primary_key=True,
@@ -117,6 +105,7 @@ class AuctionLot(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
 # -----------------------------------------------------------------------------
+
 
 class BidHistory(models.Model):
     bid_id = models.CharField(max_length=36, blank=False, primary_key=True,

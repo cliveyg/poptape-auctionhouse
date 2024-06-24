@@ -64,7 +64,8 @@ class TestAPIPaths(TransactionTestCase):
         dicky['start_time'] = str(td1)
         td2 = dicky['end_time']
         dicky['end_time'] = str(td2)
-        dicky['random'] = "Yarp"
+        dicky['random'] = 'Yarp'
+        dicky['active'] = 'Beep'
 
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=json.dumps(dicky), headers=headers)
 

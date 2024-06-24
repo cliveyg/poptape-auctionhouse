@@ -57,7 +57,9 @@ class TestAPIPaths(TransactionTestCase):
         assert returned_data['auction']['auction_id'] == self.auction.auction_id
         assert returned_data['auction']['public_id'] == self.auction.public_id
         assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
-        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id
+        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id\
+        assert returned_data['auction']['delivery_options']['collection'] == True
+        assert returned_data['auction']['payment_options']['mastercard'] == True
         assert r.url == 'http://localhost/auctionhouse/auction/item/'+self.lots[0].item_id+'/'
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'

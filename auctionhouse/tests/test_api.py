@@ -49,6 +49,30 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_create_auction(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+                   'Content-Type': 'application/json'}
+        public_id = str(uuid.uuid4())
+        input = {"public_id": public_id,
+                 "lots": [self.lots[0].lot_id],
+                 "type": "EN",
+                 "name": "Test Auction",
+                 "multiple": False,
+                 "start_time": "2024-06-23 20:18:21.910326",
+                 "end_time": "2024-06-24 20:18:21.910326",
+                 "status": "created",
+                 "active": True,
+                 "currency": "GBP",
+                 "start_price": 200.00,
+                 "reserve_price": 550.00,
+                 "min_increment": 10.00}
+        r = c.post('http://localhost/auctionhouse/auction/', data=json.dumps(input), headers=headers)
+        returned_data = r.json()
+        assert r.status_code == 201
+        assert returned_data['public_id'] == public_id
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id_fail(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',

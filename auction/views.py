@@ -117,17 +117,17 @@ class AuctionDetail(APIView):
         return Response(status=status.HTTP_410_GONE)
 
     # posting to this url actually creates a child resource
-    def post(self, request, auction_id, format=None):
-        logger.debug("AuctionDetail - post")
-        # add a uuid to create request here
-        request.data['lot_id'] = str(uuid.uuid4())
-        auction = self.get_object(auction_id)
-        _, serializer_obj = self.get_data_objects(auction.type)
-        serializer = serializer_obj(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def post(self, request, auction_id, format=None):
+    #    logger.debug("AuctionDetail - post")
+    #    # add a uuid to create request here
+    #    request.data['lot_id'] = str(uuid.uuid4())
+    #    auction = self.get_object(auction_id)
+    #    _, serializer_obj = self.get_data_objects(auction.type)
+    #    serializer = serializer_obj(data=request.data)
+    #    if serializer.is_valid():
+    #        serializer.save()
+    #        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # -----------------------------------------------------------------------------
 

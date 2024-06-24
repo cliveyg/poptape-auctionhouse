@@ -58,19 +58,18 @@ class TestAPIPaths(TransactionTestCase):
                  "lots": [self.lots[0].lot_id],
                  "type": "EN",
                  "name": "Test Auction",
-                 "blah": "yarp",
                  "multiple": False,
                  "start_time": "2024-06-23 20:18:21.910326",
                  "end_time": "2024-06-24 20:18:21.910326",
                  "status": "created",
                  "active": True,
                  "currency": "GBP",
-                 "start_price": 200.00,
+                 "start_price": "iffy",
                  "reserve_price": 550.00,
                  "min_increment": 10.00}
         r = c.post('http://localhost/auctionhouse/auction/', data=json.dumps(input), headers=headers)
         assert r.status_code == 400
-        
+
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_create_auction(self, mock_get):
         c = RequestsClient()

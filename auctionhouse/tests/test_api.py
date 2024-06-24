@@ -49,6 +49,20 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_get_auction_by_item_id(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        r = c.get('http://localhost/auctionhouse/auction/item/'+self.lots[0].item_id+'/', headers=header)
+        returned_data = r.json()
+        assert returned_data['auction']['auction_id'] == self.auction.auction_id
+        assert returned_data['auction']['public_id'] == self.auction.public_id
+        assert returned_data['auction']['lots'][0]['lot_id'] == self.lots[0].lot_id
+        assert returned_data['auction']['lots'][1]['lot_id'] == self.lots[1].lot_id
+        assert r.url == 'http://localhost/auctionhouse/auction/item/'+self.lots[0].item_id+'/'
+        assert r.status_code == 200
+        assert r.headers.get('Content-Type') == 'application/json'
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_create_auction_fail(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',

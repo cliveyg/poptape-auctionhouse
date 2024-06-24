@@ -62,7 +62,7 @@ class TestAPIPaths(TransactionTestCase):
                  "start_time": "2024-06-23 20:18:21.910326",
                  "end_time": "2024-06-24 20:18:21.910326",
                  "status": "created",
-                 "active": True,
+                 "active": "yarp",
                  "currency": "GBP",
                  "start_price": "iffy",
                  "reserve_price": 550.00,

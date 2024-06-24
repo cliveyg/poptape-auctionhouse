@@ -1,5 +1,5 @@
 # poptape-auctionhouse
-![Unit tests](https://github.com/cliveyg/poptape-auctionhouse/actions/workflows/unit-test.yml/badge.svg) ![Tests passed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/25e46eb97437bb9030e7fcf4b5d5de6021b877b4/poptape-auctionhouse-junit-tests.json&label=Tests) ![Test coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/b1dfb8bd2a39be89de34bd02c1aeafd3ecf40832/poptape-auctionhouse-cobertura-coverage.json&label=Test%20coverage)
+![Unit tests](https://github.com/cliveyg/poptape-auctionhouse/actions/workflows/unit-test.yml/badge.svg) ![Tests passed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/fc1fdee0535beb210b3b06451e6b3e4bd00a21b6/poptape-auctionhouse-junit-tests.json&label=Tests) ![Test coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cliveyg/d99b55c1eeb7ed01c7c81072b66b6cfb/raw/fc1fdee0535beb210b3b06451e6b3e4bd00a21b6/poptape-auctionhouse-cobertura-coverage.json&label=Test%20coverage)
 
 A microservice written in Python Django that controls auctions, i.e. create,
 delete, update an auction with items or lots and start times etc. Also in this

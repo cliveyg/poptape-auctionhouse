@@ -1,6 +1,6 @@
 # auctionhouse/tests/test_setup.py
 
-from auction.models import Auction, EnglishAuctionLot
+from auction.models import Auction, EnglishAuctionLot, PaymentOptions, DeliveryOptions
 import uuid
 from datetime import datetime, timedelta
 
@@ -54,5 +54,17 @@ def create_auction_and_lots(cls):
         min_increment = 15.00
     )
     lots = [cls.AucLot1, cls.AucLot2]
+
+    cls.PayOpts = PaymentOptions.objects.create(
+        auction_id = auction_id,
+        mastercard = True
+    )
+
+    cls.DelivOpts1 = DeliveryOptions.objects.create(
+        auction_id = auction_id,
+        postage = False,
+        delivery = False,
+        collection = True
+    )
 
     return cls.Auction1, lots

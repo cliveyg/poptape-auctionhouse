@@ -55,6 +55,17 @@ class TestAPIPaths(TransactionTestCase):
                    'Content-Type': 'application/json'}
 
         dicky = self.auction.__dict__
+        # have to remove and change some stuff to make this work
+        del dicky['_state']
+        del dicky['created']
+        del dicky['modified']
+        dicky['currency'] = 'BRL'
+        td1 = dicky['start_time']
+        dicky['start_time'] = str(td1)
+        td2 = dicky['end_time']
+        dicky['end_time'] = str(td2)
+        dicky['random'] = "Yarp"
+
         r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=json.dumps(dicky), headers=headers)
 
         assert r.url == 'http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'

@@ -54,7 +54,7 @@ class TestAPIPaths(TransactionTestCase):
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
         r = c.get('http://localhost/auctionhouse/auction/', headers=header)
         returned_data = r.json()
-        logger.debug("RETURNED DATA IS %s", returned_data)
+        assert returned_data[0]['auction_id'] == self.auction.auction_id
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
 
@@ -212,7 +212,6 @@ class TestAPIPaths(TransactionTestCase):
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
         r = c.get('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
         returned_data = r.json()
-        logger.debug("RETURNED DATA IS %s", returned_data)
 
         assert r.url == 'http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/'
         assert r.status_code == 200
@@ -248,7 +247,6 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         r = c.get('http://localhost/auctionhouse/some404')
         assert r.status_code == 404
-        logger.debug("Content-Type is %s", r.headers.get('Content-Type'))
         assert r.headers.get('Content-Type') == 'application/json'
 
     def test_delete_non_existent_resource(self):
@@ -267,7 +265,6 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         header = {'Content-Type': 'text/html'}
         r = c.get('http://localhost/auctionhouse/status', headers=header)
-        logger.debug("Content-Type is %s", r.headers.get('Content-Type'))
         assert r.headers.get('Content-Type') == 'application/json'
         assert r.status_code == 200
 

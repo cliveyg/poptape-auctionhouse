@@ -53,10 +53,7 @@ class AuctionJanitor(APIView):
     authentication_classes = (AdminOnlyAuthentication,)
 
     def get(self, request):
-        logger.info("IN AuctionJanitor_GET")
-        logger.info("before process_finished_auctions")
         process_finished_single_auctions()
-        logger.info("after process_finished_auctions")
 
         return Response({ 'woopy': 'doo' }, status=status.HTTP_202_ACCEPTED)
 
@@ -136,8 +133,7 @@ class AuctionListCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
-        logger.debug("AuctionListCreate - post")
-        # add a uuid to create request here 
+        # add a uuid to create request here
         request.data['auction_id'] = str(uuid.uuid4())
         serializer = AuctionSerializer(data=request.data)
         if serializer.is_valid():
@@ -146,7 +142,6 @@ class AuctionListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
-        logger.info("IN AuctionListCreate_GET")
         queryset = Auction.objects.all()
         serializer = AuctionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -202,7 +197,6 @@ class AuctionByItem(APIView):
 
     def get(self, request, item_id, format=None):
 
-        logger.info("IN AuctionByItem_GET")
         auction_lot = self.get_object(item_id)
         auction = self.get_auction(auction_lot.lot_id)
         auction_serializer = AuctionSerializer(auction)
@@ -238,7 +232,6 @@ class AuctionLotDetail(APIView):
         return model.get(auctype), serializer.get(auctype)
 
     def get(self, request, lot_uuid):
-        logger.info("IN AuctionLotDetail_GET")
         lot_id = str(lot_uuid)
 
         # get rabbitmq messages (if any) and save to db
@@ -331,7 +324,6 @@ class Return404(APIView):
 
     def get(self, request, *args, **kwargs):
         # simply returns a 404
-        logger.info("In Return404.get")
         message = {'message': 'Not found'}
         return Response(message, status=status.HTTP_404_NOT_FOUND)
 
@@ -351,8 +343,6 @@ class AuctionValid(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, auction_id, lot_id, format=None):
-
-        logger.info("IN AuctionValid_GET")
 
         lot = auction = None
 
@@ -438,7 +428,6 @@ class ComboAuctionCreate(APIView):
 
     def post(self, request, auction_type, format=None):
         # TODO: refactor for when we accept multiple lot auctions - currently only half done
-        logger.debug("ComboAuctionCreate - post")
         if auction_type != 'multi' and auction_type != 'solo':
             return Response({ 'error': "Invalid auction type" }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -631,7 +620,6 @@ class ComboAuctionCreate(APIView):
         # queryset = Auction.objects.all()
         # serializer = AuctionSerializer(queryset, many=True)
         # return Response(serializer.data, status=status.HTTP_200_OK)
-        logger.info("IN COMBO_AUCTION_CREATE_GET")
         return Response({ 'meep': True }, status=status.HTTP_201_CREATED)
 
     def create_message_queues(input_data):

@@ -48,15 +48,37 @@ class TestAPIPaths(TransactionTestCase):
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
 
-#    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
-#    def test_delete_auction_by_id(self, mock_get):
-#        c = RequestsClient()
-#        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-#        r1 = c.delete('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
-#        assert r1.status_code == 410
-#        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-#        r2 = c.get('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
-#        assert r2.status_code == 404
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_edit_auction_by_id_fail(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+                   'Content-Type': 'application/json'}
+
+        dicky = self.auction.__dict__
+        # have to remove and change some stuff to make this work
+        del dicky['_state']
+        del dicky['created']
+        del dicky['modified']
+        dicky['currency'] = 'BRL'
+        td1 = dicky['start_time']
+        dicky['start_time'] = str(td1)
+        td2 = dicky['end_time']
+        dicky['end_time'] = str(td2)
+        dicky['random'] = 'Yarp'
+        dicky['active'] = 'Beep'
+
+        r = c.put('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', data=json.dumps(dicky), headers=headers)
+
+        assert r.url == 'http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'
+        assert r.status_code == 400
+        assert r.headers.get('Content-Type') == 'application/json'
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_delete_auction_by_id(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        r1 = c.delete('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
+        assert r1.status_code == 410
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id(self, mock_get):

@@ -363,6 +363,8 @@ class AuctionValid(APIView):
         # public id of requester is stored in the django User object
         if auction.public_id != request.user.get_username():
             logger.info("MEEEEEP [2]")
+            logger.info("Request user is [%s]", request.user.get_username())
+            logger.info("Auction public_id is [%s]", auction.public_id)
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         lot_found = False

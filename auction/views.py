@@ -623,14 +623,6 @@ class ComboAuctionCreate(APIView):
 
         return True
 
-
-    # def is_valid_uuid(value):
-    #     try:
-    #         uuid.UUID(str(value))
-    #         return True
-    #     except ValueError:
-    #         return False
-
 def custom404(request, exception=None):
     return JsonResponse({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 

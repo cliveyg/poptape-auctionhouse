@@ -56,6 +56,22 @@ class TestAPIPaths(TransactionTestCase):
                                  algorithm='HS512')
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_auction_fail(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': self.token}
+        r = c.post('http://localhost/auctionhouse/badtype/auction/', headers=header)
+        assert r.status_code == 400
+        assert r.headers.get('Content-Type') == 'application/json'
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_auction_multi(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': self.token}
+        r = c.post('http://localhost/auctionhouse/multi/auction/', headers=header)
+        assert r.status_code == 100
+        assert r.headers.get('Content-Type') == 'application/json'
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_fail_lot_id_bad(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': self.token}

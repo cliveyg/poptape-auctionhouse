@@ -1,9 +1,9 @@
 # auctionhouse/tests/test_api.py
 import uuid
 
-import django.conf
 from django.test import TransactionTestCase
 from rest_framework.test import RequestsClient
+from django.conf import settings
 from .test_setup import create_auction_and_lots
 import logging
 import json
@@ -51,7 +51,7 @@ class TestAPIPaths(TransactionTestCase):
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
         cls.token = jwt.encode({ 'public_id': cls.auction.public_id, 'username': 'Blinky', 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=240) },
-                                 django.conf.settings['SECRET_KEY'],
+                                 settings.SECRET_KEY,
                                  algorithm='HS512')
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)

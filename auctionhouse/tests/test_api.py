@@ -66,7 +66,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_list(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/', headers=header)
         returned_data = r.json()
         assert returned_data[0]['auction_id'] == self.auction.auction_id
@@ -76,7 +76,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_item_id(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/item/'+self.lots[0].item_id+'/', headers=header)
         returned_data = r.json()
         assert returned_data['auction']['auction_id'] == self.auction.auction_id
@@ -92,7 +92,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_create_auction_fail(self, mock_get):
         c = RequestsClient()
-        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+        headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
         public_id = str(uuid.uuid4())
         input = {"public_id": public_id,
@@ -114,7 +114,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_create_auction(self, mock_get):
         c = RequestsClient()
-        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+        headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
         public_id = str(uuid.uuid4())
         input = {"public_id": public_id,
@@ -138,7 +138,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id_fail(self, mock_get):
         c = RequestsClient()
-        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+        headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
 
         dicky = self.auction.__dict__
@@ -163,14 +163,14 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_delete_auction_by_id(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r1 = c.delete('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
         assert r1.status_code == 410
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_edit_auction_by_id(self, mock_get):
         c = RequestsClient()
-        headers = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g',
+        headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
 
         assert self.auction.currency == 'GBP'
@@ -202,7 +202,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_fail_get_auction_by_id_not_valid_uuid(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/notvaliduuid', headers=header)
         assert r.status_code == 404
         assert r.headers.get('Content-Type') == 'application/json'
@@ -210,7 +210,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_auction_by_id(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/', headers=header)
         returned_data = r.json()
         assert returned_data['auction']['auction_id'] == self.auction.auction_id
@@ -224,7 +224,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_get_by_lot_id(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/lot/'+self.lots[0].lot_id+'/', headers=header)
         returned_data = r.json()
 
@@ -247,7 +247,7 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_fail_get_auction_by_id_404(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/'+str(uuid.uuid4())+'/', headers=header)
         assert r.status_code == 404
         assert r.headers.get('Content-Type') == 'application/json'

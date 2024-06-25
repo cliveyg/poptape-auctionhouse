@@ -430,7 +430,8 @@ class ComboAuctionCreate(APIView):
         logger.info("MEEEEEEEEPPPPP")
         # TODO: refactor for when we accept multiple lot auctions - currently only half done
         if auction_type != 'multi' and auction_type != 'solo':
-            return Response({ 'error': "Invalid auction type" }, status=status.HTTP_400_BAD_REQUEST)
+            message = {"error": "Invalid auction type"}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         logger.info("NARP 1")
 

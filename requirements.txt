@@ -51,6 +51,7 @@ pytest-django
 python-dateutil
 python-dotenv
 pytz
+PyJWT
 referencing
 requests
 requests-mock

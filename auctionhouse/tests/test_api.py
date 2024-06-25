@@ -1,17 +1,21 @@
 # auctionhouse/tests/test_api.py
 import uuid
 
+import django.conf
 from django.test import TransactionTestCase
 from rest_framework.test import RequestsClient
 from .test_setup import create_auction_and_lots
 import logging
 import json
+import jwt
 from requests.models import Response
 from unittest.mock import Mock
 from unittest import mock
 from auction.models import Auction
+import datetime
 
 logger = logging.getLogger(__name__)
+
 
 def mocked_auth_success(*args, **kwargs):
     r = Mock(spec=Response)
@@ -28,7 +32,6 @@ def mocked_auth_fail_403(*args, **kwargs):
     r.json.return_value = {'public_id': 'Yarp'}
     return r
 
-
 # helper function to compare json objects
 def ordered(obj):
     if isinstance(obj, dict):
@@ -41,16 +44,20 @@ def ordered(obj):
 
 class TestAPIPaths(TransactionTestCase):
 
+
     @classmethod
     def setUp(cls):
         cls.auction = Auction()
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
+        cls.token = jwt.encode({ 'public_id': cls.auction.public_id, 'username': 'Blinky', 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=240) },
+                                 django.conf.settings['SECRET_KEY'],
+                                 algorithm='HS512')
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_ok(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
+        header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'+self.lots[1].lot_id+'/', headers=header)
         logger.info("MEEP status code is %s", r.status_code)
         assert r.status_code == 200

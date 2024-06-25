@@ -436,7 +436,8 @@ class ComboAuctionCreate(APIView):
         logger.info("NARP 1")
 
         if auction_type == 'multi':
-            return self.process_multi(request)
+            self.process_multi(request)
+            return Response({'message': 'darp'}, status=status.HTTP_418_IM_A_TEAPOT)
         else:
             return Response({'message': 'yarp'}, status=status.HTTP_418_IM_A_TEAPOT)
             # self.process_single(request)

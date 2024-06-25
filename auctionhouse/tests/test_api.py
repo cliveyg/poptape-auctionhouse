@@ -56,6 +56,19 @@ class TestAPIPaths(TransactionTestCase):
                                  algorithm='HS512')
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail1(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            'blah': 'meep'
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['missing_fields'] == True
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_combo_create_auction_fail(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': self.token,
@@ -75,8 +88,8 @@ class TestAPIPaths(TransactionTestCase):
             'blah': 'meep'
         }
         r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input_data), headers=headers)
-        logger.info("RESP CODE MEEP 3 is %s", r.status_code)
-        logger.info("JSON MEEP 3 is %s", r.json())
+        return_message = r.json()
+        assert return_message['message'] == "multi-lot auctions not available yet"
         assert r.status_code == 503
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)

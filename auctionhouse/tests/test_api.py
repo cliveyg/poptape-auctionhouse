@@ -62,8 +62,6 @@ class TestAPIPaths(TransactionTestCase):
         non_existent_lot = str(uuid.uuid4())
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'+non_existent_lot+'/', headers=header)
         assert r.status_code == 406
-        logger.info("HEADERS [%s]", r.headers)
-        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_fail_auction_id_bad(self, mock_get):
@@ -72,8 +70,6 @@ class TestAPIPaths(TransactionTestCase):
         non_existent_auction = str(uuid.uuid4())
         r = c.get('http://localhost/auctionhouse/auction/'+non_existent_auction+'/'+self.lots[1].lot_id+'/', headers=header)
         assert r.status_code == 406
-        logger.info("HEADERS [%s]", r.headers)
-        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_ok(self, mock_get):

@@ -18,7 +18,7 @@ def mocked_auth_success(*args, **kwargs):
     r = Mock(spec=Response)
     r.status_code = 200
     r.headers = {'Content-Type': 'application/json'}
-    r.json.return_value = {'public_id': "Yarp"}
+    r.json.return_value = {'public_id': 'Yarp'}
     return r
 
 

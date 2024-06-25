@@ -601,7 +601,7 @@ class ComboAuctionCreate(APIView):
                                          venmo = 'pay_venmo' in request.data,
                                          paypal = 'pay_paypal' in request.data)
 
-        logger.info("MEEEP 02")
+        logger.info("MEEEP 03")
         # we now need to create an auction and add our auction lot to it
         auction_serializer = AuctionSerializer(data=request.data)
 
@@ -630,7 +630,8 @@ class ComboAuctionCreate(APIView):
                              'lot_id': request.data['lot_id']},
                              status=status.HTTP_201_CREATED)
 
-        raise ParseError(detail=auction_serializer.errors)
+
+        raise ParseError(detail={'message': 'Auction serializer errors', 'errors': auction_serializer.errors})
         # return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_data_objects(self, auctype):

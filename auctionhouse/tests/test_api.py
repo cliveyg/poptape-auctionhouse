@@ -63,7 +63,7 @@ class TestAPIPaths(TransactionTestCase):
         input = {
             'blah': 'meep'
         }
-        r = c.post('http://localhost/auctionhouse/badtype/auction/', data=json.dumps(input), headers=header)
+        r = c.post('http://localhost/auctionhouse/badtype/auction/', data=json.dumps(input), headers=headers)
         assert r.status_code == 400
         assert r.headers.get('Content-Type') == 'application/json'
 
@@ -75,7 +75,7 @@ class TestAPIPaths(TransactionTestCase):
         input = {
             'blah': 'meep'
         }
-        r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input), headers=header)
+        r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input), headers=headers)
         assert r.status_code == 100
         assert r.headers.get('Content-Type') == 'application/json'
 

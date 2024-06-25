@@ -3,6 +3,7 @@
 from auction.models import Auction, EnglishAuctionLot, PaymentOptions, DeliveryOptions
 import uuid
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 
 
 def create_auction_and_lots(cls):
@@ -13,6 +14,11 @@ def create_auction_and_lots(cls):
     tomorrow = now + timedelta(days=1)
     lot1_id = str(uuid.uuid4())
     lot2_id = str(uuid.uuid4())
+
+    cls.User1 = User.objects.create(
+        username = public_id,
+        first_name = "Blinky"
+    )
 
     cls.Auction1 = Auction.objects.create(
         auction_id = auction_id,

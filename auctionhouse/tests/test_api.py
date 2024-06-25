@@ -52,9 +52,9 @@ class TestAPIPaths(TransactionTestCase):
     def test_validate_auction_ok(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        with mock.patch('django.contrib.auth.models.User.objects.get') as mock_get:
+        with mock.patch('django.contrib.auth.models.User.get_username') as mock_get:
             mock_user = User(username=self.auction.public_id, first_name='Blinky')
-            mock_get.return_value = mock_user
+            mock_get.return_value = mock_user.username
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'+self.lots[1].lot_id+'/', headers=header)
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'

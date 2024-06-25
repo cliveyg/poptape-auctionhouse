@@ -451,70 +451,7 @@ class ComboAuctionCreate(APIView):
         # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 
         # are required when creating an auction using this class
-        '''
-        required_fields = ['name', 'type', 'start_time', 'end_time', 'currency', 'quantity']
 
-        missing = set(required_fields) - request.data.keys()
-        if missing:
-            return Response({ 'missing_fields': missing }, status=status.HTTP_400_BAD_REQUEST)
-
-        # for multi auctions we need to remove the start and end times for auction lots
-        start_time = end_time = None
-        start_time = request.data['start_time']
-        end_time = request.data['end_time']
-        del request.data['start_time']
-        del request.data['end_time']
-
-        # add uuids to create request here 
-        request.data['auction_id'] = str(uuid.uuid4())
-        # public_id is stored in django User.username
-        request.data['public_id'] = request.user.get_username()
-
-        auctype = request.data['type'].upper()
-        serializer_obj = None
-        if auctype in serializer:
-            _, serializer_obj = self.get_data_objects(auctype)
-        else:
-            return Response({ 'error': 'Unrecognized auction type' }, status=status.HTTP_400_BAD_REQUEST)
-
-        # need to deal with multiple lots here
-        lot_serializer = serializer_obj(data=request.data)
-
-        # TODO: multi lots
-        if not lot_serializer.is_valid():
-            return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # add back in data for auction
-        request.data['start_time'] = start_time
-        request.data['end_time'] = end_time
-        request.data['multiple'] = True
-        request.data['name'] = name
-
-        # TODO: multi lots
-        request.data['lots'] = [request.data['lot_id']]
-
-        # TODO : set active flag to true if start time is now or in past
-
-        # we now need to create an auction and add our auction lot to it
-        auction_serializer = AuctionSerializer(data=request.data)
-        if auction_serializer.is_valid():
-            # only save when both are valid
-            try:
-                auction_serializer.save()
-                lot_serializer.save()
-            except Exception as err:
-                logger.error(err)
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            # we know we have successfully saved both lots and auction at this 
-            # point so we can create the delivery and payment records
-
-            return Response({ 'auction_id': request.data['auction_id'],
-                              'lot_id': request.data['lot_id'] },
-                            status=status.HTTP_201_CREATED)
-
-        return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        '''
 
     def process_single(self, request):
 

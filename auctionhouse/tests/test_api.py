@@ -60,7 +60,7 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         header = {'x-access-token': self.token}
         non_existent_lot = str(uuid.uuid4())
-        r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id'/'+non_existent_lot+'/', headers=header)
+        r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'+non_existent_lot+'/', headers=header)
         assert r.status_code == 406
         assert r.headers.get('Content-Type') == 'application/json'
 

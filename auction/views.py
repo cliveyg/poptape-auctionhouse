@@ -631,8 +631,8 @@ class ComboAuctionCreate(APIView):
     #     except ValueError:
     #         return False
 
-# def custom404(request, exception=None):
-#     return JsonResponse({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+def custom404(request, exception=None):
+    return JsonResponse({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

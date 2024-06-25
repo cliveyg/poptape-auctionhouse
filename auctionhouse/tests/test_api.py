@@ -61,7 +61,7 @@ class TestAPIPaths(TransactionTestCase):
         headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
         input_data = {
-            "type": "en",
+            "type": "EN",
             "start_time": "2024-06-23 20:18:21.910326",
             "end_time": "2024-06-24 20:18:21.910326",
             "quantity": 1,
@@ -84,7 +84,7 @@ class TestAPIPaths(TransactionTestCase):
         headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
         input_data = {
-            "type": "en",
+            "type": "EN",
             "start_time": "2024-06-23 20:18:21.910326",
             "end_time": "2024-06-24 20:18:21.910326",
             "quantity": 1,
@@ -96,7 +96,6 @@ class TestAPIPaths(TransactionTestCase):
         }
         r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
         return_message = r.json()
-        logger.info("RET MESS IS %s", return_message)
         assert return_message['message'] == "Lot serializer errors"
         assert r.status_code == 400
 

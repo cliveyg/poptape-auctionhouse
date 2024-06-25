@@ -436,9 +436,9 @@ class ComboAuctionCreate(APIView):
         logger.info("NARP 1")
 
         if auction_type == 'multi':
-            return self.process_multi(request)
+            self.process_multi(request)
         else:
-            return self.process_single(request) 
+            self.process_single(request)
 
 
     def process_multi(self, request):

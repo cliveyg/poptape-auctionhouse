@@ -444,7 +444,8 @@ class ComboAuctionCreate(APIView):
             # return Response({'message': 'darp'}, status=status.HTTP_418_IM_A_TEAPOT)
         else:
             # return Response({'message': 'yarp'}, status=status.HTTP_418_IM_A_TEAPOT)
-            self.process_single(request)
+            auction_id, lot_id = self.process_single(request)
+            return Response({'auction_id': auction_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED
 
 
     def process_multi(self, request):
@@ -628,9 +629,10 @@ class ComboAuctionCreate(APIView):
             #    # return Response({ 'message': 'bad input data'},
             #    #                status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({'auction_id': aid,
-                             'lot_id': request.data['lot_id']},
-                             status=status.HTTP_201_CREATED)
+            #return Response({'auction_id': aid,
+            #                 'lot_id': request.data['lot_id']},
+            #                 status=status.HTTP_201_CREATED)
+            return aid, request.data['lot_id']
 
         logger.info("MEEEP 07")
         raise ParseError(detail={'message': 'Auction serializer errors', 'errors': auction_serializer.errors})

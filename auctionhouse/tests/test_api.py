@@ -58,7 +58,8 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_combo_create_auction_fail(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': self.token}
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
         input = {
             'blah': 'meep'
         }
@@ -69,7 +70,8 @@ class TestAPIPaths(TransactionTestCase):
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_combo_create_auction_multi(self, mock_get):
         c = RequestsClient()
-        header = {'x-access-token': self.token}
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
         input = {
             'blah': 'meep'
         }

@@ -345,6 +345,8 @@ class AuctionValid(APIView):
 
     def get(self, request, auction_id, lot_id, format=None):
 
+        logger.info("£$%@£%@£%@£%£@$%£$%£$%£$%£$%£$%")
+        logger.info("Request is %s", request)
         lot = auction = None
 
         try:

@@ -50,16 +50,34 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction = Auction()
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
+        # create a token with correct public_id for testing validate method
         cls.token = jwt.encode({ 'public_id': cls.auction.public_id, 'username': 'Blinky', 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=240) },
                                  settings.SECRET_KEY,
                                  algorithm='HS512')
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_validate_auction_fail_lot_id_bad(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': self.token}
+        non_existent_lot = str(uuid.uuid4())
+        r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id'/'+non_existent_lot+'/', headers=header)
+        assert r.status_code == 406
+        assert r.headers.get('Content-Type') == 'application/json'
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_validate_auction_fail_auction_id_bad(self, mock_get):
+        c = RequestsClient()
+        header = {'x-access-token': self.token}
+        non_existent_auction = str(uuid.uuid4())
+        r = c.get('http://localhost/auctionhouse/auction/'+non_existent_auction+'/'+self.lots[1].lot_id+'/', headers=header)
+        assert r.status_code == 406
+        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_ok(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': self.token}
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'+self.lots[1].lot_id+'/', headers=header)
-        logger.info("MEEP status code is %s", r.status_code)
         assert r.status_code == 200
         assert r.headers.get('Content-Type') == 'application/json'
 

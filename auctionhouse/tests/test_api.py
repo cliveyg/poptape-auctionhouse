@@ -52,7 +52,7 @@ class TestAPIPaths(TransactionTestCase):
     def test_validate_auction_ok(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiJmMzhiYTM5YS0zNjgyLTQ4MDMtYTQ5OC02NTlmMGJmMDUzMDQiLCJ1c2VybmFtZSI6ImNsaXZleSIsImV4cCI6MTcxOTAxNDMxNX0.-qkVpCAZvwng-Suf55EPLAd4r-PHgVqqYFywjDtjnrUNL8hsdYyFMgFFPdE1wOhYYjI9izftfyY43pUayEQ57g'}
-        with mock.patch('rest_framework.request.Request.User.get_username') as mock_get:
+        with mock.patch('rest_framework.request.user.get_username') as mock_get:
             mock_user = User(username=self.auction.public_id, first_name='Blinky')
             mock_get.return_value = mock_user.username
         r = c.get('http://localhost/auctionhouse/auction/'+self.auction.auction_id+'/'+self.lots[1].lot_id+'/', headers=header)

@@ -1,0 +1,54 @@
+# deploys to server via ssh after successful merge into main
+# and then attempts to perform docker compose up
+name: Deploy to server
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DO_GITHUB_USER_SSH_PRIVATE_KEY }}
+
+      - name: Git pull from github
+        run: |
+          cd ${{ github.workspace }}
+          ssh-keyscan -t rsa ${{ secrets.SERVER_DOMAIN }} >> ~/.ssh/known_hosts
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_DOMAIN }} << EOF
+          cd ${{ secrets.DO_REPO_PATH }}
+          git checkout main
+          git pull
+          rv1=$?
+          if [ $? -eq 0 ]; then
+            echo "Remote server successfully pulled repo."
+          else
+            echo "*ERROR* git pull failed with error [$rv1]"
+          fi
+          exit
+          EOF
+      - name: Run docker compose
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_DOMAIN }} << EOF
+          cd ${{ secrets.DO_REPO_PATH }}
+          echo "Stopping docker containers"
+          docker-compose down --remove-orphans
+          echo "Starting docker containers"
+          docker-compose up -d --build --remove-orphans
+          rv2=$?
+          if [ $? -eq 0 ]; then
+            echo "docker compose up ran without errors"
+          else
+            echo "*ERROR* docker-compose failed with error [$rv2]"
+          fi
+          EOF

@@ -56,6 +56,29 @@ class TestAPIPaths(TransactionTestCase):
                                  algorithm='HS512')
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail6(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "en",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP",
+            "pay_visa": True,
+            "pay_cash": True,
+            "collection": True,
+            "name": "delete me",
+            "item_id": str(uuid.uuid4())
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        logger.info("RET MESS IS %s", return_message)
+        assert return_message['message'] == "Lot serializer errors"
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_combo_create_solo_auction_fail5(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': self.token,

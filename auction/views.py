@@ -443,7 +443,7 @@ class ComboAuctionCreate(APIView):
             # self.process_single(request)
 
 
-    def process_multi(request):
+    def process_multi(self, request):
 
         logger.info("IN process_multi %s", request.data)
         #return Response({'message': 'multi-lot auctions not available yet'}, status=status.HTTP_100_CONTINUE)

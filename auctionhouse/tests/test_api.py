@@ -59,7 +59,10 @@ class TestAPIPaths(TransactionTestCase):
     def test_combo_create_auction_fail(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': self.token}
-        r = c.post('http://localhost/auctionhouse/badtype/auction/', headers=header)
+        input = {
+            'blah': 'meep'
+        }
+        r = c.post('http://localhost/auctionhouse/badtype/auction/', data=json.dumps(input), headers=header)
         assert r.status_code == 400
         assert r.headers.get('Content-Type') == 'application/json'
 
@@ -67,7 +70,10 @@ class TestAPIPaths(TransactionTestCase):
     def test_combo_create_auction_multi(self, mock_get):
         c = RequestsClient()
         header = {'x-access-token': self.token}
-        r = c.post('http://localhost/auctionhouse/multi/auction/', headers=header)
+        input = {
+            'blah': 'meep'
+        }
+        r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input), headers=header)
         assert r.status_code == 100
         assert r.headers.get('Content-Type') == 'application/json'
 

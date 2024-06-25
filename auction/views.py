@@ -436,12 +436,12 @@ class ComboAuctionCreate(APIView):
         logger.info("NARP 1")
 
         if auction_type == 'multi':
-            self.process_multi(request)
+            process_multi(request)
         else:
             self.process_single(request)
 
 
-    def process_multi(self, request):
+    def process_multi(request):
 
         logger.info("IN process_multi %s", request.data)
         return Response({'message': 'multi-lot auctions not available yet'}, status=status.HTTP_100_CONTINUE)

@@ -431,31 +431,21 @@ class ComboAuctionCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, auction_type, format=None):
-        logger.info("MEEEEEEEEPPPPP")
+
         # TODO: refactor for when we accept multiple lot auctions - currently only half done
         if auction_type != 'multi' and auction_type != 'solo':
             message = {"error": "Invalid auction type"}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        logger.info("NARP 1")
-
         if auction_type == 'multi':
             self.process_multi(request)
-            # return Response({'message': 'darp'}, status=status.HTTP_418_IM_A_TEAPOT)
         else:
-            # return Response({'message': 'yarp'}, status=status.HTTP_418_IM_A_TEAPOT)
-            #auction_id, lot_id = self.process_single(request)
             auc_id, lot_id = self.process_single(request)
-
-            logger.info("YARP AUC ID IS [%s]", auc_id)
-            logger.info("YARP LOT ID IS [%s]", lot_id)
             return Response({'auction_id': auc_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
 
 
     def process_multi(self, request):
 
-        logger.info("IN process_multi %s", request.data)
-        #return Response({'message': 'multi-lot auctions not available yet'}, status=status.HTTP_100_CONTINUE)
         raise ServiceUnavailable(detail={'message': 'multi-lot auctions not available yet'})
 
         # we need to do additional checks on some fields that we require when
@@ -529,8 +519,7 @@ class ComboAuctionCreate(APIView):
 
     def process_single(self, request):
 
-        logger.info("IN process_single")
-        # we need to do additional checks on some fields that we require when 
+        # we need to do additional checks on some fields that we require when
         # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 
         # are required when creating an auction using this class
@@ -551,14 +540,12 @@ class ComboAuctionCreate(APIView):
 
         if len(chosen_payment_options) == 0:
             raise ParseError(detail={'message': 'missing payment types'})
-            # return Response({ 'message': 'missing payment types' }, status=status.HTTP_400_BAD_REQUEST)
 
         delivery_methods = {'postage', 'delivery', 'collection'}
         chosen_delivery_options = delivery_methods.intersection(input_set)
 
         if len(chosen_delivery_options) == 0:
             raise ParseError(detail={'message': 'missing delivery options'})
-            # return Response({ 'message': 'missing delivery options' }, status=status.HTTP_400_BAD_REQUEST)
 
         if 'name' in request.data.keys():
             del request.data['name']
@@ -576,18 +563,14 @@ class ComboAuctionCreate(APIView):
             _, serializer_obj = self.get_data_objects(auctype)
         else:
             raise ParseError(detail={'message': 'Unrecognized auction type'})
-            # return Response({ 'error': 'Unrecognized auction type' }, status=status.HTTP_400_BAD_REQUEST)
-    
+
         lot_serializer = serializer_obj(data=request.data) 
 
         if not lot_serializer.is_valid():
-            logger.info("MEEEP 01")
             raise ParseError(detail={'message': 'Lot serializer errors', 'errors': lot_serializer.errors})
-            # return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # just add a single id to lots array
         request.data['lots'] = [request.data['lot_id']]
-        logger.info("MEEEP 02")
         # TODO : set active flag to true if start time is now or in past
           
         delivery_options = DeliveryOptions(auction_id = request.data['auction_id'],
@@ -606,42 +589,26 @@ class ComboAuctionCreate(APIView):
                                          venmo = 'pay_venmo' in request.data,
                                          paypal = 'pay_paypal' in request.data)
 
-        logger.info("MEEEP 03")
         # we now need to create an auction and add our auction lot to it
         auction_serializer = AuctionSerializer(data=request.data)
 
         if auction_serializer.is_valid():
 
             # only save everything together
-            logger.info("MEEEP 04")
             try:
                 auction_serializer.save()
                 lot_serializer.save()
                 delivery_options.save()
                 payment_options.save()
             except Exception as err:
-                logger.info("MEEEP 05")
                 logger.error(err)
                 raise ServiceUnavailable(detail={'message': 'ooh err, it didn\'t like that, check ya logs'})
-                #return Response({ 'message': 'ooh err, it didn\'t like that, check ya logs'},
-                #                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            #aid = auction_serializer.Meta.model.auction_id
-            logger.info("MEEEP 06")
-            # if self.is_valid_uuid(request.data['lot_id']) is False:
-            #    raise ParseError(detail={'message': 'bad input data'})
-            #    # return Response({ 'message': 'bad input data'},
-            #    #                status=status.HTTP_400_BAD_REQUEST)
 
             lot_id = request.data['lot_id']
             auc_id = request.data['auction_id']
             return lot_id, auc_id
-            #Response({'auction_id': auc_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
-            #return aid, request.data['lot_id']
 
-        logger.info("MEEEP 07")
         raise ParseError(detail={'message': 'Auction serializer errors', 'errors': auction_serializer.errors})
-        # return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_data_objects(self, auctype):
         return model.get(auctype), serializer.get(auctype) 

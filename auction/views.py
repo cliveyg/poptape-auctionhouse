@@ -432,6 +432,7 @@ class ComboAuctionCreate(APIView):
         if auction_type != 'multi' and auction_type != 'solo':
             return Response({ 'error': "Invalid auction type" }, status=status.HTTP_400_BAD_REQUEST)
 
+        logger.info("NARP 1")
 
         if auction_type == 'multi':
             return self.process_multi(request)

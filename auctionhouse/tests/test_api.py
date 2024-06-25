@@ -50,10 +50,148 @@ class TestAPIPaths(TransactionTestCase):
         cls.auction = Auction()
         cls.lots = []
         cls.auction, cls.lots = create_auction_and_lots(cls)
-        # create a token with correct public_id for testing validate method
+        # create a token with correct public_id for testing validate auction method
         cls.token = jwt.encode({ 'public_id': cls.auction.public_id, 'username': 'Blinky', 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=240) },
                                  settings.SECRET_KEY,
                                  algorithm='HS512')
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail6(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "EN",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP",
+            "pay_visa": True,
+            "pay_cash": True,
+            "collection": True,
+            "name": "delete me",
+            "item_id": str(uuid.uuid4())
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert r.status_code == 201
+        assert return_message['auction_id']
+        assert return_message['lot_id']
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail5(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "EN",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP",
+            "pay_visa": True,
+            "pay_cash": True,
+            "collection": True,
+            "name": "delete me"
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['message'] == "Lot serializer errors"
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail4(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "qq",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP",
+            "pay_visa": True,
+            "pay_cash": True,
+            "collection": True,
+            "name": "delete me"
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['message'] == "Unrecognized auction type"
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail3(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "EN",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP",
+            "pay_visa": True,
+            "pay_cash": True
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['message'] == "missing delivery options"
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail2(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "EN",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP"
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['message'] == "missing payment types"
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail1(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            'blah': 'meep'
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['missing_fields']
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_auction_fail(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            'blah': 'meep'
+        }
+        r = c.post('http://localhost/auctionhouse/badtype/auction/', data=json.dumps(input_data), headers=headers)
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_auction_multi(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            'blah': 'meep'
+        }
+        r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        assert return_message['message'] == "multi-lot auctions not available yet"
+        assert r.status_code == 503
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_fail_lot_id_bad(self, mock_get):

@@ -73,6 +73,7 @@ class TestAPIPaths(TransactionTestCase):
             "item_id": str(uuid.uuid4())
         }
         r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        logger.info("RET STAT CODE IS %s", r.status_code)
         return_message = r.json()
         logger.info("RET MESS IS %s", return_message)
         assert return_message['message'] == "Auction serializer errors"

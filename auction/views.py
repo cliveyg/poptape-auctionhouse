@@ -443,6 +443,7 @@ class ComboAuctionCreate(APIView):
 
     def process_multi(self, request):
 
+        logger.info("IN process_multi %s", request.data)
         return Response({ 'message': 'multi-lot auctions not available yet' }, 
                         status=status.HTTP_100_CONTINUE)
 
@@ -516,7 +517,8 @@ class ComboAuctionCreate(APIView):
         '''
 
     def process_single(self, request):
-        
+
+        logger.info("IN process_single")
         # we need to do additional checks on some fields that we require when 
         # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 

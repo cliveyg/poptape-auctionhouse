@@ -447,7 +447,7 @@ class ComboAuctionCreate(APIView):
         # creating an auction. these are allowed to be null in our data models
         # (and errors won't be captured by the serializer) but these fields 
         # are required when creating an auction using this class
-
+        '''
         required_fields = ['name', 'type', 'start_time', 'end_time', 'currency', 'quantity']
 
         missing = set(required_fields) - request.data.keys()
@@ -510,7 +510,7 @@ class ComboAuctionCreate(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        '''
 
     def process_single(self, request):
         
@@ -612,7 +612,7 @@ class ComboAuctionCreate(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-       
+
     def get_data_objects(self, auctype):
         return model.get(auctype), serializer.get(auctype) 
 

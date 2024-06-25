@@ -576,12 +576,13 @@ class ComboAuctionCreate(APIView):
         lot_serializer = serializer_obj(data=request.data) 
 
         if not lot_serializer.is_valid():
+            logger.info("MEEEP 01")
             raise ParseError(detail={'message': 'Lot serializer errors', 'errors': lot_serializer.errors})
             # return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # just add a single id to lots array
         request.data['lots'] = [request.data['lot_id']]
-
+        logger.info("MEEEP 02")
         # TODO : set active flag to true if start time is now or in past
           
         delivery_options = DeliveryOptions(auction_id = request.data['auction_id'],
@@ -600,6 +601,7 @@ class ComboAuctionCreate(APIView):
                                          venmo = 'pay_venmo' in request.data,
                                          paypal = 'pay_paypal' in request.data)
 
+        logger.info("MEEEP 02")
         # we now need to create an auction and add our auction lot to it
         auction_serializer = AuctionSerializer(data=request.data)
 
@@ -619,14 +621,14 @@ class ComboAuctionCreate(APIView):
 
             aid = auction_serializer.Meta.model.auction_id
 
-            if self.is_valid_uuid(request.data['lot_id']) is False:
-                raise ParseError(detail={'message': 'bad input data'})
-                # return Response({ 'message': 'bad input data'},
-                #                status=status.HTTP_400_BAD_REQUEST)
+            # if self.is_valid_uuid(request.data['lot_id']) is False:
+            #    raise ParseError(detail={'message': 'bad input data'})
+            #    # return Response({ 'message': 'bad input data'},
+            #    #                status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({ 'auction_id': aid,
-                              'lot_id': request.data['lot_id'] },
-                            status=status.HTTP_201_CREATED)
+            return Response({'auction_id': aid,
+                             'lot_id': request.data['lot_id']},
+                             status=status.HTTP_201_CREATED)
 
         raise ParseError(detail=auction_serializer.errors)
         # return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

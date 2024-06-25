@@ -445,7 +445,8 @@ class ComboAuctionCreate(APIView):
         else:
             # return Response({'message': 'yarp'}, status=status.HTTP_418_IM_A_TEAPOT)
             auction_id, lot_id = self.process_single(request)
-            return Response({'auction_id': auction_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
+            logger.info("YARP 2")
+            return Response(data={'auction_id': auction_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
 
 
     def process_multi(self, request):

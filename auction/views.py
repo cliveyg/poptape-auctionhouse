@@ -570,13 +570,13 @@ class ComboAuctionCreate(APIView):
         if auctype in serializer:
             _, serializer_obj = self.get_data_objects(auctype)
         else:
-            raise ParseError(detail={'error': 'Unrecognized auction type'})
+            raise ParseError(detail={'message': 'Unrecognized auction type'})
             # return Response({ 'error': 'Unrecognized auction type' }, status=status.HTTP_400_BAD_REQUEST)
     
         lot_serializer = serializer_obj(data=request.data) 
 
         if not lot_serializer.is_valid():
-            raise ParseError(detail=lot_serializer.errors)
+            raise ParseError(detail={'message': 'Lot serializer errors', 'errors': lot_serializer.errors})
             # return Response(lot_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # just add a single id to lots array

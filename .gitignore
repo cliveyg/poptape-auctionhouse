@@ -54,3 +54,6 @@
 !run_app.sh
 !manage.py
 !pytest.ini
+!.github/workflows/post-merge-deployment.yml
+!.github/workflows/unit-test.yml
+!.github/workflows/codeql-analysis.yml

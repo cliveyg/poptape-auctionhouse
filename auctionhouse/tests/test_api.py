@@ -75,7 +75,7 @@ class TestAPIPaths(TransactionTestCase):
         r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
         return_message = r.json()
         logger.info("RET MESS IS %s", return_message)
-        assert return_message['message'] == "Lot serializer errors"
+        assert return_message['message'] == "Auction serializer errors"
         assert r.status_code == 400
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)

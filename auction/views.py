@@ -350,7 +350,7 @@ class AuctionValid(APIView):
         try:
             auction = Auction.objects.get(auction_id=auction_id)
         except Auction.DoesNotExist:
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE, headers={'Content-Type': 'application/json'})
 
         # auction has already started so can't create again
         # TODO: not sure about this
@@ -359,7 +359,7 @@ class AuctionValid(APIView):
 
         # public id of requester is stored in the django User object
         if auction.public_id != request.user.get_username():
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE, headers={'Content-Type': 'application/json'})
 
         lot_found = False
         for lotty in auction.lots:
@@ -374,7 +374,7 @@ class AuctionValid(APIView):
                 break
 
         if not lot_found:
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE, headers={'Content-Type': 'application/json'})
 
         # look for bid history
         # TODO: need to change as it's possible that bids may exist
@@ -410,7 +410,7 @@ class AuctionValid(APIView):
             auction_data['bid_history_exists'] = False
 
             # successfully passed all tests
-            return Response(auction_data, status=status.HTTP_200_OK)
+            return Response(auction_data, status=status.HTTP_200_OK, headers={'Content-Type': 'application/json'})
 
         # if we reach here we have bids and a history and bid_history var
         # should contain latest bid data
@@ -418,7 +418,7 @@ class AuctionValid(APIView):
         auction_data['username'] = bid_history.username
         auction_data['bid_history_exists'] = True
 
-        return Response(auction_data, status=status.HTTP_200_OK)
+        return Response(auction_data, status=status.HTTP_200_OK, headers={'Content-Type': 'application/json'})
 
 # -----------------------------------------------------------------------------
 

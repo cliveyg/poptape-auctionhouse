@@ -339,7 +339,8 @@ class Return404(APIView):
 # TODO: decide which data to return
 
 
-class AuctionValid(RetrieveAPIView):
+# class AuctionValid(RetrieveAPIView):
+class AuctionValid(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, auction_id, lot_id, format=None):
@@ -418,7 +419,6 @@ class AuctionValid(RetrieveAPIView):
         auction_data['bid_history_exists'] = True
 
         return Response(auction_data, status=status.HTTP_200_OK)
-        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 # -----------------------------------------------------------------------------
 

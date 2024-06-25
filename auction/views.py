@@ -608,19 +608,21 @@ class ComboAuctionCreate(APIView):
         if auction_serializer.is_valid():
 
             # only save everything together
+            logger.info("MEEEP 04")
             try:
                 auction_serializer.save()
                 lot_serializer.save()
                 delivery_options.save()
                 payment_options.save()
             except Exception as err:
+                logger.info("MEEEP 05")
                 logger.error(err)
                 raise ServiceUnavailable(detail={'message': 'ooh err, it didn\'t like that, check ya logs'})
                 #return Response({ 'message': 'ooh err, it didn\'t like that, check ya logs'},
                 #                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             aid = auction_serializer.Meta.model.auction_id
-
+            logger.info("MEEEP 06")
             # if self.is_valid_uuid(request.data['lot_id']) is False:
             #    raise ParseError(detail={'message': 'bad input data'})
             #    # return Response({ 'message': 'bad input data'},
@@ -630,7 +632,7 @@ class ComboAuctionCreate(APIView):
                              'lot_id': request.data['lot_id']},
                              status=status.HTTP_201_CREATED)
 
-
+        logger.info("MEEEP 07")
         raise ParseError(detail={'message': 'Auction serializer errors', 'errors': auction_serializer.errors})
         # return Response(auction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -56,6 +56,26 @@ class TestAPIPaths(TransactionTestCase):
                                  algorithm='HS512')
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
+    def test_combo_create_solo_auction_fail3(self, mock_get):
+        c = RequestsClient()
+        headers = {'x-access-token': self.token,
+                   'Content-Type': 'application/json'}
+        input_data = {
+            "type": "EN",
+            "start_time": "2024-06-23 20:18:21.910326",
+            "end_time": "2024-06-24 20:18:21.910326",
+            "quantity": 1,
+            "currency": "GBP",
+            "pay_visa": True,
+            "pay_cash": True
+        }
+        r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
+        return_message = r.json()
+        logger.info("RET MESS IS %s", return_message)
+        assert return_message['message'] == "missing delivery options"
+        assert r.status_code == 400
+
+    @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_combo_create_solo_auction_fail2(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': self.token,
@@ -69,7 +89,6 @@ class TestAPIPaths(TransactionTestCase):
         }
         r = c.post('http://localhost/auctionhouse/solo/auction/', data=json.dumps(input_data), headers=headers)
         return_message = r.json()
-        logger.info("RET MESS IS %s", return_message)
         assert return_message['message'] == "missing payment types"
         assert r.status_code == 400
 

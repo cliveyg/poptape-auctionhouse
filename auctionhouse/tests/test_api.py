@@ -75,6 +75,7 @@ class TestAPIPaths(TransactionTestCase):
             'blah': 'meep'
         }
         r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input_data), headers=headers)
+        logger.info("RESP CODE MEEP 3 is %s", r.status_code)
         assert r.status_code == 100
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)

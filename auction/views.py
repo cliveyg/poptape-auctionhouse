@@ -436,15 +436,17 @@ class ComboAuctionCreate(APIView):
         logger.info("NARP 1")
 
         if auction_type == 'multi':
-            process_multi(request)
+            return self.process_multi(request)
         else:
-            self.process_single(request)
+            return Response({'message': 'yarp'}, status=status.HTTP_418_IM_A_TEAPOT)
+            # self.process_single(request)
 
 
     def process_multi(request):
 
         logger.info("IN process_multi %s", request.data)
-        return Response({'message': 'multi-lot auctions not available yet'}, status=status.HTTP_100_CONTINUE)
+        #return Response({'message': 'multi-lot auctions not available yet'}, status=status.HTTP_100_CONTINUE)
+        raise NotFound()
 
         # we need to do additional checks on some fields that we require when
         # creating an auction. these are allowed to be null in our data models

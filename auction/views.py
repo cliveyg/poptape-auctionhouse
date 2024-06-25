@@ -427,6 +427,7 @@ class ComboAuctionCreate(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, auction_type, format=None):
+        logger.info("MEEEEEEEEPPPPP")
         # TODO: refactor for when we accept multiple lot auctions - currently only half done
         if auction_type != 'multi' and auction_type != 'solo':
             return Response({ 'error': "Invalid auction type" }, status=status.HTTP_400_BAD_REQUEST)

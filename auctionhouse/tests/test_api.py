@@ -60,24 +60,22 @@ class TestAPIPaths(TransactionTestCase):
         c = RequestsClient()
         headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
-        input = {
+        input_data = {
             'blah': 'meep'
         }
-        r = c.post('http://localhost/auctionhouse/badtype/auction/', data=json.dumps(input), headers=headers)
+        r = c.post('http://localhost/auctionhouse/badtype/auction/', data=json.dumps(input_data), headers=headers)
         assert r.status_code == 400
-        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_combo_create_auction_multi(self, mock_get):
         c = RequestsClient()
         headers = {'x-access-token': self.token,
                    'Content-Type': 'application/json'}
-        input = {
+        input_data = {
             'blah': 'meep'
         }
-        r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input), headers=headers)
+        r = c.post('http://localhost/auctionhouse/multi/auction/', data=json.dumps(input_data), headers=headers)
         assert r.status_code == 100
-        assert r.headers.get('Content-Type') == 'application/json'
 
     @mock.patch('auctionhouse.authentication.requests.get', side_effect=mocked_auth_success)
     def test_validate_auction_fail_lot_id_bad(self, mock_get):

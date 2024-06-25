@@ -446,7 +446,8 @@ class ComboAuctionCreate(APIView):
             # return Response({'message': 'yarp'}, status=status.HTTP_418_IM_A_TEAPOT)
             #auction_id, lot_id = self.process_single(request)
             self.process_single(request)
-            #logger.info("YARP 2")
+
+            logger.info("YARP 2")
             #return JsonResponse(data={'auction_id': auction_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
 
 
@@ -633,7 +634,7 @@ class ComboAuctionCreate(APIView):
 
             lot_id = request.data['lot_id']
             auc_id = request.data['auction_id']
-            return Response({'auction_id': auc_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
+            Response({'auction_id': auc_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
             #return aid, request.data['lot_id']
 
         logger.info("MEEEP 07")

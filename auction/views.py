@@ -352,6 +352,7 @@ class AuctionValid(APIView):
         try:
             auction = Auction.objects.get(auction_id=auction_id)
         except Auction.DoesNotExist:
+            logger.info("MEEEEEP [1]")
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         # auction has already started so can't create again
@@ -361,6 +362,7 @@ class AuctionValid(APIView):
 
         # public id of requester is stored in the django User object
         if auction.public_id != request.user.get_username():
+            logger.info("MEEEEEP [2]")
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         lot_found = False
@@ -376,6 +378,7 @@ class AuctionValid(APIView):
                 break
 
         if not lot_found:
+            logger.info("MEEEEEP [3]")
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         # look for bid history

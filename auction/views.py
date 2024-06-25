@@ -624,15 +624,16 @@ class ComboAuctionCreate(APIView):
                 #return Response({ 'message': 'ooh err, it didn\'t like that, check ya logs'},
                 #                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            aid = auction_serializer.Meta.model.auction_id
-            logger.info("MEEEP 06 - auction id is %s", aid)
+            #aid = auction_serializer.Meta.model.auction_id
+            logger.info("MEEEP 06")
             # if self.is_valid_uuid(request.data['lot_id']) is False:
             #    raise ParseError(detail={'message': 'bad input data'})
             #    # return Response({ 'message': 'bad input data'},
             #    #                status=status.HTTP_400_BAD_REQUEST)
 
             lot_id = request.data['lot_id']
-            return JsonResponse({'auction_id': aid, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
+            auc_id = request.data['auction_id']
+            return Response({'auction_id': auc_id, 'lot_id': lot_id}, status=status.HTTP_201_CREATED)
             #return aid, request.data['lot_id']
 
         logger.info("MEEEP 07")

@@ -368,7 +368,7 @@ class AuctionValid(APIView):
         lot_found = False
         for lotty in auction.lots:
             if lotty == str(lot_id):
-                model_obj =  model.get(auction.type)
+                model_obj = model.get(auction.type)
                 try:
                     lot = model_obj.objects.get(lot_id=lot_id)
                 except model_obj.DoesNotExist:

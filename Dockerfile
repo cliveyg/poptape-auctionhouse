@@ -1,38 +1,20 @@
-FROM python:3.10-alpine
-
-# add bash etc as alpine version doesn't have these
-#RUN apk add --no-cache bash git gawk sed grep bc coreutils 
-
-# these modules enable us to build bcrypt
-#RUN apk --no-cache add --virtual build-dependencies gcc g++ make libffi-dev openssl-dev
-
-# install openssl 
-#RUN  apk update \
-#  && apk add openssl \
-#  && rm -rf /var/cache/apk/*
-
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev
-#RUN apk update && apk add postgresql-dev
-# add bash etc as alpine version doesn't have these
-RUN apk add linux-headers
-RUN apk add --no-cache bash gawk sed grep bc coreutils
-RUN apk --no-cache add libpq postgresql-client curl
+FROM python:3.12-slim
 
 # this needs to match the directory/package name of the python app
 # TODO: Copy only specific needed files and folders across
 COPY . /auctionhouse
 WORKDIR /auctionhouse
 
-RUN rm -f .coverage
-RUN rm -rf .git/
-RUN rm -rf auction/tests
-RUN rm -rf auctionhouse/tests
-RUN rm -rf htmlcov
-RUN rm -rf vauc
-RUN rm -f docker-compose.yml
-RUN rm -f .DS_Store
-RUN rm -rf .idea
-RUN mkdir -p /auctionhouse/log
+RUN rm -f .coverage && \
+    rm -rf .git/ && \
+    rm -rf auction/tests && \
+    rm -rf auctionhouse/tests && \
+    rm -rf htmlcov && \
+    rm -rf vauc && \
+    rm -f docker-compose.yml && \
+    rm -f .DS_Store && \
+    rm -rf .idea && \
+    mkdir -p /auctionhouse/log
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip

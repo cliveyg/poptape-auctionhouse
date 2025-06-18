@@ -92,7 +92,7 @@ jobs:
           POSTGRES_DB_NAME: ${{ secrets.TEST_DB_NAME }}
           POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          POSTGRES_HOST: "postgres"
+          #POSTGRES_HOST: "postgres"
           POSTGRES_PORT: 5432
           LOGFILE: "auctionhouse.log"
 

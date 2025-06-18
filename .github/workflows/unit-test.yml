@@ -72,7 +72,6 @@ jobs:
         run: |
           echo "creating logfile"
           echo "$GITHUB_WORKSPACE/auctionhouse.log"
-          echo "==============="
           touch "$GITHUB_WORKSPACE/auctionhouse.log"
           echo "changing logfile permissions to read/write all"
           chmod a+rw "$GITHUB_WORKSPACE/auctionhouse.log"

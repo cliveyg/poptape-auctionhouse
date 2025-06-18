@@ -3,6 +3,7 @@
 /auction/*
 /auctionhouse/*
 /auctionhouse.log
+/.env
 /log/*
 /auctionhouse/.env
 /auctionhouse/.env
@@ -57,4 +58,3 @@
 !.github/workflows/post-merge-deployment.yml
 !.github/workflows/unit-test.yml
 !.github/workflows/codeql-analysis.yml
-!auctionhouse.log

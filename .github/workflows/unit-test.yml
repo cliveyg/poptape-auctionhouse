@@ -10,7 +10,6 @@ on:
   - cron: '15 10 * * 1' # run "At 10:15 on Monday"
 
 jobs:
-  # Run code tests before building the image, to ensure it is good to go
   unit-tests:
     name: Run code tests
     runs-on: ubuntu-latest
@@ -20,7 +19,6 @@ jobs:
     services:
       # label used to access the service container
       postgres:
-        # dockerhub image
         image: postgres
         # provide the login and db deets for postgres
         env:
@@ -53,20 +51,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-        # have to create an .env file to be able to run unit tests
-#      - name: Create .env file from github secrets
-#        run: |
-#          echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
-
-      #- name: Set env as secret
-      #  env:
-      #    MY_VAL: ${{ secrets.ENV_FILE }}
-      #  run: |
-      #    import os
-      #    for q in (os.getenv("MY_VAL")):
-      #      print(q)
-      #  shell: python
 
       - name: Run unit tests and coverage reports
         env:

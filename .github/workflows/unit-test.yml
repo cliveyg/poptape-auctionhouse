@@ -83,6 +83,7 @@ jobs:
           echo "changing logfile permissions to read/write all"
           chmod a+rw "$GITHUB_WORKSPACE/auctionhouse.log"
           echo "Running django migrate"
+          python manage.py makemigrations auction
           python manage.py migrate auction
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test 
           coverage xml

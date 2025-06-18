@@ -58,7 +58,15 @@ jobs:
       - name: Create .env file from github secrets
         run: |
           echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
-          echo ${{secrets.ENV_FILE}} | sed 's/./& /g'
+
+      - name: Set env as secret
+        env:
+          MY_VAL: ${{ secrets.ENV_FILE }}
+        run: |
+          import os
+          for q in (os.getenv("MY_VAL")):
+            print(q)
+        shell: python
 
       - name: Run unit tests and coverage reports
         run: |

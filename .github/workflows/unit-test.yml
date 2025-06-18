@@ -70,7 +70,10 @@ jobs:
 
       - name: Run unit tests and coverage reports
         run: |
+          echo "creating logfile"
           touch auctionhouse.log
+          echo "changing logfile permissions to read/write all"
+          chmod a+rw auctionhouse.log
           echo "RUNNING MIGRATE"
           python manage.py migrate auction zero
           python manage.py migrate --fake auction zero

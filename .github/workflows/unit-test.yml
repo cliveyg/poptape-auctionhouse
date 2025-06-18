@@ -71,7 +71,7 @@ jobs:
       - name: Run unit tests and coverage reports
         run: |
           echo "creating logfile"
-          
+          echo "touch "$GITHUB_WORKSPACE/auctionhouse.log"
           touch "$GITHUB_WORKSPACE/auctionhouse.log"
           echo "changing logfile permissions to read/write all"
           chmod a+rw "$GITHUB_WORKSPACE/auctionhouse.log"

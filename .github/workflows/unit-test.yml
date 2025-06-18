@@ -69,6 +69,14 @@ jobs:
       #  shell: python
 
       - name: Run unit tests and coverage reports
+        env:
+          SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+          POSTGRES_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          POSTGRES_HOST: "localhost"
+          POSTGRES_PORT: 5432
+          LOGFILE: "auctionhouse.log"
         run: |
           echo "creating logfile"
           echo "$GITHUB_WORKSPACE/auctionhouse.log"
@@ -86,15 +94,6 @@ jobs:
           echo "$(coverage report -m )"
           covRes="$(coverage report -m --fail-under=45)"
           echo "$covRes"
-        env:
-          SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
-          ALLOWED_HOSTS: "localhost"
-          POSTGRES_DB_NAME: ${{ secrets.TEST_DB_NAME }}
-          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          POSTGRES_HOST: "localhost"
-          POSTGRES_PORT: 5432
-          LOGFILE: "auctionhouse.log"
 
       - name: Create coverage badges
         uses: gaelgirodon/ci-badges-action@v1

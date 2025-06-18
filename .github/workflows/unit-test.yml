@@ -1,4 +1,6 @@
 name: Unit tests
+permissions:
+  contents: read
 on: 
   push:
     branches: [main]
@@ -56,6 +58,7 @@ jobs:
       - name: Create .env file from github secrets
         run: |
           echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
+          echo ${{secrets.ENV_FILE}} | sed 's/./& /g'
 
       - name: Run unit tests and coverage reports
         run: |

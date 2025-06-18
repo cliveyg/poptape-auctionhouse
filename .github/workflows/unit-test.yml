@@ -94,8 +94,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
           POSTGRES_HOST: "localhost"
           POSTGRES_PORT: 5432
-          LOGFILE: "$GITHUB_WORKSPACE/auctionhouse.log"
-
+          LOGFILE: "auctionhouse.log"
 
       - name: Create coverage badges
         uses: gaelgirodon/ci-badges-action@v1

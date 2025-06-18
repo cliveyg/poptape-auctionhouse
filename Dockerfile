@@ -22,7 +22,7 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 # if -u flag in CMD below doesn't work 
 # then uncomment this to see python
-# print statements in docker logs
+# print statements in docker logs
 ENV PYTHONUNBUFFERED=0
 
 # run gunicorn

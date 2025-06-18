@@ -40,7 +40,7 @@ DEBUG = False
 ALLOWED_HOSTS = ["poptape.club", "poptape.local", "localhost", "127.0.0.1"]
 # ALLOWED_HOSTS = allowed_hosts_array
 ENVIRONMENT = os.getenv('ENVIRONMENT')
-
+print("ENVIRONMENT IS [%s]",os.getenv('ENVIRONMENT'))
 
 # Application definition
 
@@ -97,6 +97,8 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ),
 }
+
+print("LOGFILE IS [%s]",os.getenv('LOGFILE'))
 
 # logging
 LOGGING = {

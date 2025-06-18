@@ -1,6 +1,8 @@
 # deploys to server via ssh after successful merge into main
 # and then attempts to perform docker compose up
 name: Deploy to server
+permissions:
+  contents: read
 on:
   pull_request:
     branches:

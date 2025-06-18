@@ -1,4 +1,6 @@
 name: Unit tests
+permissions:
+  contents: read
 on: 
   push:
     branches: [main]
@@ -53,19 +55,36 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
         # have to create an .env file to be able to run unit tests
-      - name: Create .env file from github secrets
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
+#      - name: Create .env file from github secrets
+#        run: |
+#          echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
+
+      #- name: Set env as secret
+      #  env:
+      #    MY_VAL: ${{ secrets.ENV_FILE }}
+      #  run: |
+      #    import os
+      #    for q in (os.getenv("MY_VAL")):
+      #      print(q)
+      #  shell: python
 
       - name: Run unit tests and coverage reports
+        env:
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+          POSTGRES_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          POSTGRES_HOST: "localhost"
+          POSTGRES_PORT: 5432
+          LOGFILE: "auctionhouse.log"
         run: |
-          touch auctionhouse.log
-          echo "RUNNING MIGRATE"
-          python manage.py migrate auction zero
-          python manage.py migrate --fake auction zero
-          rm -rf migrations
+          echo "creating logfile: $GITHUB_WORKSPACE/auctionhouse.log"
+          touch "$GITHUB_WORKSPACE/auctionhouse.log"
+          echo "changing logfile permissions to read/write all"
+          chmod a+rw "$GITHUB_WORKSPACE/auctionhouse.log"
+          echo "Running django migrate"
           python manage.py makemigrations auction
-          python manage.py migrate --fake auction
+          python manage.py migrate auction
           coverage run --omit="*/migrations/*,*/tests/*"  manage.py test 
           coverage xml
           echo "$(coverage report -m )"

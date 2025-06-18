@@ -35,12 +35,11 @@ APPEND_SLASH = True
 # DEBUG = True
 DEBUG = False
 
-#allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
-#allowed_hosts_array = allowed_hosts_string.split(",")
+# allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
+# allowed_hosts_array = allowed_hosts_string.split(",")
 ALLOWED_HOSTS = ["poptape.club", "poptape.local", "localhost", "127.0.0.1"]
 # ALLOWED_HOSTS = allowed_hosts_array
 ENVIRONMENT = os.getenv('ENVIRONMENT')
-
 
 # Application definition
 
@@ -206,6 +205,18 @@ DATABASES = {
         # 'ATOMIC_REQUESTS': True,
     }
 }
+
+if os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB_NAME'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': os.getenv('POSTGRES_HOST'),
+            'PORT': os.getenv('POSTGRES_PORT')
+        }
+    }
 
 # get rid of DEFAULT_AUTO_FIELD warnings
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

@@ -55,9 +55,9 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
         # have to create an .env file to be able to run unit tests
-      - name: Create .env file from github secrets
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
+#      - name: Create .env file from github secrets
+#        run: |
+#          echo "${{ secrets.ENV_FILE }}" > auctionhouse/.env
 
       #- name: Set env as secret
       #  env:
@@ -86,6 +86,16 @@ jobs:
           echo "$(coverage report -m )"
           covRes="$(coverage report -m --fail-under=45)"
           echo "$covRes"
+        env:
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+          ALLOWED_HOSTS: "localhost"
+          POSTGRES_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          POSTGRES_HOST: "localhost"
+          POSTGRES_PORT: 5432
+          LOGFILE: "$GITHUB_WORKSPACE/auctionhouse.log"
+
 
       - name: Create coverage badges
         uses: gaelgirodon/ci-badges-action@v1

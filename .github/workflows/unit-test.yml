@@ -70,7 +70,7 @@ jobs:
 
       - name: Run unit tests and coverage reports
         env:
-          SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
           POSTGRES_DB_NAME: ${{ secrets.TEST_DB_NAME }}
           POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}

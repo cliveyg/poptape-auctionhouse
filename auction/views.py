@@ -354,6 +354,7 @@ class AuctionValid(APIView):
         try:
             auction = Auction.objects.get(auction_id=auction_id)
         except Auction.DoesNotExist:
+            logger.info("Auction does not exist")
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         # auction has already started so can't create again
@@ -363,6 +364,7 @@ class AuctionValid(APIView):
 
         # public id of requester is stored in the django User object
         if auction.public_id != request.user.get_username():
+            logger.info("User does not exist")
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         lot_found = False
@@ -378,6 +380,7 @@ class AuctionValid(APIView):
                 break
 
         if not lot_found:
+            logger.info("Lot does not exist")
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         # look for bid history
@@ -559,6 +562,7 @@ class ComboAuctionCreate(APIView):
 
         auctype = request.data['type'].upper()
         serializer_obj = None
+        logger.info("Auctype is is {0}".format(auctype))
         if auctype in serializer:
             _, serializer_obj = self.get_data_objects(auctype)
         else:
@@ -606,7 +610,7 @@ class ComboAuctionCreate(APIView):
 
             lot_id = request.data['lot_id']
             auc_id = request.data['auction_id']
-            return lot_id, auc_id
+            return auc_id, lot_id
 
         raise ParseError(detail={'message': 'Auction serializer errors', 'errors': auction_serializer.errors})
 

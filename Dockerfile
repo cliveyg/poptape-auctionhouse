@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12
 
 # this needs to match the directory/package name of the python app
 # TODO: Copy only specific needed files and folders across
@@ -15,6 +15,7 @@ RUN rm -f .coverage && \
     rm -f .DS_Store && \
     rm -rf .idea && \
     mkdir -p /auctionhouse/log
+RUN apt-get update && apt-get install -y net-tools
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip
@@ -33,5 +34,5 @@ ENV PYTHONUNBUFFERED=0
 CMD ["./run_app.sh"]
 #RUN ["python", "manage.py", "process_tasks"]
 
-# Make port 9100 available to the world outside this container
+# Make port available to the world outside this container
 EXPOSE 9100

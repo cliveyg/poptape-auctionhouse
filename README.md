@@ -21,6 +21,7 @@ on auction type. naming stuff is hard :)
 
 There are many different auction types but I'm going to provide the following
 types of auctions:
+
 * English
 * Dutch
 * Sealed bid

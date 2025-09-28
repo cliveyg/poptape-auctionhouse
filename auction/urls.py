@@ -27,7 +27,7 @@ urlpatterns = [
     path('auctionhouse/auction/lot/<uuid:lot_uuid>/', AuctionLotDetail.as_view(), name="auctionlotdetail"),
 
     # this url is for checking whether the auctioneer microservice has been sent the correct data
-    path('auctionhouse/auction/<uuid:auction_id>/<uuid:lot_id>/', AuctionValid.as_view(), name='validauction'),
+    path('auctionhouse/auction/<uuid:auction_id>/lot/<uuid:lot_id>/', AuctionValid.as_view(), name='validauction'),
 
     # create auction lot - probably superceded by ComboAuctionCreate
     path('auctionhouse/auction/lot/', AuctionLotListCreate.as_view(), name='createlot'),

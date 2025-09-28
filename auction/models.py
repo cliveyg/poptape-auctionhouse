@@ -97,7 +97,7 @@ class AuctionLot(models.Model):
     # as live auctions have an ordered list of items to go through and the 
     # start time is when the lot comes up under the auctioneers hammer so is 
     # likely to be set at 'run' time - single item auctions will have both 
-    # start times (and end times) set to teh same value
+    # start times (and end times) set to the same value
     start_time = UnixDateTimeField(blank=True, null=True)
     end_time = UnixDateTimeField(blank=True, null=True)
     quantity = models.IntegerField(null=False)

@@ -37,7 +37,11 @@ DEBUG = False
 
 # allowed_hosts_string = os.getenv('ALLOWED_HOSTS')
 # allowed_hosts_array = allowed_hosts_string.split(",")
-ALLOWED_HOSTS = ["poptape.club", "poptape.local", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["poptape.club",
+                 "poptape.local",
+                 "poptape-auctionhouse-api-1",
+                 "localhost",
+                 "127.0.0.1"]
 # ALLOWED_HOSTS = allowed_hosts_array
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
